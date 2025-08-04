@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <link rel="stylesheet" href="UserDetailsPage.css">
+</head>
+<body>
+    <div class="user-details-page">
+        <div class="page-header">
+            <h2>User Details:</h2>
+        </div>
+        <div class="content-container">
+            <div class="user-info-section">
+                <div class="profile-picture-container">
+                    <div class="profile-picture-placeholder"></div>
+                    <div class="edit-icon"></div>
+                </div>
+                <div class="input-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" value="Full Name">
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="Email">
+                </div>
+                <div class="input-group">
+                    <label for="phone-number">Phone Number</label>
+                    <input type="text" id="phone-number" value="Phone Number">
+                </div>
+                <div class="input-group">
+                    <label for="company-name">Company Name(if applicable)</label>
+                    <input type="text" id="company-name" value="Company Name(if applicable)">
+                </div>
+                <div class="action-buttons">
+                    <button class="save-button">Save</button>
+                    <button class="cancel-button">Cancel</button>
+                </div>
+            </div>
+            <div class="billing-info-section">
+                <h3>Billing Info:</h3>
+                <div class="billing-item">
+                    <span>Tokens</span>
+                    <img src="info-icon.png" alt="info icon" class="info-icon">
+                    <span>10000</span>
+                </div>
+                <div class="billing-item">
+                    <span>Top-Up Tokens</span>
+                    <img src="info-icon.png" alt="info icon" class="info-icon">
+                    <span>1000</span>
+                </div>
+                <div class="billing-item">
+                    <span>Version History</span>
+                    <img src="info-icon.png" alt="info icon" class="info-icon">
+                    <span>0</span>
+                    <span>50</span>
+                </div>
+                <div class="billing-item">
+                    <span>API & Scheduling</span>
+                    <img src="info-icon.png" alt="info icon" class="info-icon">
+                    <span>0</span>
+                    <span>50</span>
+                </div>
+                <div class="total-amount">
+                    <span>Total:</span>
+                    <span>150</span>
+                </div>
+                <button class="change-payment-settings-button">Change Payment Settings</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

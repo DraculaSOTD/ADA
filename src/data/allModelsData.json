@@ -1,0 +1,25 @@
+{
+  "models": [
+    {
+      "name": "Model Name",
+      "description": "Model description",
+      "trainedValues": "Model Trained Values",
+      "averageAccuracy": "Model Average Accuracy",
+      "personPublished": "Person published"
+    },
+    {
+      "name": "Model Name",
+      "description": "Model description",
+      "trainedValues": "Model Trained Values",
+      "averageAccuracy": "Model Average Accuracy",
+      "personPublished": "Person published"
+    },
+    {
+      "name": "Model Name",
+      "description": "Model description",
+      "trainedValues": "Model Trained Values",
+      "averageAccuracy": "Model Average Accuracy",
+      "personPublished": "Person published"
+    }
+  ]
+}

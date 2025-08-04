@@ -1,0 +1,20 @@
+{
+  "currentBalance": 10000,
+  "items": [
+    {
+      "name": "Controller Basic",
+      "price": 125.50,
+      "quantity": 1
+    },
+    {
+      "name": "Controller Basic",
+      "price": 125.50,
+      "quantity": 1
+    }
+  ],
+  "priceBreakdown": {
+    "basePrice": 125.50,
+    "taxes": 12.25,
+    "total": 137.75
+  }
+}

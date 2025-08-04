@@ -1,0 +1,18 @@
+{
+  "models": [
+    {
+      "name": "K Means Klustering Model",
+      "state": "Uploading Data",
+      "timeElapsed": "12 hours 32 min",
+      "elapsedTokenCost": 152,
+      "progress": 50
+    },
+    {
+      "name": "K Means Klustering Model",
+      "state": "Uploading Data",
+      "timeElapsed": "12 hours 32 min",
+      "elapsedTokenCost": 152,
+      "progress": 50
+    }
+  ]
+}

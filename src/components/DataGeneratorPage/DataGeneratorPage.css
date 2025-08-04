@@ -1,0 +1,88 @@
+.data-generator-page {
+    padding: var(--spacing-large);
+}
+
+.data-generator-page .page-header {
+    margin-bottom: var(--spacing-large);
+}
+
+.data-generator-page .page-title {
+    font-size: var(--font-size-large);
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+}
+
+.data-generator-page .info-banner {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-large);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+}
+
+.data-generator-page .info-icon {
+    font-size: 1.2em;
+}
+
+.data-generator-page .form-section {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+}
+
+.data-generator-page .form-row {
+    display: flex;
+    gap: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.data-generator-page .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.data-generator-page .form-group label {
+    margin-bottom: var(--spacing-small);
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.data-generator-page .form-group input,
+.data-generator-page .form-group span {
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    font-size: var(--font-size-medium);
+}
+
+.data-generator-page .form-group span {
+    background-color: var(--secondary-color);
+}
+
+.data-generator-page .auth-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    margin-top: var(--spacing-small);
+}
+
+.data-generator-page .auth-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.copyright {
+    text-align: center;
+    color: var(--text-color);
+    font-size: var(--font-size-small);
+    margin-bottom: 0px;
+}

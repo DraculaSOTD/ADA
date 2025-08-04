@@ -1,0 +1,103 @@
+.data-tagging-page {
+    padding: var(--spacing-large);
+    font-family: var(--font-family);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-large);
+}
+
+.page-header h2 {
+    font-size: var(--font-size-large);
+    color: var(--text-color);
+}
+
+.model-name-display {
+    font-size: var(--font-size-large);
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.explanation-field {
+    display: flex;
+    align-items: center;
+    background-color: var(--secondary-color);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-large);
+    color: var(--text-color);
+}
+
+.explanation-field .info-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: var(--spacing-medium);
+    /* You might want to replace this with an actual info icon image or SVG */
+}
+
+.data-fields-container {
+    display: flex;
+    justify-content: space-around;
+    gap: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.field-section {
+    flex: 1;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-large);
+    background-color: var(--background-color);
+    box-shadow: var(--shadow);
+}
+
+.field-section h3 {
+    font-size: var(--font-size-large);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-large);
+    text-align: center;
+}
+
+.field-input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing-medium);
+}
+
+.field-input-group label {
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-small);
+}
+
+.field-input-group select {
+    width: 100%;
+    padding: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    font-size: var(--font-size-medium);
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-large);
+}
+
+.navigation-buttons button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-large);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: var(--font-size-medium);
+}
+
+.navigation-buttons button:hover {
+    background-color: var(--primary-color-dark);
+}

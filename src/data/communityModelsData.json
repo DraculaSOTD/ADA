@@ -1,0 +1,26 @@
+{
+    "models": [
+        {
+            "username": "community_user_1",
+            "postDescription": "A great model for sentiment analysis.",
+            "likes": 150,
+            "modelName": "Sentiment Analyzer v1.0",
+            "modelDescription": "Analyzes text for positive, negative, or neutral sentiment.",
+            "dataTrainedDescription": "Trained on a large dataset of social media posts.",
+            "dataFields": "Text input",
+            "dropdownValue": "retrain",
+            "dropdownNumber": 30
+        },
+        {
+            "username": "data_scientist_2",
+            "postDescription": "Image recognition model for classifying animals.",
+            "likes": 80,
+            "modelName": "Animal Classifier Beta",
+            "modelDescription": "Identifies various animal species in images.",
+            "dataTrainedDescription": "Trained on ImageNet and custom animal datasets.",
+            "dataFields": "Image input",
+            "dropdownValue": "new",
+            "dropdownNumber": 15
+        }
+    ]
+}

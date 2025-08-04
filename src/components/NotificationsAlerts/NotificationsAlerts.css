@@ -1,0 +1,83 @@
+.notifications-alerts-card {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+}
+
+.notifications-alerts-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-medium);
+}
+
+.notifications-alerts-card h3 {
+    font-size: 1.2em;
+    color: var(--primary-color-dark);
+    margin: 0;
+}
+
+.notifications-alerts-card .refresh-button {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.notifications-alerts-card .refresh-button:hover {
+    color: var(--primary-color);
+}
+
+.alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-medium);
+    padding-bottom: var(--spacing-medium);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.alert-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.alert-item .alert-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary-color); /* Example color for dot */
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px; /* Align with title */
+}
+
+.alert-item .alert-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.alert-item .alert-title {
+    font-weight: bold;
+    color: var(--text-color);
+    font-size: 0.95em;
+}
+
+.alert-item .alert-description {
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.alert-item .alert-time {
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+    flex-shrink: 0;
+}

@@ -1,0 +1,168 @@
+:root {
+    --primary-color: #6a5acd;
+    --primary-color-light: #e0e0ff;
+    --primary-color-dark: #483d8b;
+    --secondary-color: #f0f2f5;
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --text-color-light: #ffffff;
+    --border-color: #e0e0e0;
+    --error-color: #d32f2f;
+    --success-color: #388e3c;
+
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-small: 0.875rem;
+    --font-size-medium: 1rem;
+    --font-size-large: 1.25rem;
+
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 24px;
+
+    --border-radius: 8px;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+html, body, #app-root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100%;
+    background-color: var(--secondary-color);
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.header {
+    position: fixed;
+    width: calc(100% - 80px); /* Full width minus sidebar */
+    margin-left: 80px; /* Sidebar width */
+}
+
+.page-content-area {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.dashboard-body {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.dashboard-main-area {
+    flex: 3; /* Takes up more space */
+    background-color: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+}
+
+.right-sidebar {
+    flex: 1; /* Takes up less space */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-title {
+    font-size: var(--font-size-large);
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+}
+
+/* Basic reset */
+* {
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    color: var(--text-color);
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+}
+
+button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    padding: var(--spacing-small);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    width: 100%;
+}
+
+/* Utility classes */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
+}
+
+body.dark-mode {
+    --background-color: #2c2c2c;
+    --text-color: #f4f7f6;
+    --secondary-color: #3a3a3a;
+    --border-color: #555;
+}

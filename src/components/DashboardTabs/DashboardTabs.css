@@ -1,0 +1,52 @@
+.dashboard-tabs-container {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: var(--spacing-large);
+    padding-bottom: var(--spacing-small);
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-small) var(--spacing-medium);
+    cursor: pointer;
+    color: var(--text-color);
+    font-weight: bold;
+    transition: color 0.2s ease, border-bottom 0.2s ease;
+    position: relative;
+}
+
+.tab-item {
+    font-size: 2em; /* Adjust emoji size */
+    margin-bottom: 5px;
+}
+
+.tab-item span {
+    font-size: 0.9em;
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+}
+
+
+.tab-item::after {
+    content: '';
+    position: absolute;
+    bottom: -12px; /* Position it below the border-bottom of the container */
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+}
+
+.tab-item.active::after {
+    background-color: var(--primary-color);
+}
+
+.tab-item:hover {
+    color: var(--primary-color);
+}

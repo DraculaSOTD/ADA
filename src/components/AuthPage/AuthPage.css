@@ -1,0 +1,190 @@
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--secondary-color);
+}
+
+.auth-container {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.app-title {
+    font-size: 2.5em;
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+}
+
+.auth-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-large);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.auth-tab {
+    background: none;
+    border: none;
+    padding: var(--spacing-small) var(--spacing-medium);
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--text-color);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.auth-tab.active {
+    color: var(--primary-color);
+}
+
+.auth-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+.auth-tab:hover {
+    color: var(--primary-color);
+}
+
+.auth-intro {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    position: relative;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-small);
+    font-size: 0.95em;
+}
+
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-input-wrapper input[type="password"] {
+    width: 100%;
+    padding: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    padding-right: 45px; /* Space for the toggle icon */
+}
+
+.password-input-wrapper .password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    font-size: 1.1em;
+    z-index: 1;
+}
+
+.form-group input[type="email"],
+.form-group input[type="text"] {
+    width: 100%;
+    padding: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+}
+
+.auth-button { /* Renamed from .sign-in-button to be generic */
+    width: 100%;
+    padding: var(--spacing-medium);
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    border-radius: var(--border-radius);
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: var(--spacing-small);
+    transition: background-color 0.2s ease;
+}
+
+.auth-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.sign-up-form {
+    display: none; /* Hidden by default */
+}
+
+.sign-in-form.active-form,
+.sign-up-form.active-form {
+    display: block;
+}
+
+.sign-in-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.forgot-password {
+    display: block;
+    margin-top: var(--spacing-medium);
+    color: var(--primary-color);
+    font-size: var(--font-size-small);
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.footer-text {
+    margin-top: var(--spacing-large);
+    color: var(--text-color);
+    font-size: var(--font-size-small);
+}
+
+.info-icon-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.info-icon-wrapper .tooltip {
+    visibility: hidden;
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.info-icon-wrapper:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}

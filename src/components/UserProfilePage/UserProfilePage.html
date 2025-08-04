@@ -1,0 +1,136 @@
+<div class="user-profile-page">
+    <div class="page-header">
+        <h1 class="page-title">User Profile</h1>
+    </div>
+    
+    <div class="profile-container">
+        <div class="profile-info card">
+            <div class="profile-avatar-section">
+                <div class="profile-avatar">
+                    <span class="avatar-icon"><i class="fas fa-user"></i></span>
+                </div>
+                <button class="change-avatar-btn">Change Avatar</button>
+            </div>
+            
+            <div class="profile-details">
+                <h3>Personal Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" value="John" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" value="Doe" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" value="john.doe@example.com" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="tel" id="phone" value="+1 (555) 123-4567" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Company:</label>
+                        <input type="text" id="company" value="DataPulse Corp" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="position">Position:</label>
+                        <input type="text" id="position" value="Data Scientist" class="form-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="account-stats card">
+            <h3>Account Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Models Created:</span>
+                    <span class="stat-value">24</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Active Models:</span>
+                    <span class="stat-value">8</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Predictions:</span>
+                    <span class="stat-value">15,432</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Tokens Used:</span>
+                    <span class="stat-value">125,890</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Account Created:</span>
+                    <span class="stat-value">Jan 15, 2024</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Last Login:</span>
+                    <span class="stat-value">Today, 2:30 PM</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="subscription-info card">
+            <h3>Subscription Details</h3>
+            <div class="subscription-content">
+                <div class="plan-info">
+                    <div class="plan-badge">Pro Plan</div>
+                    <p class="plan-description">Access to advanced features and unlimited model creation</p>
+                    <p class="plan-price">$49.99/month</p>
+                </div>
+                <div class="plan-features">
+                    <h4>Plan Features:</h4>
+                    <ul>
+                        <li>✅ Unlimited Model Creation</li>
+                        <li>✅ Advanced Analytics</li>
+                        <li>✅ API Access</li>
+                        <li>✅ Priority Support</li>
+                        <li>✅ Custom Data Generation</li>
+                        <li>✅ Rules Engine</li>
+                    </ul>
+                </div>
+                <div class="subscription-actions">
+                    <button class="upgrade-btn">Upgrade Plan</button>
+                    <button class="billing-btn">View Billing</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="security-settings card">
+            <h3>Security Settings</h3>
+            <div class="security-options">
+                <div class="security-item">
+                    <span class="security-label">Two-Factor Authentication:</span>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="2fa" checked>
+                        <label for="2fa" class="switch"></label>
+                    </div>
+                </div>
+                <div class="security-item">
+                    <span class="security-label">Email Notifications:</span>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="email-notifications" checked>
+                        <label for="email-notifications" class="switch"></label>
+                    </div>
+                </div>
+                <div class="security-item">
+                    <span class="security-label">Login Alerts:</span>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="login-alerts">
+                        <label for="login-alerts" class="switch"></label>
+                    </div>
+                </div>
+            </div>
+            <button class="change-password-btn">Change Password</button>
+        </div>
+    </div>
+
+    <div class="page-actions">
+        <button class="cancel-btn">Cancel</button>
+        <button class="save-btn">Save Changes</button>
+    </div>
+</div>
+<script src="../../js/user-profile.js"></script>

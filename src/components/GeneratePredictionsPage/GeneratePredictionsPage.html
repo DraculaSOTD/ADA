@@ -1,0 +1,228 @@
+<div class="generate-predictions-container">
+    <div class="finalization-page">
+        <div class="page-header">
+            <h1 class="page-title">Model Editor:</h1>
+            <div class="model-selector-container">
+                <div class="custom-dropdown">
+                    <input type="text" id="model-search" class="model-search" placeholder="Search or select a model...">
+                    <div id="model-options" class="model-options" style="display: none;">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="model-name">Model Name:</label>
+                    <input type="text" id="model-name" placeholder="TextField">
+                </div>
+                <div class="form-group large-input">
+                    <label for="model-description">Model Description:</label>
+                    <textarea id="model-description" placeholder="TextField"></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="model-function">Model Function:</label>
+                    <input type="text" id="model-function" placeholder="TextField">
+                </div>
+                <div class="form-group">
+                    <label for="epoch">Epoch:</label>
+                    <input type="text" id="epoch" placeholder="TextField">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="hidden-layers">Hidden Layers:</label>
+                    <input type="text" id="hidden-layers" placeholder="TextField">
+                </div>
+                <div class="form-group">
+                    <label for="batch-size">Batch size:</label>
+                    <input type="text" id="batch-size" placeholder="TextField">
+                </div>
+            </div>
+        </div>
+
+        <div class="uploaded-data card">
+            <h3>Upload Data:</h3>
+            <div class="data-row">
+                <input type="file" id="csv-upload" accept=".csv" style="display: none;">
+                <label for="csv-upload" class="upload-label">Choose File</label>
+                <span id="file-name">No file chosen</span>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <span id="upload-status"></span>
+                <span id="eta"></span>
+                <button id="upload-button" class="upload-button">Upload</button>
+            </div>
+        </div>
+
+        <div class="tagged-data card">
+            <h3>Tagged Data:</h3>
+            <div class="data-row-header">
+                <span>Train Value</span>
+                <span>Train Description</span>
+                <span>Predict Value</span>
+                <span>Predict Description</span>
+            </div>
+            <div class="data-row">
+                <select class="description-dropdown">
+                    <option>Train Value 1</option>
+                    <option>Train Value 2</option>
+                    <option>Train Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Predict Value 1</option>
+                    <option>Predict Value 2</option>
+                    <option>Predict Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+            </div>
+            <div class="data-row">
+                <select class="description-dropdown">
+                    <option>Train Value 1</option>
+                    <option>Train Value 2</option>
+                    <option>Train Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Predict Value 1</option>
+                    <option>Predict Value 2</option>
+                    <option>Predict Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+            </div>
+            <div class="data-row">
+                <select class="description-dropdown">
+                    <option>Train Value 1</option>
+                    <option>Train Value 2</option>
+                    <option>Train Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Predict Value 1</option>
+                    <option>Predict Value 2</option>
+                    <option>Predict Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+            </div>
+            <div class="data-row">
+                <select class="description-dropdown">
+                    <option>Train Value 1</option>
+                    <option>Train Value 2</option>
+                    <option>Train Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Predict Value 1</option>
+                    <option>Predict Value 2</option>
+                    <option>Predict Value 3</option>
+                </select>
+                <select class="description-dropdown">
+                    <option>Column 1</option>
+                    <option>Column 2</option>
+                    <option>Column 3</option>
+                </select>
+            </div>
+        </div>
+        <div class="tagged-data card">
+            <div class="data-row new-fields-row">
+                <span class="detail-label">Testing Data Size:</span>
+                <input type="number" class="detail-value" id="testing-data-size" placeholder="e.g., 20">
+                <select class="description-dropdown" id="testing-data-unit">
+                    <option value="percentage">%</option>
+                    <option value="rows">Rows</option>
+                </select>
+                <span class="detail-label">Testing Data From:</span>
+                <select class="description-dropdown" id="testing-data-from">
+                    <option value="random">Random</option>
+                    <option value="first">First</option>
+                    <option value="last">Last</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="model-history card">
+            <h3>Model History: <span class="info-icon"><i class="fas fa-info-circle"></i></span></h3>
+            <div class="history-controls">
+                <button class="minus-button">-</button>
+                <span>0</span>
+                <button class="plus-button">+</button>
+                <span>Versions</span>
+                <span class="cost">Cost: 100 tokens per month</span>
+            </div>
+        </div>
+
+        <div class="api-scheduler card">
+            <h3>API Scheduler: <span class="info-icon"><i class="fas fa-info-circle"></i></span></h3>
+            <div class="scheduler-controls">
+                <button class="minus-button">-</button>
+                <span class="api-calls-count">0</span>
+                <button class="plus-button">+</button>
+                <span>API Calls per Month</span>
+                <span class="cost">Cost: <span class="api-cost">0</span> tokens per month</span>
+            </div>
+            <div class="scheduler-info">
+                <p>Allows your business to send data to the model and receive responses automatically</p>
+                <p>Each API call processes your data through the trained model</p>
+                <p>Monthly increment based on your business requirements</p>
+            </div>
+        </div>
+
+        <div class="model-history card">
+            <h3>Cost: <span class="info-icon"><i class="fas fa-info-circle"></i></span></h3>
+            <div class="metrics">
+                <p>Accuracy: <span>75%</span></p>
+                <p>Data Quality: <span>60%</span></p>
+                <p>Model Complexity Score: <span>85%</span></p>
+                <p>Model Quality: <span>93%</span></p>
+                <p>Training Cost: <span>1000 tokens <i class="fas fa-coins"></i></span></p>
+                <p>Estimated ETA: <span>152 min</span></p>
+            </div>
+        </div>
+
+        <div class="disclaimer card">
+            <h3>Disclaimer:</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies ligula eget eros tristique accumsan. Duis diam velit, sagittis quis ipsum ut, tempor pharetra erat. Fusce a pretium tortor.</p>
+        </div>
+
+        <div class="page-actions">
+            <button class="back-button">Back</button>
+            <button class="finish-button">Finish</button>
+        </div>
+    </div>
+</div>

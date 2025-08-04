@@ -1,0 +1,92 @@
+.active-models-tab-content {
+    padding: var(--spacing-large);
+}
+
+.active-models-tab-content .info-banner {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-large);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    font-size: var(--font-size-small);
+}
+
+.active-models-tab-content .info-banner .info-icon {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.active-models-tab-content .model-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.scrollable-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 1em;
+}
+
+.active-models-tab-content .model-card {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+}
+
+.active-models-tab-content .model-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-medium);
+}
+
+.active-models-tab-content .model-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--primary-color-dark);
+}
+
+.active-models-tab-content .person-published {
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.active-models-tab-content .model-actions {
+    display: flex;
+    gap: var(--spacing-medium);
+}
+
+.active-models-tab-content .action-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    line-height: 1;
+    transition: background-color 0.2s ease;
+}
+
+.active-models-tab-content .action-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.active-models-tab-content .model-details p {
+    margin: var(--spacing-small) 0;
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.active-models-tab-content .model-details .detail-value {
+    font-weight: normal;
+    color: var(--text-color);
+}

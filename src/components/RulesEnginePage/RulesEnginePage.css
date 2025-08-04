@@ -1,0 +1,97 @@
+.rules-engine-page {
+    padding: var(--spacing-large);
+}
+
+.rules-engine-page .page-header {
+    margin-bottom: var(--spacing-large);
+}
+
+.rules-engine-page .page-title {
+    font-size: var(--font-size-large);
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+}
+
+.rules-engine-page .info-banner {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-large);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+}
+
+.rules-engine-page .info-icon {
+    font-size: 1.2em;
+}
+
+.rules-engine-page .rules-container {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.rule {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
+    padding: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.rule input,
+.rule select {
+    padding: var(--spacing-small);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.rule .delete-rule-button {
+    background: none;
+    color: var(--error-color);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rules-engine-page .auth-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    margin-top: var(--spacing-small);
+}
+
+.rules-engine-page .auth-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.total-tokens-container {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+    text-align: right;
+    font-size: var(--font-size-large);
+    font-weight: bold;
+    color: var(--primary-color-dark);
+}
+
+.copyright {
+    text-align: center;
+    color: var(--text-color);
+    font-size: var(--font-size-small);
+    margin-bottom: 0px;
+}

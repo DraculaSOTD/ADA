@@ -1,0 +1,45 @@
+.dashboard-page {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-body {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+    max-height: 90vh;
+
+}
+
+.dashboard-main-area {
+    flex: 3; /* Takes up more space */
+    background-color: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-light);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-sidebar {
+    flex: 1; /* Takes up less space */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.dashboard-title {
+    font-size: 2em;
+    color: var(--dark-purple);
+    margin-bottom: 20px;
+}
+
+.copyright {
+    text-align: center;
+    color: var(--text-color);
+    font-size: var(--font-size-small);
+    margin-bottom: 0px;
+}

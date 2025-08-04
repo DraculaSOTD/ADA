@@ -1,0 +1,72 @@
+.model-performance-card {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+}
+
+.model-performance-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-medium);
+}
+
+.model-performance-card h3 {
+    font-size: 1.2em;
+    color: var(--primary-color-dark);
+    margin: 0;
+}
+
+.model-performance-card .refresh-button {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.model-performance-card .refresh-button:hover {
+    color: var(--primary-color);
+}
+
+.performance-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.performance-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+}
+
+.performance-item .model-name {
+    flex-basis: 40%;
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.performance-item .progress-bar-container {
+    flex-grow: 1;
+    height: 8px;
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.performance-item .progress-bar {
+    height: 100%;
+    background-color: var(--success-color); /* Green for progress */
+    border-radius: var(--border-radius);
+}
+
+.performance-item .percentage {
+    flex-basis: 15%;
+    text-align: right;
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    color: var(--primary-color-dark);
+}

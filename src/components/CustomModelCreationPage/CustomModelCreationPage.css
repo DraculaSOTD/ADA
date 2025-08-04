@@ -1,0 +1,156 @@
+.custom-model-creation-container {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.custom-model-creation-page {
+    padding: var(--spacing-large);
+}
+
+.custom-model-creation-page .page-header {
+    margin-bottom: var(--spacing-large);
+}
+
+.custom-model-creation-page .page-title {
+    font-size: var(--font-size-large);
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+}
+
+.custom-model-creation-page .info-banner {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-large);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    font-size: var(--font-size-small);
+}
+
+.custom-model-creation-page .info-banner .info-icon {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.form-section {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.form-row {
+    display: flex;
+    gap: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 250px; /* Minimum width for form groups */
+}
+
+.form-group.large-input {
+    flex: 2; /* Take more space for larger inputs like textareas */
+    min-width: 350px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-small);
+    font-size: 0.95em;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    width: 100%;
+    min-height: 40px; /* Ensure inputs have a minimum height */
+}
+
+.form-group textarea {
+    min-height: 80px; /* Larger min-height for textareas */
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.data-tags-container {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-medium);
+    background-color: var(--secondary-color);
+    min-height: 80px; /* Placeholder height */
+}
+
+.data-tags-container p {
+    margin: var(--spacing-small) 0;
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.number-input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-small);
+    background-color: var(--secondary-color);
+    justify-content: center;
+}
+
+.number-input-group button {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    border: none;
+    border-radius: var(--border-radius);
+    width: 30px;
+    height: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.number-input-group button:hover {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+}
+
+.number-input-group span {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.custom-model-creation-page .back-button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.custom-model-creation-page .back-button:hover {
+    background-color: var(--border-color);
+}
+
+.copyright {
+    text-align: center;
+    color: var(--text-color);
+    font-size: var(--font-size-small);
+    margin-bottom: 0px;
+}

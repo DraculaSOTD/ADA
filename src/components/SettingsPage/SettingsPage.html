@@ -1,0 +1,240 @@
+<div class="settings-page">
+    <div class="page-header">
+        <h1 class="page-title">Settings</h1>
+        <p class="page-subtitle">Manage your application preferences and configurations</p>
+    </div>
+    
+    <div class="settings-container">
+        <div class="general-settings card">
+            <h3>General Settings</h3>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Dark Mode</span>
+                        <span class="setting-description">Enable dark theme across the application</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="dark-mode">
+                        <label for="dark-mode" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Auto-save</span>
+                        <span class="setting-description">Automatically save your work every 5 minutes</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="auto-save" checked>
+                        <label for="auto-save" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Language</span>
+                        <span class="setting-description">Choose your preferred language</span>
+                    </div>
+                    <select class="setting-select" data-setting="language">
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="zh">Chinese</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Timezone</span>
+                        <span class="setting-description">Set your local timezone</span>
+                    </div>
+                    <select class="setting-select" data-setting="timezone">
+                        <option value="UTC">UTC</option>
+                        <option value="EST">Eastern Time</option>
+                        <option value="PST">Pacific Time</option>
+                        <option value="CET">Central European Time</option>
+                        <option value="JST">Japan Standard Time</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="notification-settings card">
+            <h3>Notification Settings</h3>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Email Notifications</span>
+                        <span class="setting-description">Receive updates via email</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="email-notifications" checked>
+                        <label for="email-notifications" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Model Completion Alerts</span>
+                        <span class="setting-description">Get notified when models finish training</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="model-alerts" checked>
+                        <label for="model-alerts" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">API Usage Warnings</span>
+                        <span class="setting-description">Alert when approaching API limits</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="api-warnings" checked>
+                        <label for="api-warnings" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Weekly Reports</span>
+                        <span class="setting-description">Receive weekly usage summaries</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="weekly-reports">
+                        <label for="weekly-reports" class="switch"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="privacy-settings card">
+            <h3>Privacy & Security</h3>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Data Analytics</span>
+                        <span class="setting-description">Allow anonymous usage analytics</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="analytics" checked>
+                        <label for="analytics" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Session Timeout</span>
+                        <span class="setting-description">Automatically log out after inactivity</span>
+                    </div>
+                    <select class="setting-select" data-setting="session-timeout">
+                        <option value="15">15 minutes</option>
+                        <option value="30" selected>30 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="120">2 hours</option>
+                        <option value="never">Never</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Data Retention</span>
+                        <span class="setting-description">How long to keep your data</span>
+                    </div>
+                    <select class="setting-select" data-setting="data-retention">
+                        <option value="30">30 days</option>
+                        <option value="90" selected>90 days</option>
+                        <option value="365">1 year</option>
+                        <option value="forever">Forever</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="api-settings card">
+            <h3>API Configuration</h3>
+            <div class="api-config">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">API Rate Limiting</span>
+                        <span class="setting-description">Enable rate limiting for API calls</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="rate-limiting" checked>
+                        <label for="rate-limiting" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="api-keys-section">
+                    <h4>API Keys</h4>
+                    <div class="api-key-item">
+                        <div class="key-info">
+                            <span class="key-name">Production Key</span>
+                            <span class="key-value">pk_live_••••••••••••••••••••</span>
+                        </div>
+                        <div class="key-actions">
+                            <button class="copy-key-btn"><i class="fas fa-copy"></i></button>
+                            <button class="regenerate-key-btn"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="api-key-item">
+                        <div class="key-info">
+                            <span class="key-name">Development Key</span>
+                            <span class="key-value">pk_dev_••••••••••••••••••••</span>
+                        </div>
+                        <div class="key-actions">
+                            <button class="copy-key-btn"><i class="fas fa-copy"></i></button>
+                            <button class="regenerate-key-btn"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    <button class="generate-key-btn">+ Generate New Key</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="advanced-settings card">
+            <h3>Advanced Settings</h3>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Debug Mode</span>
+                        <span class="setting-description">Enable detailed logging and debugging</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="debug-mode">
+                        <label for="debug-mode" class="switch"></label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-label">Cache Duration</span>
+                        <span class="setting-description">How long to cache API responses</span>
+                    </div>
+                    <select class="setting-select" data-setting="cache-duration">
+                        <option value="0">No cache</option>
+                        <option value="5" selected>5 minutes</option>
+                        <option value="15">15 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="60">1 hour</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="danger-zone">
+                <h4>Danger Zone</h4>
+                <div class="danger-actions">
+                    <button class="export-data-btn">Export All Data</button>
+                    <button class="delete-account-btn">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-actions">
+        <button class="reset-btn">Reset to Defaults</button>
+        <button class="save-settings-btn">Save Settings</button>
+    </div>
+</div>
+<script src="../../js/settings.js"></script>

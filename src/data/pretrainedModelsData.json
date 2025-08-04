@@ -1,0 +1,26 @@
+{
+    "models": [
+        {
+            "username": "DataPulseAI",
+            "postDescription": "Official model for natural language processing.",
+            "likes": 200,
+            "modelName": "NLP Core v2.1",
+            "modelDescription": "Advanced NLP model for text understanding and generation.",
+            "dataTrainedDescription": "Trained on a vast corpus of text data from various sources.",
+            "dataFields": "Text input",
+            "dropdownValue": "retrain",
+            "dropdownNumber": 50
+        },
+        {
+            "username": "DataPulseAI",
+            "postDescription": "Official model for time series forecasting.",
+            "likes": 120,
+            "modelName": "Time Series Predictor",
+            "modelDescription": "Predicts future values based on historical time series data.",
+            "dataTrainedDescription": "Trained on financial, weather, and sales data.",
+            "dataFields": "Time series data",
+            "dropdownValue": "new",
+            "dropdownNumber": 25
+        }
+    ]
+}

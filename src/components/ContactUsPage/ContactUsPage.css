@@ -1,0 +1,74 @@
+.contact-us-page {
+    padding: var(--spacing-large);
+    font-family: var(--font-family);
+}
+
+.page-header {
+    margin-bottom: var(--spacing-large);
+}
+
+.page-header h2 {
+    font-size: var(--font-size-large);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-medium);
+}
+
+.page-header p {
+    font-size: var(--font-size-medium);
+    color: var(--text-color);
+}
+
+.contact-form {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-large);
+    background-color: var(--background-color);
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: var(--shadow);
+}
+
+.input-group {
+    margin-bottom: var(--spacing-large);
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-small);
+}
+
+.input-group input[type="text"],
+.input-group input[type="email"],
+.input-group textarea {
+    width: 100%;
+    padding: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    font-size: var(--font-size-medium);
+}
+
+.input-group textarea {
+    resize: vertical;
+}
+
+.send-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-medium) var(--spacing-large);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: var(--font-size-medium);
+    display: block;
+    width: 100%;
+    max-width: 150px;
+    margin: 0 auto;
+    transition: background-color 0.2s ease;
+}
+
+.send-button:hover {
+    background-color: var(--primary-color-dark);
+}

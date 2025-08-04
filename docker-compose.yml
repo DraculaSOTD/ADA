@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:13
+    container_name: datapulse_db
+    env_file:
+      - ./backend/db.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

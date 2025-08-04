@@ -1,0 +1,109 @@
+.tokens-tab-content {
+    padding: var(--spacing-large);
+}
+
+.current-balance-section h2 {
+    font-size: 1.5em;
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+}
+
+.current-balance-section .balance-amount {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.balance-items {
+    margin-bottom: var(--spacing-large);
+}
+
+.balance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-medium);
+    background-color: var(--background-color);
+    box-shadow: var(--shadow);
+}
+
+.balance-item .item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.balance-item .item-name {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.balance-item .item-price,
+.balance-item .item-quantity {
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.balance-item .delete-item-btn {
+    background: none;
+    border: none;
+    color: var(--error-color);
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: var(--spacing-small);
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease;
+}
+
+.balance-item .delete-item-btn:hover {
+    background-color: var(--error-color-light);
+}
+
+.price-breakdown {
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-medium);
+    margin-top: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.price-breakdown .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-medium);
+    font-size: 0.95em;
+    color: var(--text-color);
+}
+
+.price-breakdown .total-row {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: var(--primary-color-dark);
+}
+
+.price-breakdown .total-amount {
+    font-size: 1.5em;
+    color: var(--primary-color);
+}
+
+.price-breakdown .info-icon {
+    font-size: 0.8em;
+    color: #999;
+    margin-left: 5px;
+    cursor: help;
+}
+
+.checkout-button {
+    width: 100%;
+    padding: var(--spacing-medium);
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    border-radius: var(--border-radius);
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.checkout-button:hover {
+    background-color: var(--primary-color-dark);
+}

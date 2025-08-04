@@ -1,0 +1,137 @@
+.in-progress-tab-content {
+    padding: var(--spacing-large);
+}
+
+.in-progress-tab-content .info-banner {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-large);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    font-size: var(--font-size-small);
+}
+
+.in-progress-tab-content .info-banner .info-icon {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.in-progress-tab-content .model-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.scrollable-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 1em;
+}
+
+.in-progress-tab-content .model-card {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+}
+
+.in-progress-tab-content .model-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-medium);
+}
+
+.in-progress-tab-content .model-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--primary-color-dark);
+}
+
+.in-progress-tab-content .model-value {
+    font-size: 1.1em;
+    color: var(--text-color);
+}
+
+.in-progress-tab-content .model-details p {
+    margin: var(--spacing-small) 0;
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.in-progress-tab-content .model-details .detail-value {
+    font-weight: normal;
+    color: var(--text-color);
+}
+
+.in-progress-tab-content .progress-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    margin-top: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+}
+
+.in-progress-tab-content .progress-label {
+    font-weight: bold;
+    font-size: var(--font-size-small);
+    color: var(--primary-color-dark);
+}
+
+.in-progress-tab-content .progress-bar-container {
+    flex-grow: 1;
+    height: 10px;
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.in-progress-tab-content .progress-bar {
+    height: 100%;
+    background-color: var(--primary-color); /* Purple for progress */
+    border-radius: var(--border-radius);
+}
+
+.in-progress-tab-content .percentage {
+    font-weight: bold;
+    color: var(--primary-color-dark);
+    font-size: var(--font-size-small);
+}
+
+.in-progress-tab-content .model-actions {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: var(--spacing-medium);
+    margin-top: var(--spacing-medium);
+}
+
+.in-progress-tab-content .pause-button,
+.in-progress-tab-content .cancel-button {
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.in-progress-tab-content .pause-button {
+    background-color: #ffc107; /* Yellow for pause */
+    color: var(--text-color);
+}
+
+.in-progress-tab-content .pause-button:hover {
+    background-color: #e0a800;
+}
+
+.in-progress-tab-content .cancel-button {
+    background-color: var(--error-color);
+    color: var(--text-color-light);
+}
+
+.in-progress-tab-content .cancel-button:hover {
+    background-color: #c82333;
+}

@@ -1,0 +1,148 @@
+.all-models-tab-content {
+    padding: var(--spacing-large);
+}
+
+.model-actions-buttons {
+    display: flex;
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+}
+
+.model-actions-buttons .add-model-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.model-actions-buttons .add-model-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.info-banner {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-large);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    font-size: var(--font-size-small);
+}
+
+.info-banner .info-icon {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.search-bar-container {
+    display: flex;
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+}
+
+.search-bar-container .search-input {
+    flex-grow: 1;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+}
+
+.search-bar-container .search-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    transition: background-color 0.2s ease;
+}
+
+.search-bar-container .search-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.model-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.scrollable-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 1em;
+    position: relative;
+    z-index: 1;
+}
+
+.model-card {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+    position: relative;
+}
+
+.model-card .model-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-medium);
+}
+
+.model-card .model-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--primary-color-dark);
+}
+
+.model-card .person-published {
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.model-card .add-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    line-height: 1;
+    transition: background-color 0.2s ease;
+}
+
+.model-card .add-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.model-card .model-details p {
+    margin: var(--spacing-small) 0;
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.model-card .model-details .detail-value {
+    font-weight: normal;
+    color: var(--text-color);
+}
+
+.remove-model-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    cursor: pointer;
+}

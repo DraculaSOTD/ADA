@@ -1,0 +1,420 @@
+.generate-predictions-container {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.finalization-page {
+    padding: var(--spacing-large);
+}
+
+.finalization-page .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-large);
+}
+
+.model-selector-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+}
+
+.model-selector {
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    min-width: 200px;
+}
+
+.create-new-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.create-new-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.finalization-page .page-title {
+    font-size: var(--font-size-large);
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+}
+
+.model-summary,
+.uploaded-data,
+.tagged-data,
+.model-history,
+.disclaimer {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.model-summary h3,
+.uploaded-data h3,
+.tagged-data h3,
+.model-history h3,
+.disclaimer h3 {
+    font-size: 1.2em;
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-medium);
+}
+
+.model-details-table,
+.tagged-data .data-row-header,
+.tagged-data .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-medium) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.uploaded-data .data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-medium);
+    padding: var(--spacing-medium) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.model-details-table .table-header,
+.tagged-data .data-row-header {
+    font-weight: bold;
+    color: var(--primary-color-dark);
+    background-color: var(--primary-color-light);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-medium);
+}
+
+.model-details-table .table-row,
+.uploaded-data .data-row,
+.tagged-data .data-row {
+    color: var(--text-color);
+    font-size: var(--font-size-small);
+}
+
+.tagged-data .data-row > *,
+.tagged-data .data-row-header > * {
+    flex: 1;
+    text-align: center;
+    padding: 0 var(--spacing-medium);
+    border-right: 1px solid var(--border-color);
+}
+
+.tagged-data .data-row > *:last-child,
+.tagged-data .data-row-header > *:last-child {
+    border-right: none;
+}
+
+.model-history .info-icon {
+    font-size: 0.8em;
+    color: #999;
+    margin-left: 5px;
+    cursor: help;
+}
+
+.history-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
+}
+
+.history-controls button {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    border: none;
+    border-radius: var(--border-radius);
+    width: 30px;
+    height: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.history-controls button:hover {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+}
+
+.history-controls span {
+    font-size: var(--font-size-medium);
+    color: var(--text-color);
+}
+
+.history-controls .cost {
+    margin-left: auto; /* Pushes cost to the right */
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.metrics p {
+    display: flex;
+    justify-content: space-between;
+    margin: var(--spacing-small) 0;
+    font-size: 0.95em;
+    color: var(--text-color);
+}
+
+.metrics p span {
+    font-weight: bold;
+    color: var(--primary-color-dark);
+}
+
+.disclaimer p {
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+.page-actions {
+    display: flex;
+    
+    margin-top: var(--spacing-large);
+}
+
+.page-actions .back-button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.page-actions .back-button:hover {
+    background-color: var(--border-color);
+}
+
+.page-actions .finish-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.page-actions .finish-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.model-detail-item .detail-value-list li {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.new-fields-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-medium) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.new-fields-row .detail-label {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.new-fields-row .description-dropdown,
+.new-fields-row .detail-value {
+    flex: 2;
+    margin: 0 var(--spacing-medium);
+}
+
+.form-section {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+}
+
+.form-row {
+    display: flex;
+    gap: var(--spacing-large);
+    margin-bottom: var(--spacing-large);
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 250px; /* Minimum width for form groups */
+}
+
+.form-group.large-input {
+    flex: 2; /* Take more space for larger inputs like textareas */
+    min-width: 350px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-small);
+    font-size: 0.95em;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    width: 100%;
+    min-height: 40px; /* Ensure inputs have a minimum height */
+}
+
+.form-group textarea {
+    min-height: 80px; /* Larger min-height for textareas */
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.data-tags-container {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-medium);
+    background-color: var(--secondary-color);
+    min-height: 80px; /* Placeholder height */
+}
+
+.data-tags-container p {
+    margin: var(--spacing-small) 0;
+    font-size: var(--font-size-small);
+    color: var(--text-color);
+}
+
+.number-input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-small);
+    background-color: var(--secondary-color);
+    justify-content: center;
+}
+
+.number-input-group button {
+    background-color: var(--primary-color-light);
+    color: var(--primary-color-dark);
+    border: none;
+    border-radius: var(--border-radius);
+    width: 30px;
+    height: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.number-input-group button:hover {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+}
+
+.number-input-group span {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.upload-label {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.upload-label:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.upload-button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    margin-left: auto;
+}
+
+.upload-button:hover {
+    background-color: var(--border-color);
+}
+
+.progress-container {
+    flex: 2;
+    background-color: var(--border-color);
+    border-radius: var(--border-radius);
+    margin: 0 var(--spacing-medium);
+}
+
+.progress-bar {
+    width: 0%;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius);
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.model-search {
+    width: 100%;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+}
+
+.model-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    max-height: 200px; /* Approx 8 items */
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.model-options div {
+    padding: var(--spacing-small) var(--spacing-medium);
+    cursor: pointer;
+}
+
+.model-options div:hover {
+    background-color: var(--primary-color-light);
+}
