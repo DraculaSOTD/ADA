@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, Text, Boolean
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from models.base import Base
+from core.db_types import JSONField
 
 class Rule(Base):
     __tablename__ = "rules"
@@ -9,11 +9,24 @@ class Rule(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     model_id = Column(Integer, ForeignKey("models.id"))
     rule_name = Column(Text)
-    logic_json = Column(JSONB)
+    description = Column(Text)
+    logic_json = Column(JSONField)
     token_cost = Column(Integer)
+    trigger_config = Column(JSONField, default={"type": "manual"})
+    input_schema = Column(JSONField, default={})
+    output_schema = Column(JSONField, default={})
+    is_active = Column(Boolean, default=True)
+    version = Column(Integer, default=1)
+    parent_rule_id = Column(Integer, ForeignKey("rules.id"))
+    execution_mode = Column(Text, default="sequential")
+    error_handling = Column(JSONField, default={"strategy": "stop", "maxRetries": 3})
+    linked_model_id = Column(Integer, ForeignKey("models.id"))
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="rules")
+    linked_model = relationship("Model", foreign_keys=[linked_model_id])
+    parent_rule = relationship("Rule", remote_side=[id])
+    executions = relationship("RuleExecution", back_populates="rule")
 
 class ModelVote(Base):
     __tablename__ = "model_votes"
@@ -46,3 +59,21 @@ class Notification(Base):
     timestamp = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="notifications")
+
+class RuleExecution(Base):
+    __tablename__ = "rule_executions"
+    id = Column(Integer, primary_key=True)
+    rule_id = Column(Integer, ForeignKey("rules.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    trigger_type = Column(Text)
+    input_data = Column(JSONField)
+    output_data = Column(JSONField)
+    status = Column(Text)
+    error_message = Column(Text)
+    execution_time_ms = Column(Integer)
+    token_cost = Column(Integer)
+    created_at = Column(DateTime, server_default=func.now())
+    completed_at = Column(DateTime)
+
+    rule = relationship("Rule", back_populates="executions")
+    user = relationship("User")

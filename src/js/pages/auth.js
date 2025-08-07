@@ -66,11 +66,13 @@ function setupAuthPage() {
                 body: formData
             });
 
-            if (data && data.access_token) {
+            if (data && data.error) {
+                alert(`Login failed: ${data.message}`);
+            } else if (data && data.access_token) {
                 localStorage.setItem('token', data.access_token);
                 loadPage('DashboardPage');
             } else {
-                alert('Login failed!');
+                alert('Login failed! Please check your credentials.');
             }
         });
     }

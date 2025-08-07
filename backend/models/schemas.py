@@ -104,21 +104,119 @@ class GeneratedData(GeneratedDataBase):
         orm_mode = True
 
 class RuleBase(BaseModel):
-    user_id: int
-    model_id: int
     rule_name: str
     logic_json: dict
     token_cost: int
 
 class RuleCreate(RuleBase):
-    pass
+    description: Optional[str] = None
+    model_id: Optional[int] = None
+    trigger_config: Optional[dict] = None
+    input_schema: Optional[dict] = None
+    output_schema: Optional[dict] = None
+    execution_mode: Optional[str] = "sequential"
+    error_handling: Optional[dict] = None
+    create_as_model: Optional[bool] = False
+    type: Optional[str] = None
+    visibility: Optional[str] = "private"
+    is_active: Optional[bool] = True
+
+class RuleUpdate(BaseModel):
+    rule_name: Optional[str] = None
+    description: Optional[str] = None
+    logic_json: Optional[dict] = None
+    trigger_config: Optional[dict] = None
+    input_schema: Optional[dict] = None
+    output_schema: Optional[dict] = None
+    execution_mode: Optional[str] = None
+    error_handling: Optional[dict] = None
+    is_active: Optional[bool] = None
+    token_cost: Optional[int] = None
 
 class Rule(RuleBase):
     id: int
+    user_id: int
+    model_id: Optional[int] = None
+    description: Optional[str] = None
+    trigger_config: Optional[dict] = None
+    input_schema: Optional[dict] = None
+    output_schema: Optional[dict] = None
+    is_active: bool
+    version: int
+    execution_mode: str
+    error_handling: Optional[dict] = None
+    linked_model_id: Optional[int] = None
     created_at: datetime
 
     class Config:
         orm_mode = True
+
+class RuleResponse(Rule):
+    pass
+
+class RuleListItem(BaseModel):
+    id: int
+    rule_name: str
+    description: Optional[str] = None
+    is_active: bool
+    trigger_type: Optional[str] = None
+    created_at: datetime
+    linked_model_id: Optional[int] = None
+
+    class Config:
+        orm_mode = True
+
+class RuleDetail(Rule):
+    pass
+
+class RuleExecutionRequest(BaseModel):
+    input_data: dict
+    trigger_type: Optional[str] = "manual"
+
+class RuleExecutionResponse(BaseModel):
+    execution_id: int
+    status: str
+    output_data: Optional[dict] = None
+    execution_time_ms: Optional[int] = None
+    token_cost: Optional[int] = None
+
+class RuleTestRequest(BaseModel):
+    test_data: dict
+
+class RuleTestResponse(BaseModel):
+    conditions_passed: bool
+    actions_to_execute: int
+    estimated_token_cost: int
+    test_output: dict
+    error: Optional[str] = None
+
+class RuleExecutionListItem(BaseModel):
+    id: int
+    trigger_type: str
+    status: str
+    error_message: Optional[str] = None
+    execution_time_ms: Optional[int] = None
+    token_cost: Optional[int] = None
+    created_at: datetime
+    completed_at: Optional[datetime] = None
+
+    class Config:
+        orm_mode = True
+
+class RuleModelListItem(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    type: str
+    visibility: str
+    status: str
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+class RuleCloneRequest(BaseModel):
+    new_name: str
 
 class TokenTransactionBase(BaseModel):
     user_id: int

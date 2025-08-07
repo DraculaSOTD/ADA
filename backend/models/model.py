@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, Text
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from models.base import Base
+from core.db_types import JSONField
 
 class Model(Base):
     __tablename__ = "models"
@@ -12,7 +12,7 @@ class Model(Base):
     type = Column(Text)
     visibility = Column(Text, default='private')
     status = Column(Text)
-    performance = Column(JSONB)
+    performance = Column(JSONField)
     retrain_from = Column(Integer, ForeignKey("models.id"))
     created_at = Column(DateTime, server_default=func.now())
 
@@ -28,7 +28,7 @@ class ModelSettings(Base):
     batch_size = Column(Integer)
     epochs = Column(Integer)
     function_type = Column(Text)
-    train_fields = Column(JSONB)
-    predict_fields = Column(JSONB)
+    train_fields = Column(JSONField)
+    predict_fields = Column(JSONField)
 
     model = relationship("Model", back_populates="settings")

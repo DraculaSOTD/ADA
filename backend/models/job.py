@@ -35,9 +35,11 @@ class GeneratedData(Base):
     description = Column(Text)
     rows = Column(Integer)
     columns = Column(Integer)
-    file_size = Column(Text)
+    file_size = Column(Integer)  # Changed to Integer for bytes
     token_cost = Column(Integer)
     file_path = Column(Text)
+    data_type = Column(Text, default="generated")  # New field
+    generation_config = Column(Text)  # New field to store JSON config
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="generated_data")

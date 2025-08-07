@@ -18,6 +18,13 @@ function renderModelCards(models, containerSelector) {
         } else if (model.name === 'DataPulse NLP Core') {
             username = 'DataPulse';
         }
+        // Add special styling for rules engines
+        const modelTypeLabel = model.type === 'rules_engine' ? ' <span style="background: #4CAF50; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75em;">Rules Engine</span>' : '';
+        const actionButtons = model.type === 'rules_engine' ? 
+            `<button class="action-button edit-rule-btn" data-rule-id="${model.id}"><i class="fas fa-edit"></i> Edit</button>
+             <button class="action-button execute-rule-btn" data-rule-id="${model.id}"><i class="fas fa-play"></i> Execute</button>` :
+            `<button class="action-button add-to-library-btn"><i class="fas fa-plus"></i></button>`;
+        
         modelCard.innerHTML = `
             <div class="model-header">
                 <span class="username">${username}</span>
@@ -30,12 +37,12 @@ function renderModelCards(models, containerSelector) {
                 </div>
             </div>
             <div class="model-details">
-                <p>Model Name: <span class="detail-value">${model.name}</span></p>
+                <p>Model Name: <span class="detail-value">${model.name}${modelTypeLabel}</span></p>
                 <p>Model Description: <span class="detail-value">${model.description}</span></p>
             </div>
             <div class="model-actions">
                 <span class="dropdown-number">${model.added_to_library || 0}</span>
-                <button class="action-button add-to-library-btn"><i class="fas fa-plus"></i></button>
+                ${actionButtons}
             </div>
         `;
         container.appendChild(modelCard);
@@ -64,6 +71,37 @@ function renderModelCards(models, containerSelector) {
             });
             // Refresh the view to show updated library counts
             loadAllModelsOverviewData();
+        });
+    });
+    
+    // Add event listeners for rules engine buttons
+    container.querySelectorAll('.edit-rule-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const ruleId = event.target.closest('button').dataset.ruleId;
+            // Redirect to rules engine edit page
+            window.location.hash = `#rules-engine?edit=${ruleId}`;
+        });
+    });
+    
+    container.querySelectorAll('.execute-rule-btn').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const ruleId = event.target.closest('button').dataset.ruleId;
+            // Show execution dialog or redirect to execution page
+            if (confirm('Execute this rule engine with test data?')) {
+                try {
+                    const result = await fetchAuthenticatedData(`/api/rules/${ruleId}/execute`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            input_data: { test: true },
+                            trigger_type: 'manual'
+                        })
+                    });
+                    alert(`Rule executed successfully!\n\nStatus: ${result.status}\nExecution Time: ${result.execution_time_ms}ms`);
+                } catch (error) {
+                    alert('Failed to execute rule: ' + error.message);
+                }
+            }
         });
     });
 }

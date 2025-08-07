@@ -37,7 +37,7 @@ source backend/venv/bin/activate
 
 # Install Python dependencies if needed
 echo -e "${GREEN}Checking Python dependencies...${NC}"
-if ! python -c "import fastapi" 2>/dev/null; then
+if ! python -c "import fastapi, pandas" 2>/dev/null; then
     echo "Installing Python dependencies..."
     pip install -r backend/requirements.txt
 fi

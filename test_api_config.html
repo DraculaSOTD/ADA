@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Configuration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f4f4f4; padding: 10px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>Rules Engine API Configuration Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+    
+    <script>
+        // Test the API configuration functionality
+        const testResults = document.getElementById('test-results');
+        
+        // Mock rule data with API configuration
+        const ruleData = {
+            name: 'Test Rule with API Config',
+            description: 'Testing API input/output configuration',
+            apiConfig: {
+                inputs: {
+                    webhook: {
+                        enabled: true,
+                        url: '',
+                        token: '',
+                        auth: { type: 'bearer', config: { token: 'test-token-123' } }
+                    },
+                    schema: [
+                        { id: 'field1', name: 'userId', type: 'string', required: true, default: '' },
+                        { id: 'field2', name: 'amount', type: 'number', required: true, default: '100' },
+                        { id: 'field3', name: 'isActive', type: 'boolean', required: false, default: 'true' }
+                    ],
+                    mapping: {}
+                },
+                outputs: [
+                    {
+                        id: 'output1',
+                        type: 'webhook',
+                        name: 'Payment Processor',
+                        config: {
+                            url: 'https://api.payment.com/process',
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            auth: { type: 'api_key', key: 'pk_test_123' }
+                        },
+                        timing: 'immediate',
+                        mapping: {}
+                    },
+                    {
+                        id: 'output2',
+                        type: 'database',
+                        name: 'Transaction Log',
+                        config: {
+                            table: 'transactions',
+                            operation: 'insert'
+                        },
+                        timing: 'immediate',
+                        mapping: {}
+                    }
+                ]
+            }
+        };
+        
+        // Test functions
+        function testWebhookGeneration() {
+            const token = Math.random().toString(36).substring(2, 15);
+            const webhookUrl = `${window.location.origin}/api/rules/webhook/test-rule/${token}`;
+            return {
+                success: true,
+                message: 'Webhook URL generated successfully',
+                data: { url: webhookUrl, token: token }
+            };
+        }
+        
+        function testSamplePayloadGeneration(schema) {
+            const payload = {};
+            schema.forEach(field => {
+                switch (field.type) {
+                    case 'string':
+                        payload[field.name] = field.default || 'sample string';
+                        break;
+                    case 'number':
+                        payload[field.name] = field.default ? parseFloat(field.default) : 123;
+                        break;
+                    case 'boolean':
+                        payload[field.name] = field.default === 'true';
+                        break;
+                }
+            });
+            return {
+                success: true,
+                message: 'Sample payload generated successfully',
+                data: payload
+            };
+        }
+        
+        function testTokenCostCalculation(apiConfig) {
+            let cost = 0;
+            if (apiConfig.inputs.webhook.enabled) cost += 150;
+            cost += apiConfig.inputs.schema.length * 20;
+            cost += apiConfig.outputs.length * 100;
+            return {
+                success: true,
+                message: 'Token cost calculated successfully',
+                data: { cost: cost }
+            };
+        }
+        
+        // Run tests
+        const tests = [
+            { name: 'Webhook URL Generation', fn: () => testWebhookGeneration() },
+            { name: 'Sample Payload Generation', fn: () => testSamplePayloadGeneration(ruleData.apiConfig.inputs.schema) },
+            { name: 'Token Cost Calculation', fn: () => testTokenCostCalculation(ruleData.apiConfig) }
+        ];
+        
+        let html = '';
+        tests.forEach(test => {
+            const result = test.fn();
+            html += `
+                <div class="test-section">
+                    <h3>${test.name}</h3>
+                    <p class="${result.success ? 'success' : 'error'}">
+                        ${result.success ? '✓' : '✗'} ${result.message}
+                    </p>
+                    ${result.data ? `<pre>${JSON.stringify(result.data, null, 2)}</pre>` : ''}
+                </div>
+            `;
+        });
+        
+        // Show rule configuration
+        html += `
+            <div class="test-section">
+                <h3>Rule Configuration</h3>
+                <pre>${JSON.stringify(ruleData, null, 2)}</pre>
+            </div>
+        `;
+        
+        testResults.innerHTML = html;
+    </script>
+</body>
+</html>

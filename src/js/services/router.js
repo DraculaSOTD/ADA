@@ -5,7 +5,9 @@ import { setupAllModelsPage } from '../pages/all-models.js';
 import { setupCustomModelCreationPage } from '../pages/custom-model-creation.js';
 import { setupGeneratePredictionsPage } from '../pages/generate-predictions.js';
 import { setupDataGenerator } from '../pages/data-generator.js';
-import { setupRulesEngine } from '../pages/rules-engine.js';
+import { setupAdvancedRulesEngine } from '../pages/rules-engine-advanced.js';
+import { setupRulesList } from '../pages/rules-list.js';
+import { setupRuleHistory } from '../pages/rule-history.js';
 import { setupSettingsPage } from '../pages/settings.js';
 import { setupUserProfilePage } from '../pages/user-profile.js';
 import { setupContactUsPage } from '../pages/contact-us.js';
@@ -43,9 +45,19 @@ const routes = {
         setup: setupDataGenerator
     },
     'RulesEnginePage': {
-        component: 'RulesEnginePage',
-        css: 'src/components/RulesEnginePage/RulesEnginePage.css',
-        setup: setupRulesEngine
+        component: 'RulesEnginePage/RulesEnginePageAdvanced',
+        css: 'src/components/RulesEnginePage/RulesEnginePageAdvanced_enhanced.css',
+        setup: setupAdvancedRulesEngine
+    },
+    'RulesListPage': {
+        component: 'RulesListPage',
+        css: 'src/components/RulesListPage/RulesListPage.css',
+        setup: setupRulesList
+    },
+    'RuleHistoryPage': {
+        component: 'RuleHistoryPage',
+        css: 'src/components/RuleHistoryPage/RuleHistoryPage.css',
+        setup: setupRuleHistory
     },
     'SettingsPage': {
         component: 'SettingsPage',

@@ -75,13 +75,24 @@ async function loadModelPerformanceData() {
             const performance = model.performance && model.performance.accuracy ? model.performance.accuracy * 100 : 0;
             const itemDiv = document.createElement('div');
             itemDiv.classList.add('performance-item');
-            itemDiv.innerHTML = `
-                <span class="model-name">${model.name}</span>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${performance}%;"></div>
-                </div>
-                <span class="percentage">${performance.toFixed(0)}%</span>
-            `;
+            // Special handling for rules engines
+            if (model.type === 'rules_engine') {
+                itemDiv.innerHTML = `
+                    <span class="model-name">${model.name} <span style="font-size: 0.75em; color: #666;">[Rules Engine]</span></span>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%; background-color: #4CAF50;"></div>
+                    </div>
+                    <span class="percentage">Active</span>
+                `;
+            } else {
+                itemDiv.innerHTML = `
+                    <span class="model-name">${model.name}</span>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${performance}%;"></div>
+                    </div>
+                    <span class="percentage">${performance.toFixed(0)}%</span>
+                `;
+            }
             performanceList.appendChild(itemDiv);
         });
     }

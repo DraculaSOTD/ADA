@@ -1,51 +1,255 @@
 <div class="data-generator-page">
     <div class="page-header">
-        <h1 class="page-title">Data Generator:</h1>
+        <h1 class="page-title">Advanced Data Generator</h1>
     </div>
     <div class="info-banner">
         <span class="info-icon"><i class="fas fa-info-circle"></i></span>
-        This is an explanation field
+        <div>
+            <strong>Generate synthetic data based on patterns</strong> - Upload sample data and we'll analyze patterns to generate similar rows
+        </div>
     </div>
-    <div class="form-section card">
-        <div class="form-row">
-            <div class="form-group">
-                <label for="instance-name">Instance Name:</label>
-                <input type="text" id="instance-name" placeholder="Enter a name for this data instance">
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <button class="tab-button active" data-tab="upload">
+            <i class="fas fa-upload"></i> Upload & Analyze
+        </button>
+        <button class="tab-button" data-tab="manual">
+            <i class="fas fa-edit"></i> Manual Configuration
+        </button>
+        <button class="tab-button" data-tab="history">
+            <i class="fas fa-history"></i> Generation History
+        </button>
+    </div>
+
+    <!-- Upload Tab -->
+    <div id="upload-tab" class="tab-content active">
+        <div class="form-section card">
+            <h2>Upload Sample Data</h2>
+            
+            <!-- File Upload Area -->
+            <div class="upload-area" id="upload-area">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <h3>Drag & Drop your file here</h3>
+                <p>or</p>
+                <button class="browse-button">Browse Files</button>
+                <input type="file" id="file-input" accept=".csv,.json,.xlsx,.xls" style="display: none;">
+                <p class="file-types">Supported formats: CSV, JSON, Excel</p>
             </div>
-            <div class="form-group large-input">
-                <label for="instance-description">Instance Description:</label>
-                <textarea id="instance-description" placeholder="Enter a description for this data instance"></textarea>
+
+            <!-- File Preview -->
+            <div id="file-preview" class="file-preview" style="display: none;">
+                <div class="file-info">
+                    <i class="fas fa-file-csv file-icon"></i>
+                    <div>
+                        <p class="file-name"></p>
+                        <p class="file-size"></p>
+                    </div>
+                    <button class="remove-file"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <!-- Pattern Analysis Results -->
+            <div id="analysis-results" class="analysis-results" style="display: none;">
+                <h3>Pattern Analysis Results</h3>
+                <div class="analysis-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Analyzing patterns...
+                </div>
+                <div class="analysis-content" style="display: none;">
+                    <div class="data-preview">
+                        <h4>Data Preview</h4>
+                        <div class="table-container">
+                            <table id="preview-table"></table>
+                        </div>
+                    </div>
+                    
+                    <div class="column-patterns">
+                        <h4>Detected Patterns</h4>
+                        <div id="patterns-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generation Configuration -->
+            <div id="generation-config" class="generation-config" style="display: none;">
+                <h3>Generation Configuration</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gen-rows">Number of Rows to Generate:</label>
+                        <input type="number" id="gen-rows" value="1000" min="1" max="1000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="gen-format">Output Format:</label>
+                        <select id="gen-format">
+                            <option value="csv">CSV</option>
+                            <option value="json">JSON</option>
+                            <option value="excel">Excel</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="advanced-options">
+                    <h4>Advanced Options</h4>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="preserve-relationships"> Preserve column relationships
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="include-outliers"> Include outliers (5%)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="add-missing"> Add missing values (3%)
+                    </label>
+                </div>
+                
+                <div class="generation-summary">
+                    <div class="summary-item">
+                        <span>Estimated File Size:</span>
+                        <span id="gen-file-size">0 KB</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Estimated Generation Time:</span>
+                        <span id="gen-time">&lt; 1 second</span>
+                    </div>
+                </div>
+                
+                <button id="generate-from-pattern" class="auth-button">
+                    <i class="fas fa-magic"></i> Generate Data
+                </button>
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="data-type">Data Type:</label>
-                <select id="data-type">
-                    <option value="people">People Data (for clustering)</option>
-                    <option value="linear">Numbered Data (for linear models)</option>
-                </select>
+    </div>
+
+    <!-- Manual Tab -->
+    <div id="manual-tab" class="tab-content">
+        <div class="form-section card">
+            <h2>Manual Data Configuration</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="instance-name">Dataset Name:</label>
+                    <input type="text" id="instance-name" placeholder="Enter a name for this dataset">
+                </div>
+                <div class="form-group large-input">
+                    <label for="instance-description">Description:</label>
+                    <textarea id="instance-description" placeholder="Describe your dataset"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="data-type">Data Type:</label>
+                    <select id="data-type">
+                        <option value="people">People Data (names, demographics)</option>
+                        <option value="numeric">Numeric Data (measurements, values)</option>
+                        <option value="timeseries">Time Series Data</option>
+                        <option value="categorical">Categorical Data</option>
+                        <option value="mixed">Mixed Types</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Column Configuration -->
+            <div class="column-config">
+                <h3>Column Configuration</h3>
+                <div id="columns-container">
+                    <div class="column-item">
+                        <input type="text" placeholder="Column name" class="column-name">
+                        <select class="column-type">
+                            <option value="string">Text</option>
+                            <option value="integer">Integer</option>
+                            <option value="float">Decimal</option>
+                            <option value="date">Date</option>
+                            <option value="boolean">Boolean</option>
+                            <option value="category">Category</option>
+                        </select>
+                        <button class="remove-column"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <button id="add-column" class="secondary-button">
+                    <i class="fas fa-plus"></i> Add Column
+                </button>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="manual-rows">Number of Rows:</label>
+                    <input type="number" id="manual-rows" value="1000" min="1" max="1000000">
+                </div>
+                <div class="form-group">
+                    <label for="manual-format">Output Format:</label>
+                    <select id="manual-format">
+                        <option value="csv">CSV</option>
+                        <option value="json">JSON</option>
+                        <option value="excel">Excel</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Estimated File Size:</label>
+                    <span id="manual-file-size">0 KB</span>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Generation Time:</label>
+                    <span id="manual-gen-time">&lt; 1 second</span>
+                </div>
+            </div>
+            
+            <button id="generate-manual" class="auth-button">
+                <i class="fas fa-cogs"></i> Generate Data
+            </button>
+        </div>
+    </div>
+
+    <!-- History Tab -->
+    <div id="history-tab" class="tab-content">
+        <div class="history-section card">
+            <h2>Generation History</h2>
+            <div id="history-container" class="history-container">
+                <div class="empty-state">
+                    <i class="fas fa-history"></i>
+                    <p>No data generated yet</p>
+                </div>
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="rows">Number of Rows:</label>
-                <input type="number" id="rows" value="1000">
+    </div>
+
+    <!-- Generation Progress Modal -->
+    <div id="progress-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Generating Data...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
             </div>
-            <div class="form-group">
-                <label for="columns">Number of Columns:</label>
-                <input type="number" id="columns" value="10">
+            <p class="progress-text">Initializing...</p>
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <span>Rows Generated:</span>
+                    <span id="rows-generated">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Time Elapsed:</span>
+                    <span id="time-elapsed">0s</span>
+                </div>
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Estimated File Size:</label>
-                <span id="file-size">0 KB</span>
-            </div>
-            <div class="form-group">
-                <label>Estimated Token Cost:</label>
-                <span id="token-cost">0</span>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal" style="display: none;">
+        <div class="modal-content success">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h3>Data Generated Successfully!</h3>
+            <p class="success-message"></p>
+            <div class="modal-actions">
+                <button id="download-data" class="auth-button">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button id="preview-data" class="secondary-button">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+                <button class="close-modal">Close</button>
             </div>
         </div>
-        <button id="generate-button" class="auth-button">Generate Data</button>
     </div>
 </div>

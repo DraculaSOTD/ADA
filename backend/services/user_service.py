@@ -24,12 +24,17 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 def authenticate_user(db: Session, email: str, password: str):
-    user = get_user_by_email(db, email)
-    if not user:
+    try:
+        user = get_user_by_email(db, email)
+        if not user:
+            return False
+        if not security.verify_password(password, user.password_hash):
+            return False
+        return user
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Authentication error: {str(e)}")
         return False
-    if not security.verify_password(password, user.password_hash):
-        return False
-    return user
 
 def get_user_profile(db: Session, user_id: int):
     return db.query(UserProfile).filter(UserProfile.user_id == user_id).first()

@@ -1,0 +1,128 @@
+<!-- Link to Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="rules-engine-page-advanced">
+    <div class="page-header">
+        <h1 class="page-title">Advanced Rules Engine</h1>
+        <div class="header-controls">
+            <div class="form-group">
+                <label for="rule-name">Rule Name:</label>
+                <input type="text" id="rule-name" placeholder="Enter rule name" class="form-control">
+                <small>Give your rule a descriptive name</small>
+            </div>
+            <div class="form-group">
+                <label for="rule-description">Description:</label>
+                <textarea id="rule-description" placeholder="Describe what this rule does" class="form-control" rows="2"></textarea>
+                <small>Explain the purpose and behavior of this rule</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-banner">
+        <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+        <div>
+            <strong>Create sophisticated automation rules</strong> with conditional logic, model orchestration, and action pipelines
+            <div class="loading-dots" style="display: inline-block; margin-left: 0.5rem;">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trigger Configuration -->
+    <div class="card">
+        <div id="trigger-container"></div>
+    </div>
+
+    <!-- API Configuration -->
+    <div class="card">
+        <div class="api-config-section">
+            <h3>API Configuration</h3>
+            <div class="api-tabs">
+                <button class="tab-button active" data-tab="inputs">Input Configuration</button>
+                <button class="tab-button" data-tab="outputs">Output Configuration</button>
+            </div>
+            <div class="tab-content">
+                <div id="api-inputs-tab" class="tab-pane active">
+                    <div id="api-inputs-container"></div>
+                </div>
+                <div id="api-outputs-tab" class="tab-pane">
+                    <div id="api-outputs-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conditions Builder -->
+    <div class="card">
+        <div id="conditions-container"></div>
+    </div>
+
+    <!-- Actions Pipeline -->
+    <div class="card">
+        <div id="actions-container"></div>
+    </div>
+
+    <!-- Test Panel -->
+    <div class="card collapsed">
+        <div class="card-header" onclick="toggleTestPanel()">
+            <h3>Test Rule <i class="fas fa-chevron-down"></i></h3>
+        </div>
+        <div id="test-panel" class="test-panel"></div>
+    </div>
+
+    <!-- Rule Settings -->
+    <div class="card">
+        <div class="rule-settings">
+            <h3>Rule Settings</h3>
+            <div class="settings-grid">
+                <div class="form-group">
+                    <label>Execution Mode</label>
+                    <select id="execution-mode" class="form-control">
+                        <option value="" disabled selected>Choose execution mode</option>
+                        <option value="sequential">Sequential (one after another)</option>
+                        <option value="parallel">Parallel (simultaneous)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Error Handling</label>
+                    <select id="error-handling" class="form-control">
+                        <option value="" disabled selected>Choose error handling</option>
+                        <option value="stop">Stop on Error</option>
+                        <option value="continue">Continue on Error</option>
+                        <option value="retry">Retry Failed Actions</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Max Retries <span class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Number of retry attempts for failed actions</span></span></label>
+                    <input type="number" id="max-retries" class="form-control" value="3" min="0" max="10">
+                    <small>Set to 0 to disable retries</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Token Cost & Actions -->
+    <div class="bottom-section">
+        <div class="total-tokens-container card">
+            <span>Estimated Token Cost:</span>
+            <span id="total-token-cost" class="token-cost">0</span>
+        </div>
+        <div class="action-buttons">
+            <button id="test-rule-btn" class="btn btn-secondary" title="Test your rule configuration">
+                <i class="fas fa-play"></i> Test Rule
+            </button>
+            <button id="save-rule-btn" class="btn btn-primary" title="Save rule to database">
+                <i class="fas fa-save"></i> Save Rule Engine
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleTestPanel() {
+    const panel = document.querySelector('.card.collapsed');
+    panel.classList.toggle('expanded');
+}
+</script>

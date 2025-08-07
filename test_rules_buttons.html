@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Rules Engine Buttons</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        .success { color: green; }
+        .error { color: red; }
+        .button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Rules Engine Button Test</h1>
+    
+    <div class="test-section">
+        <h2>Button Click Tests</h2>
+        <button onclick="testAddCondition()" class="button">Test Add Condition</button>
+        <button onclick="testAddAction()" class="button">Test Add Action</button>
+        <button onclick="showRuleData()" class="button">Show Rule Data</button>
+        <div id="test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Rule Data Structure</h2>
+        <pre id="rule-data"></pre>
+    </div>
+    
+    <script>
+        // Simulate the rules engine data structure
+        const mockRuleData = {
+            conditions: {
+                id: 'root',
+                type: 'group',
+                operator: 'AND',
+                children: []
+            },
+            actions: []
+        };
+        
+        let conditionIdCounter = 0;
+        let actionIdCounter = 0;
+        
+        function testAddCondition() {
+            const newCondition = {
+                id: `condition_${conditionIdCounter++}`,
+                type: 'condition',
+                field: '',
+                operator: 'equals',
+                value: ''
+            };
+            
+            mockRuleData.conditions.children.push(newCondition);
+            
+            document.getElementById('test-results').innerHTML = `
+                <p class="success">✓ Condition added successfully!</p>
+                <p>New condition ID: ${newCondition.id}</p>
+                <p>Total conditions: ${mockRuleData.conditions.children.length}</p>
+            `;
+            
+            showRuleData();
+        }
+        
+        function testAddAction() {
+            const newAction = {
+                id: `action_${actionIdCounter++}`,
+                type: 'trigger_model',
+                config: {}
+            };
+            
+            mockRuleData.actions.push(newAction);
+            
+            document.getElementById('test-results').innerHTML = `
+                <p class="success">✓ Action added successfully!</p>
+                <p>New action ID: ${newAction.id}</p>
+                <p>Total actions: ${mockRuleData.actions.length}</p>
+            `;
+            
+            showRuleData();
+        }
+        
+        function showRuleData() {
+            document.getElementById('rule-data').textContent = JSON.stringify(mockRuleData, null, 2);
+        }
+        
+        // Show initial state
+        showRuleData();
+    </script>
+</body>
+</html>
