@@ -7,6 +7,7 @@ const hashToPage = {
     '#models': 'AllModelsPage',
     '#generate-predictions': 'GeneratePredictionsPage',
     '#data-generator': 'DataGeneratorPage',
+    '#data-cleaning': 'DataCleaningPage',
     '#rules-engine': 'RulesEnginePage',
     '#rules-list': 'RulesListPage',
     '#rule-history': 'RuleHistoryPage',

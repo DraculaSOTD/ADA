@@ -119,6 +119,38 @@ async function loadNotificationsAlertsData() {
     }
 }
 
+async function loadTokenUsageTracker() {
+    const trackerContainer = document.getElementById('tokenUsageTrackerContainer');
+    if (trackerContainer) {
+        // Load the TokenUsageTracker component
+        await loadComponent('TokenUsageTracker', '#tokenUsageTrackerContainer');
+        loadComponentCSS('src/components/TokenUsageTracker/TokenUsageTracker.css');
+        
+        // Check if script is already loaded
+        if (!window.TokenUsageTracker) {
+            // Load the JavaScript for the tracker
+            const script = document.createElement('script');
+            script.src = 'src/components/TokenUsageTracker/TokenUsageTracker.js';
+            script.onload = () => {
+                // Initialize the tracker after the script loads
+                if (!window.tokenUsageTracker) {
+                    window.tokenUsageTracker = new TokenUsageTracker();
+                }
+                window.tokenUsageTracker.initialize('tokenUsageTrackerContainer');
+            };
+            document.body.appendChild(script);
+        } else {
+            // Script already loaded, just re-initialize
+            if (window.tokenUsageTracker) {
+                window.tokenUsageTracker.destroy(); // Clean up previous instance
+            } else {
+                window.tokenUsageTracker = new TokenUsageTracker();
+            }
+            window.tokenUsageTracker.initialize('tokenUsageTrackerContainer');
+        }
+    }
+}
+
 async function loadAllModelsData() {
     const userModels = await fetchAuthenticatedData('/api/models/me');
 
@@ -253,6 +285,10 @@ async function setupDashboardPage() {
                     await loadComponent('TokensTabContent', '.tab-content');
                     loadComponentCSS('src/components/TokensTabContent/TokensTabContent.css');
                     loadTokensData();
+                    // Load TokenUsageTracker component
+                    await loadTokenUsageTracker();
+                    // Update quick stats
+                    updateTokenQuickStats();
                     break;
                 case 'my-models':
                     await loadComponent('AllModelsTabContent', '.tab-content');
@@ -279,6 +315,78 @@ async function setupDashboardPage() {
     loadModelPerformanceData();
     loadNotificationsAlertsData();
     loadAllModelsData();
+}
+
+function updateTokenQuickStats() {
+    // Wait for token tracker to be available
+    const checkInterval = setInterval(() => {
+        if (window.tokenUsageTracker) {
+            clearInterval(checkInterval);
+            const tracker = window.tokenUsageTracker;
+            
+            // Calculate average daily usage
+            const avgDaily = document.getElementById('avgDailyUsage');
+            if (avgDaily) {
+                const startDate = new Date(tracker.startDate || Date.now());
+                const daysPassed = Math.max(1, Math.ceil((Date.now() - startDate) / (1000 * 60 * 60 * 24)));
+                const avgUsage = Math.round(tracker.usedTokens / daysPassed);
+                avgDaily.textContent = tracker.formatNumber(avgUsage);
+            }
+            
+            // Calculate projected monthly usage
+            const projectedMonthly = document.getElementById('projectedMonthly');
+            if (projectedMonthly) {
+                const startDate = new Date(tracker.startDate || Date.now());
+                const daysPassed = Math.max(1, Math.ceil((Date.now() - startDate) / (1000 * 60 * 60 * 24)));
+                const avgUsage = tracker.usedTokens / daysPassed;
+                const projected = Math.round(avgUsage * 30);
+                projectedMonthly.textContent = tracker.formatNumber(projected);
+                
+                // Add color coding
+                if (projected > tracker.monthlyLimit) {
+                    projectedMonthly.classList.add('danger');
+                    projectedMonthly.classList.remove('warning', 'success');
+                } else if (projected > tracker.monthlyLimit * 0.8) {
+                    projectedMonthly.classList.add('warning');
+                    projectedMonthly.classList.remove('danger', 'success');
+                } else {
+                    projectedMonthly.classList.add('success');
+                    projectedMonthly.classList.remove('danger', 'warning');
+                }
+            }
+            
+            // Calculate days remaining
+            const daysRemaining = document.getElementById('daysRemaining');
+            if (daysRemaining) {
+                const now = new Date();
+                const renewalDate = new Date(tracker.renewalDate);
+                const days = Math.ceil((renewalDate - now) / (1000 * 60 * 60 * 24));
+                daysRemaining.textContent = days > 0 ? days : 0;
+            }
+            
+            // Update usage status
+            const usageStatus = document.getElementById('usageStatus');
+            if (usageStatus) {
+                const percentage = (tracker.usedTokens / tracker.monthlyLimit) * 100;
+                if (percentage >= 95) {
+                    usageStatus.textContent = 'Critical';
+                    usageStatus.classList.add('danger');
+                    usageStatus.classList.remove('warning', 'success');
+                } else if (percentage >= 80) {
+                    usageStatus.textContent = 'High';
+                    usageStatus.classList.add('warning');
+                    usageStatus.classList.remove('danger', 'success');
+                } else {
+                    usageStatus.textContent = 'Normal';
+                    usageStatus.classList.add('success');
+                    usageStatus.classList.remove('danger', 'warning');
+                }
+            }
+        }
+    }, 100);
+    
+    // Stop checking after 5 seconds
+    setTimeout(() => clearInterval(checkInterval), 5000);
 }
 
 export { setupDashboardPage };

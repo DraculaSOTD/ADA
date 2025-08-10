@@ -156,13 +156,25 @@ function handleSearch(event, models, containerSelector) {
 }
 
 async function setupAllModelsPage() {
+    // Wait a bit to ensure DOM is ready
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Check if container exists
+    const tabContent = document.querySelector('.all-models-page-container .tab-content');
+    if (!tabContent) {
+        console.error('AllModelsPage tab content container not found');
+        return;
+    }
+    
     // Initial tab content load for AllModelsPage (All Models Overview tab)
     await loadComponent('AllModelsPage/AllModelsOverviewTabContent', '.all-models-page-container .tab-content');
     loadComponentCSS('src/components/AllModelsPage/AllModelsPageTabs.css'); // Load shared CSS for model cards
     loadAllModelsOverviewData(); // Load data for the initial tab
 
     // Re-attach tab switching listener for AllModelsPage tabs
-    document.querySelector('.all-models-tabs-container').addEventListener('click', async (event) => {
+    const tabsContainer = document.querySelector('.all-models-tabs-container');
+    if (tabsContainer) {
+        tabsContainer.addEventListener('click', async (event) => {
         const target = event.target.closest('.tab-item');
         if (target) {
             const tabId = target.dataset.tab;
@@ -193,6 +205,7 @@ async function setupAllModelsPage() {
             }
         }
     });
+    } // End of if (tabsContainer)
 }
 
 export { setupAllModelsPage };

@@ -1,23 +1,76 @@
 <div class="tokens-tab-content">
-    <div class="current-balance-section">
-        <h2>Current Balance: <span class="balance-amount"></span></h2>
+    <!-- TokenUsageTracker Component -->
+    <div id="tokenUsageTrackerContainer">
+        <!-- TokenUsageTracker will be loaded here -->
+    </div>
+    
+    <!-- Quick Stats Section -->
+    <div class="quick-stats-section">
+        <h2>Usage Statistics</h2>
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="avgDailyUsage">0</span>
+                    <span class="stat-label">Avg. Daily Usage</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="projectedMonthly">0</span>
+                    <span class="stat-label">Projected Monthly</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="daysRemaining">30</span>
+                    <span class="stat-label">Days Until Renewal</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="usageStatus">Normal</span>
+                    <span class="stat-label">Usage Status</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="token-actions-section">
+        <button class="action-btn upgrade-btn" onclick="window.location.hash = '#/settings'; setTimeout(() => document.getElementById('upgradePlanBtn')?.click(), 100);">
+            <i class="fas fa-rocket"></i>
+            Upgrade Plan
+        </button>
+        <button class="action-btn buy-tokens-btn" onclick="alert('Token purchasing will be available soon!')">
+            <i class="fas fa-plus-circle"></i>
+            Buy More Tokens
+        </button>
+        <button class="action-btn view-pricing-btn" onclick="window.location.hash = '#settings'">
+            <i class="fas fa-cog"></i>
+            Manage Subscription
+        </button>
+    </div>
+    
+    <!-- Transaction History Section -->
+    <div class="transaction-history-section">
+        <h2>Recent Token Activity</h2>
         <div class="balance-items">
             <!-- Items will be loaded here by JavaScript -->
         </div>
-        <div class="price-breakdown">
-            <div class="breakdown-row">
-                <span>Base Price</span>
-                <span class="base-price"></span>
-            </div>
-            <div class="breakdown-row">
-                <span>Taxes</span>
-                <span class="taxes"></span>
-            </div>
-<div class="breakdown-row total-row">
-                <span>Total <i class="fas fa-info-circle info-icon"></i></span>
-                <span class="total-amount"></span>
-            </div>
-        </div>
-        <button class="checkout-button"></button>
     </div>
 </div>

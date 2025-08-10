@@ -1,0 +1,145 @@
+<!-- Data Preview Table Component -->
+<div class="data-preview-table">
+    <!-- Header Controls -->
+    <div class="preview-header">
+        <div class="preview-info">
+            <h3 class="preview-title">Data Preview</h3>
+            <div class="preview-stats">
+                <span class="stat-item">
+                    <i class="fas fa-table"></i> 
+                    <span id="totalRows">0</span> rows × <span id="totalColumns">0</span> columns
+                </span>
+                <span class="stat-item">
+                    <i class="fas fa-database"></i> 
+                    Size: <span id="dataSize">0 KB</span>
+                </span>
+            </div>
+        </div>
+        <div class="preview-controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search data..." class="search-input">
+            </div>
+            <button class="control-btn" id="toggleStatsBtn" title="Toggle Statistics">
+                <i class="fas fa-chart-bar"></i>
+            </button>
+            <button class="control-btn" id="exportBtn" title="Export Data">
+                <i class="fas fa-download"></i>
+            </button>
+            <button class="control-btn" id="fullscreenBtn" title="Fullscreen">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Column Statistics Panel (Hidden by default) -->
+    <div class="column-stats-panel" id="columnStatsPanel" style="display: none;">
+        <div class="stats-grid" id="statsGrid">
+            <!-- Column statistics will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Table Container with Virtual Scrolling -->
+    <div class="table-container" id="tableContainer">
+        <div class="table-viewport" id="tableViewport">
+            <table class="data-table" id="dataTable">
+                <thead id="tableHead">
+                    <!-- Headers will be dynamically added -->
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Virtual scrolling content will be added here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Scroll Indicators -->
+        <div class="scroll-indicator horizontal" id="horizontalScrollIndicator">
+            <i class="fas fa-chevron-left"></i>
+            Scroll horizontally
+            <i class="fas fa-chevron-right"></i>
+        </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="preview-footer">
+        <div class="footer-info">
+            <span id="visibleRange">Showing rows 1-50 of 1000</span>
+            <span class="separator">|</span>
+            <span id="selectedInfo">0 cells selected</span>
+        </div>
+        <div class="pagination-controls">
+            <button class="page-btn" id="firstPageBtn" title="First Page">
+                <i class="fas fa-angle-double-left"></i>
+            </button>
+            <button class="page-btn" id="prevPageBtn" title="Previous Page">
+                <i class="fas fa-angle-left"></i>
+            </button>
+            <span class="page-info">
+                Page <input type="number" id="currentPage" value="1" min="1" class="page-input"> 
+                of <span id="totalPages">1</span>
+            </span>
+            <button class="page-btn" id="nextPageBtn" title="Next Page">
+                <i class="fas fa-angle-right"></i>
+            </button>
+            <button class="page-btn" id="lastPageBtn" title="Last Page">
+                <i class="fas fa-angle-double-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="export-modal" id="exportModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Data</h3>
+                <button class="close-btn" id="closeExportModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <label class="export-option">
+                        <input type="radio" name="exportFormat" value="csv" checked>
+                        <span class="option-label">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </span>
+                    </label>
+                    <label class="export-option">
+                        <input type="radio" name="exportFormat" value="json">
+                        <span class="option-label">
+                            <i class="fas fa-file-code"></i> JSON
+                        </span>
+                    </label>
+                    <label class="export-option">
+                        <input type="radio" name="exportFormat" value="excel">
+                        <span class="option-label">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </span>
+                    </label>
+                    <label class="export-option">
+                        <input type="radio" name="exportFormat" value="parquet">
+                        <span class="option-label">
+                            <i class="fas fa-database"></i> Parquet
+                        </span>
+                    </label>
+                </div>
+                <div class="export-settings">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="exportHeaders" checked>
+                        Include headers
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="exportSelected">
+                        Export selected rows only
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" id="cancelExportBtn">Cancel</button>
+                <button class="btn primary" id="confirmExportBtn">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+<!-- Progress Monitor Component -->
+<div class="progress-monitor">
+    <!-- Header Section -->
+    <div class="progress-header">
+        <h3 class="progress-title" id="progressTitle">Processing...</h3>
+        <div class="progress-controls">
+            <button class="control-button pause-button" id="pauseButton" title="Pause">
+                <i class="fas fa-pause"></i>
+            </button>
+            <button class="control-button resume-button" id="resumeButton" style="display: none;" title="Resume">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="control-button cancel-button" id="cancelButton" title="Cancel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Bar Section -->
+    <div class="progress-bar-section">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-percentage" id="progressPercentage">0%</span>
+        </div>
+    </div>
+
+    <!-- Current Stage -->
+    <div class="current-stage">
+        <i class="fas fa-cog fa-spin stage-icon"></i>
+        <span class="stage-text" id="stageText">Initializing...</span>
+    </div>
+
+    <!-- Statistics Grid -->
+    <div class="progress-stats">
+        <div class="stat-item">
+            <i class="fas fa-database"></i>
+            <div class="stat-content">
+                <span class="stat-value" id="itemsProcessed">0</span>
+                <span class="stat-label">Items Processed</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-clock"></i>
+            <div class="stat-content">
+                <span class="stat-value" id="timeElapsed">00:00</span>
+                <span class="stat-label">Time Elapsed</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <div class="stat-content">
+                <span class="stat-value" id="processingSpeed">0</span>
+                <span class="stat-label">Items/sec</span>
+            </div>
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-hourglass-half"></i>
+            <div class="stat-content">
+                <span class="stat-value" id="timeRemaining">--:--</span>
+                <span class="stat-label">Est. Time Remaining</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Viewer (Collapsible) -->
+    <div class="log-section">
+        <div class="log-header" id="logHeader">
+            <i class="fas fa-chevron-down toggle-icon" id="logToggleIcon"></i>
+            <span>Processing Logs</span>
+            <span class="log-count" id="logCount">(0)</span>
+        </div>
+        <div class="log-viewer" id="logViewer" style="display: none;">
+            <div class="log-controls">
+                <button class="log-button" id="clearLogsButton">
+                    <i class="fas fa-eraser"></i> Clear
+                </button>
+                <button class="log-button" id="exportLogsButton">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <label class="log-filter">
+                    <input type="checkbox" id="autoScrollLogs" checked>
+                    Auto-scroll
+                </label>
+            </div>
+            <div class="log-content" id="logContent">
+                <!-- Logs will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Summary (Hidden by default) -->
+    <div class="progress-summary" id="progressSummary" style="display: none;">
+        <div class="summary-icon">
+            <i class="fas fa-check-circle" id="summaryIcon"></i>
+        </div>
+        <div class="summary-content">
+            <h4 id="summaryTitle">Operation Complete</h4>
+            <p id="summaryMessage">Successfully processed all items.</p>
+            <div class="summary-stats" id="summaryStats">
+                <!-- Summary statistics will be added here -->
+            </div>
+            <div class="summary-actions">
+                <button class="action-button" id="viewReportButton">
+                    <i class="fas fa-chart-bar"></i> View Report
+                </button>
+                <button class="action-button secondary" id="closeMonitorButton">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

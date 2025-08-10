@@ -1,0 +1,124 @@
+<!-- Industry Template Selector Component -->
+<div class="industry-template-selector">
+    <div class="selector-header">
+        <h3 class="selector-title">Select Industry Template</h3>
+        <p class="selector-subtitle">Choose a pre-configured template optimized for your industry</p>
+    </div>
+    
+    <div class="template-grid">
+        <!-- Healthcare Template -->
+        <div class="template-card" data-industry="healthcare">
+            <div class="template-icon">
+                <i class="fas fa-hospital"></i>
+            </div>
+            <h4 class="template-name">Healthcare</h4>
+            <p class="template-description">FHIR compliance, ICD-10 validation, PHI handling</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> HL7 format support</li>
+                <li><i class="fas fa-check"></i> Medical code validation</li>
+                <li><i class="fas fa-check"></i> HIPAA compliance checks</li>
+            </ul>
+            <button class="select-template-btn" data-industry="healthcare">
+                <i class="fas fa-check-circle"></i> Select Template
+            </button>
+        </div>
+
+        <!-- Finance Template -->
+        <div class="template-card" data-industry="finance">
+            <div class="template-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h4 class="template-name">Finance</h4>
+            <p class="template-description">AML compliance, fraud detection, SOX validation</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> Transaction validation</li>
+                <li><i class="fas fa-check"></i> Risk scoring models</li>
+                <li><i class="fas fa-check"></i> Regulatory reporting</li>
+            </ul>
+            <button class="select-template-btn" data-industry="finance">
+                <i class="fas fa-check-circle"></i> Select Template
+            </button>
+        </div>
+
+        <!-- Insurance Template -->
+        <div class="template-card" data-industry="insurance">
+            <div class="template-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h4 class="template-name">Insurance</h4>
+            <p class="template-description">Claims processing, actuarial models, risk assessment</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> Policy validation</li>
+                <li><i class="fas fa-check"></i> Claims fraud detection</li>
+                <li><i class="fas fa-check"></i> Actuarial calculations</li>
+            </ul>
+            <button class="select-template-btn" data-industry="insurance">
+                <i class="fas fa-check-circle"></i> Select Template
+            </button>
+        </div>
+
+        <!-- Retail Template -->
+        <div class="template-card" data-industry="retail">
+            <div class="template-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h4 class="template-name">Retail</h4>
+            <p class="template-description">Product catalogs, inventory management, customer analytics</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> SKU validation</li>
+                <li><i class="fas fa-check"></i> Inventory optimization</li>
+                <li><i class="fas fa-check"></i> Customer segmentation</li>
+            </ul>
+            <button class="select-template-btn" data-industry="retail">
+                <i class="fas fa-check-circle"></i> Select Template
+            </button>
+        </div>
+
+        <!-- Manufacturing Template -->
+        <div class="template-card" data-industry="manufacturing">
+            <div class="template-icon">
+                <i class="fas fa-industry"></i>
+            </div>
+            <h4 class="template-name">Manufacturing</h4>
+            <p class="template-description">Supply chain, quality control, production analytics</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> BOM validation</li>
+                <li><i class="fas fa-check"></i> Quality metrics</li>
+                <li><i class="fas fa-check"></i> Supply chain tracking</li>
+            </ul>
+            <button class="select-template-btn" data-industry="manufacturing">
+                <i class="fas fa-check-circle"></i> Select Template
+            </button>
+        </div>
+
+        <!-- Custom Template -->
+        <div class="template-card custom" data-industry="custom">
+            <div class="template-icon">
+                <i class="fas fa-cog"></i>
+            </div>
+            <h4 class="template-name">Custom</h4>
+            <p class="template-description">Build your own template from scratch</p>
+            <ul class="template-features">
+                <li><i class="fas fa-check"></i> Full customization</li>
+                <li><i class="fas fa-check"></i> Import/export configs</li>
+                <li><i class="fas fa-check"></i> Advanced settings</li>
+            </ul>
+            <button class="select-template-btn" data-industry="custom">
+                <i class="fas fa-wrench"></i> Customize
+            </button>
+        </div>
+    </div>
+
+    <!-- Selected Template Preview -->
+    <div class="selected-template-preview" id="selectedTemplatePreview" style="display: none;">
+        <div class="preview-header">
+            <h4>Selected Template: <span id="selectedTemplateName"></span></h4>
+            <button class="change-template-btn" id="changeTemplateBtn">
+                <i class="fas fa-exchange-alt"></i> Change Template
+            </button>
+        </div>
+        <div class="preview-content" id="previewContent">
+            <!-- Dynamic content will be loaded here -->
+        </div>
+    </div>
+</div>

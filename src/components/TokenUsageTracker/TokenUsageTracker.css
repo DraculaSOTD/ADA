@@ -1,0 +1,266 @@
+/* Token Usage Tracker Component Styles */
+.token-usage-tracker {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-large);
+}
+
+.token-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-large);
+}
+
+.token-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.token-buy-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    transition: all 0.3s ease;
+}
+
+.token-buy-button:hover {
+    background: var(--primary-color-dark);
+    transform: translateY(-2px);
+}
+
+.token-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-large);
+}
+
+/* Token Balance Section */
+.token-balance-section {
+    text-align: center;
+}
+
+.token-metric {
+    margin-bottom: var(--spacing-medium);
+}
+
+.token-metric-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.token-metric-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xsmall);
+}
+
+.token-progress {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.token-progress-bar {
+    height: 8px;
+    background: var(--secondary-color);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--spacing-small);
+}
+
+.token-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-color-dark) 100%);
+    transition: width 0.5s ease;
+}
+
+.token-progress-text {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Token Tier Section */
+.token-tier-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-medium);
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+}
+
+.current-tier {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}
+
+.tier-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.tier-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--primary-light);
+    color: var(--primary-color);
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.tier-badge.developer {
+    background: var(--success-color);
+    color: white;
+}
+
+.tier-badge.professional {
+    background: var(--primary-color);
+    color: white;
+}
+
+.tier-badge.business {
+    background: #8b5cf6;
+    color: white;
+}
+
+.tier-badge.enterprise {
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    color: white;
+}
+
+.renewal-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
+    margin-top: var(--spacing-small);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.renewal-info i {
+    color: var(--primary-color);
+}
+
+.upgrade-tier-button {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xsmall);
+    transition: all 0.3s ease;
+}
+
+.upgrade-tier-button:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Usage Breakdown */
+.token-usage-breakdown {
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-medium);
+}
+
+.token-usage-breakdown h4 {
+    margin: 0 0 var(--spacing-medium) 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.usage-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+}
+
+.usage-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.usage-label {
+    color: var(--text-secondary);
+}
+
+.usage-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Token Actions */
+.token-actions {
+    display: flex;
+    gap: var(--spacing-small);
+    margin-top: var(--spacing-medium);
+    padding-top: var(--spacing-medium);
+    border-top: 1px solid var(--border-color);
+}
+
+.token-action-button {
+    flex: 1;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-small);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xsmall);
+    transition: all 0.3s ease;
+}
+
+.token-action-button:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .token-usage-tracker {
+        padding: var(--spacing-medium);
+    }
+    
+    .token-metric-value {
+        font-size: 2rem;
+    }
+    
+    .token-actions {
+        flex-direction: column;
+    }
+    
+    .token-tier-section {
+        flex-direction: column;
+        gap: var(--spacing-small);
+        align-items: stretch;
+    }
+    
+    .upgrade-tier-button {
+        justify-content: center;
+    }
+}

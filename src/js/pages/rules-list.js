@@ -36,7 +36,13 @@ class RulesListManager {
     async loadExecutions() {
         try {
             const executions = await fetchAuthenticatedData('/api/rules/executions');
-            this.executions = executions || [];
+            // Ensure executions is an array
+            if (Array.isArray(executions)) {
+                this.executions = executions;
+            } else {
+                console.warn('Executions API returned non-array data:', executions);
+                this.executions = [];
+            }
         } catch (error) {
             console.error('Failed to load executions:', error);
             this.executions = [];
@@ -171,7 +177,12 @@ class RulesListManager {
         const activeRulesEl = document.getElementById('active-rules');
         if (activeRulesEl) activeRulesEl.textContent = activeRules;
 
-        // Total executions
+        // Total executions - ensure executions is an array
+        if (!Array.isArray(this.executions)) {
+            console.warn('this.executions is not an array, defaulting to empty array');
+            this.executions = [];
+        }
+        
         const totalExecutionsEl = document.getElementById('total-executions');
         if (totalExecutionsEl) totalExecutionsEl.textContent = this.executions.length;
 

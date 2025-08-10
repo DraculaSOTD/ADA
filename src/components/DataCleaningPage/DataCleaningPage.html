@@ -1,0 +1,203 @@
+<div class="data-cleaning-page">
+    <div class="page-header">
+        <h1 class="page-title">Advanced Data Cleaning Platform</h1>
+        <p class="page-subtitle">AI-powered data cleaning with industry-specific models and billion-row scalability</p>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="cleaning-tabs-container">
+        <div class="tabs-header">
+            <button class="tab-button active" data-tab="upload">
+                <i class="fas fa-upload"></i> Upload & Profile
+            </button>
+            <button class="tab-button" data-tab="configure">
+                <i class="fas fa-cog"></i> Configure Cleaning
+            </button>
+            <button class="tab-button" data-tab="workflow">
+                <i class="fas fa-project-diagram"></i> Workflow Builder
+            </button>
+            <button class="tab-button" data-tab="history">
+                <i class="fas fa-history"></i> Cleaning History
+            </button>
+        </div>
+
+        <!-- Upload & Profile Tab -->
+        <div class="tab-content active" id="uploadTab">
+            <div class="card">
+                <h2>Upload Your Data</h2>
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p>Drag and drop your files here or click to browse</p>
+                    <p class="upload-info">Supports CSV, Excel, JSON, Parquet • Up to 100GB with resumable upload</p>
+                    <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.xls,.json,.parquet" style="display: none;">
+                </div>
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p class="progress-text"><span id="progressPercent">0</span>% uploaded</p>
+                </div>
+            </div>
+
+            <!-- Data Profiling Results -->
+            <div class="card" id="profilingResults" style="display: none;">
+                <h2>Data Quality Profile</h2>
+                <div class="profile-summary">
+                    <div class="profile-stat">
+                        <i class="fas fa-database"></i>
+                        <div>
+                            <span class="stat-value" id="totalRows">0</span>
+                            <span class="stat-label">Total Rows</span>
+                        </div>
+                    </div>
+                    <div class="profile-stat">
+                        <i class="fas fa-columns"></i>
+                        <div>
+                            <span class="stat-value" id="totalColumns">0</span>
+                            <span class="stat-label">Columns</span>
+                        </div>
+                    </div>
+                    <div class="profile-stat quality-score">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <span class="stat-value" id="qualityScore">0%</span>
+                            <span class="stat-label">Quality Score</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="columnProfiles" class="column-profiles"></div>
+            </div>
+        </div>
+
+        <!-- Configure Cleaning Tab -->
+        <div class="tab-content" id="configureTab">
+            <!-- Industry Templates -->
+            <div class="card">
+                <div id="industryTemplateSelectorContainer">
+                    <!-- IndustryTemplateSelector component will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Cleaning Tiers -->
+            <div class="card">
+                <h2>Select Cleaning Level</h2>
+                <div class="cleaning-tiers">
+                    <div class="tier-card basic" data-tier="basic">
+                        <div class="tier-header">
+                            <h3>Basic Cleaning</h3>
+                            <span class="tier-cost">1 token/million rows</span>
+                        </div>
+                        <ul class="tier-features">
+                            <li><i class="fas fa-check"></i> Standard deduplication</li>
+                            <li><i class="fas fa-check"></i> Data type validation</li>
+                            <li><i class="fas fa-check"></i> Missing value handling</li>
+                            <li><i class="fas fa-check"></i> Format standardization</li>
+                        </ul>
+                        <button class="auth-button" onclick="dataCleaningPage.selectTier('basic')">Select Basic</button>
+                    </div>
+
+                    <div class="tier-card advanced" data-tier="advanced">
+                        <div class="tier-header">
+                            <h3>Advanced Cleaning</h3>
+                            <span class="tier-cost">3 tokens/million rows</span>
+                        </div>
+                        <ul class="tier-features">
+                            <li><i class="fas fa-check"></i> AI anomaly detection</li>
+                            <li><i class="fas fa-check"></i> Fuzzy matching (Jaro-Winkler)</li>
+                            <li><i class="fas fa-check"></i> Statistical outlier detection</li>
+                            <li><i class="fas fa-check"></i> Smart column mapping</li>
+                        </ul>
+                        <button class="auth-button" onclick="dataCleaningPage.selectTier('advanced')">Select Advanced</button>
+                    </div>
+
+                    <div class="tier-card ai-powered" data-tier="ai-powered">
+                        <div class="tier-header">
+                            <h3>AI-Powered Cleaning</h3>
+                            <span class="tier-cost">5 tokens/million rows</span>
+                        </div>
+                        <ul class="tier-features">
+                            <li><i class="fas fa-check"></i> GPT-4 data correction</li>
+                            <li><i class="fas fa-check"></i> Industry ML models</li>
+                            <li><i class="fas fa-check"></i> Predictive quality assessment</li>
+                            <li><i class="fas fa-check"></i> Synthetic data generation</li>
+                        </ul>
+                        <button class="auth-button" onclick="dataCleaningPage.selectTier('ai-powered')">Select AI-Powered</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cleaning Options -->
+            <div class="card" id="cleaningOptions" style="display: none;">
+                <h2>Cleaning Configuration</h2>
+                <div id="cleaningOptionsContent"></div>
+                <button class="auth-button" onclick="dataCleaningPage.startCleaning()">
+                    <i class="fas fa-magic"></i> Start Cleaning Process
+                </button>
+            </div>
+        </div>
+
+        <!-- Workflow Builder Tab -->
+        <div class="tab-content" id="workflowTab">
+            <div class="card">
+                <h2>Visual Workflow Builder</h2>
+                <div class="workflow-container">
+                    <div class="workflow-sidebar">
+                        <h3>Available Steps</h3>
+                        <div class="workflow-tools">
+                            <div class="workflow-tool" draggable="true" data-tool="dedupe">
+                                <i class="fas fa-copy"></i> Deduplication
+                            </div>
+                            <div class="workflow-tool" draggable="true" data-tool="validate">
+                                <i class="fas fa-check-circle"></i> Validation
+                            </div>
+                            <div class="workflow-tool" draggable="true" data-tool="transform">
+                                <i class="fas fa-exchange-alt"></i> Transform
+                            </div>
+                            <div class="workflow-tool" draggable="true" data-tool="ai-clean">
+                                <i class="fas fa-brain"></i> AI Cleaning
+                            </div>
+                            <div class="workflow-tool" draggable="true" data-tool="export">
+                                <i class="fas fa-download"></i> Export
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-canvas" id="workflowCanvas">
+                        <p class="workflow-placeholder">Drag tools here to build your workflow</p>
+                    </div>
+                </div>
+                <div class="workflow-actions">
+                    <button class="secondary-button" onclick="dataCleaningPage.saveWorkflow()">
+                        <i class="fas fa-save"></i> Save Workflow
+                    </button>
+                    <button class="auth-button" onclick="dataCleaningPage.runWorkflow()">
+                        <i class="fas fa-play"></i> Run Workflow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cleaning History Tab -->
+        <div class="tab-content" id="historyTab">
+            <div class="card">
+                <h2>Cleaning History</h2>
+                <div id="cleaningHistory" class="cleaning-history">
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <p>No cleaning jobs yet</p>
+                        <p class="empty-state-subtitle">Your cleaning history will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Monitor Modal -->
+    <div class="modal" id="processingModal">
+        <div class="modal-content">
+            <div id="progressMonitorContainer">
+                <!-- ProgressMonitor component will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+</div>

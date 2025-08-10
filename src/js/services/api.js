@@ -1,5 +1,10 @@
 async function fetchData(url, options = {}) {
     try {
+        console.log(`API Request: ${options.method || 'GET'} ${url}`);
+        if (options.body) {
+            console.log('Request body:', options.body);
+        }
+        
         const response = await fetch(url, options);
         const contentType = response.headers.get("content-type");
         const isJson = contentType && contentType.includes("application/json");
@@ -22,11 +27,28 @@ async function fetchData(url, options = {}) {
             
             // Handle specific error cases
             if (response.status === 401) {
-                // Unauthorized - clear token and redirect to login
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.hash = '#login';
-                throw new Error('Authentication failed. Please login again.');
+                // For login endpoint, don't redirect - just return the error
+                if (url.includes('/api/login')) {
+                    throw new Error(errorMessage);
+                }
+                
+                // Check if we just logged in (within last 5 seconds)
+                const loginTime = localStorage.getItem('loginTime');
+                const currentTime = Date.now();
+                const timeSinceLogin = loginTime ? currentTime - parseInt(loginTime) : Infinity;
+                
+                if (timeSinceLogin < 5000) {
+                    // Just logged in, might be a timing issue - don't clear token yet
+                    console.warn('401 error shortly after login, might be a timing issue');
+                    throw new Error('Authentication error - please try again');
+                } else {
+                    // Clear token and redirect to login
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('loginTime');
+                    window.location.hash = '#login';
+                    throw new Error('Authentication failed. Please login again.');
+                }
             }
             
             throw new Error(errorMessage);
@@ -42,12 +64,8 @@ async function fetchData(url, options = {}) {
     } catch (error) {
         console.error(`Failed to fetch data from ${url}:`, error);
         
-        // Return error details instead of null for better error handling
-        return {
-            error: true,
-            message: error.message || 'Network error occurred',
-            status: error.status
-        };
+        // Re-throw the error to let callers handle it
+        throw error;
     }
 }
 

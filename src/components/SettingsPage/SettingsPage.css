@@ -43,6 +43,330 @@
     padding-bottom: var(--spacing-small);
 }
 
+/* Subscription Settings */
+.subscription-settings {
+    background: white;
+}
+
+.subscription-overview {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--spacing-large);
+    margin-bottom: var(--spacing-xl);
+    align-items: center;
+}
+
+.current-plan {
+    background: var(--secondary-color);
+    padding: var(--spacing-large);
+    border-radius: var(--border-radius);
+}
+
+.plan-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
+}
+
+.plan-header h4 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.plan-badge {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: var(--primary-color);
+    color: white;
+}
+
+.plan-badge.developer {
+    background: var(--success-color);
+}
+
+.plan-badge.professional {
+    background: var(--primary-color);
+}
+
+.plan-badge.business {
+    background: #8b5cf6;
+}
+
+.plan-badge.enterprise {
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+}
+
+.plan-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+}
+
+.plan-feature {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.plan-feature i {
+    color: var(--primary-color);
+    width: 20px;
+}
+
+.plan-feature strong {
+    color: var(--text-primary);
+}
+
+.subscription-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.upgrade-plan-btn,
+.manage-billing-btn {
+    padding: var(--spacing-small) var(--spacing-large);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
+}
+
+.upgrade-plan-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.upgrade-plan-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.manage-billing-btn {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.manage-billing-btn:hover {
+    background: var(--secondary-color);
+}
+
+/* Available Plans */
+.available-plans {
+    margin-top: var(--spacing-large);
+}
+
+.available-plans h4 {
+    margin-bottom: var(--spacing-large);
+    color: var(--text-primary);
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-medium);
+}
+
+.plan-card {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-large);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.plan-card.recommended {
+    border-color: var(--primary-color);
+}
+
+.recommended-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.plan-card-header {
+    text-align: center;
+    margin-bottom: var(--spacing-large);
+}
+
+.plan-card-header h5 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-small);
+}
+
+.plan-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+}
+
+.plan-price .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.plan-price .period {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-large) 0;
+}
+
+.plan-features li {
+    padding: var(--spacing-small) 0;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    font-size: 0.875rem;
+}
+
+.plan-features li i {
+    color: var(--success-color);
+}
+
+.select-plan-btn {
+    width: 100%;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.select-plan-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.select-plan-btn[data-plan="developer"] {
+    background: var(--success-color);
+    cursor: default;
+}
+
+/* Billing History */
+.billing-history {
+    margin-top: var(--spacing-xl);
+}
+
+.billing-history h4 {
+    margin-bottom: var(--spacing-medium);
+    color: var(--text-primary);
+}
+
+.billing-table {
+    overflow-x: auto;
+}
+
+.billing-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.billing-table th,
+.billing-table td {
+    padding: var(--spacing-medium);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.billing-table th {
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--secondary-color);
+}
+
+.billing-table td {
+    color: var(--text-secondary);
+}
+
+.billing-table .empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+/* Payment Method */
+.payment-method {
+    margin-top: var(--spacing-xl);
+}
+
+.payment-method h4 {
+    margin-bottom: var(--spacing-medium);
+    color: var(--text-primary);
+}
+
+.payment-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-medium);
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+}
+
+.card-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    color: var(--text-secondary);
+}
+
+.card-info i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.update-payment-btn {
+    padding: var(--spacing-small) var(--spacing-large);
+    background: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.update-payment-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
 .settings-grid {
     display: flex;
     flex-direction: column;

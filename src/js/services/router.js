@@ -44,8 +44,17 @@ const routes = {
         css: 'src/components/DataGeneratorPage/DataGeneratorPage.css',
         setup: setupDataGenerator
     },
+    'DataCleaningPage': {
+        component: 'DataCleaningPage',
+        css: 'src/components/DataCleaningPage/DataCleaningPage.css',
+        setup: () => {
+            if (window.dataCleaningPage) {
+                window.dataCleaningPage.initialize();
+            }
+        }
+    },
     'RulesEnginePage': {
-        component: 'RulesEnginePage/RulesEnginePageAdvanced',
+        component: 'RulesEnginePage',
         css: 'src/components/RulesEnginePage/RulesEnginePageAdvanced_enhanced.css',
         setup: setupAdvancedRulesEngine
     },
@@ -100,11 +109,11 @@ async function setupMainLayout() {
     document.querySelector('.sidebar-nav').addEventListener('click', async (event) => {
         const target = event.target.closest('.nav-link');
         if (target) {
+            event.preventDefault(); // Prevent default anchor behavior
             const pageId = target.dataset.page;
             console.log(`Sidebar navigation to: ${pageId}`);
-            // Convert kebab-case to PascalCase for page loading
-            const pageName = pageId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
-            await loadPage(pageName.endsWith('Page') ? pageName : pageName + 'Page');
+            // Use hash-based navigation instead of direct loadPage
+            window.location.hash = `#${pageId}`;
         }
     });
 }
@@ -124,6 +133,9 @@ async function loadPage(pageName) {
     const route = routes[pageName];
     if (!route) {
         console.error(`No route found for page: ${pageName}`);
+        // Redirect to dashboard if route doesn't exist
+        localStorage.setItem('currentPage', 'DashboardPage');
+        window.location.hash = '#dashboard';
         return;
     }
 

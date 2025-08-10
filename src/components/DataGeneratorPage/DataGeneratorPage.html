@@ -1,11 +1,12 @@
 <div class="data-generator-page">
     <div class="page-header">
         <h1 class="page-title">Advanced Data Generator</h1>
+        <p class="page-subtitle">AI-powered synthetic data generation with GANs, VAEs, and differential privacy</p>
     </div>
     <div class="info-banner">
         <span class="info-icon"><i class="fas fa-info-circle"></i></span>
         <div>
-            <strong>Generate synthetic data based on patterns</strong> - Upload sample data and we'll analyze patterns to generate similar rows
+            <strong>Generate synthetic data using advanced AI models</strong> - Choose from CTGANs for tabular data, TimeGAN for time series, or VAEs for mixed data types
         </div>
     </div>
 
@@ -16,6 +17,9 @@
         </button>
         <button class="tab-button" data-tab="manual">
             <i class="fas fa-edit"></i> Manual Configuration
+        </button>
+        <button class="tab-button" data-tab="multi-table">
+            <i class="fas fa-project-diagram"></i> Multi-Table
         </button>
         <button class="tab-button" data-tab="history">
             <i class="fas fa-history"></i> Generation History
@@ -73,10 +77,148 @@
             <!-- Generation Configuration -->
             <div id="generation-config" class="generation-config" style="display: none;">
                 <h3>Generation Configuration</h3>
+                
+                <!-- Generation Method Selection -->
+                <div class="generation-method-section">
+                    <h4>Select Generation Method</h4>
+                    <div class="generation-methods">
+                        <div class="method-card" data-method="ctgan">
+                            <div class="method-header">
+                                <i class="fas fa-table"></i>
+                                <h5>CTGAN</h5>
+                                <span class="method-badge">Recommended</span>
+                            </div>
+                            <p>Best for tabular data with mixed types. Handles non-Gaussian distributions and categorical columns.</p>
+                            <div class="method-features">
+                                <span><i class="fas fa-check"></i> High fidelity</span>
+                                <span><i class="fas fa-check"></i> Mode-specific normalization</span>
+                            </div>
+                        </div>
+                        
+                        <div class="method-card" data-method="timegan">
+                            <div class="method-header">
+                                <i class="fas fa-chart-line"></i>
+                                <h5>TimeGAN</h5>
+                            </div>
+                            <p>Specialized for time series data. Preserves temporal dynamics and long-term dependencies.</p>
+                            <div class="method-features">
+                                <span><i class="fas fa-check"></i> Temporal embeddings</span>
+                                <span><i class="fas fa-check"></i> Sequence preservation</span>
+                            </div>
+                        </div>
+                        
+                        <div class="method-card" data-method="vae">
+                            <div class="method-header">
+                                <i class="fas fa-project-diagram"></i>
+                                <h5>VAE</h5>
+                            </div>
+                            <p>Variational Autoencoder for mixed data types. Faster training with good performance.</p>
+                            <div class="method-features">
+                                <span><i class="fas fa-check"></i> Fast generation</span>
+                                <span><i class="fas fa-check"></i> Stable training</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Industry Templates -->
+                <div class="generation-options-section">
+                    <h4>Industry Templates</h4>
+                    <div id="generatorIndustryTemplateContainer">
+                        <!-- IndustryTemplateSelector component will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Privacy Settings -->
+                <div class="privacy-section">
+                    <h4>Privacy & Compliance Settings</h4>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="differential-privacy"> Enable Differential Privacy
+                        <span class="help-icon" title="Adds mathematical guarantees to prevent data leakage">
+                            <i class="fas fa-question-circle"></i>
+                        </span>
+                    </label>
+                    <div class="privacy-options" style="display: none;">
+                        <div class="form-group">
+                            <label for="epsilon">Privacy Budget (ε):</label>
+                            <input type="range" id="epsilon" min="0.1" max="10" step="0.1" value="1">
+                            <span id="epsilon-value">1.0</span>
+                            <div class="privacy-level-indicator">
+                                <span class="level-label">Privacy Level:</span>
+                                <span id="privacy-level" class="level-high">High</span>
+                            </div>
+                        </div>
+                        
+                        <div class="privacy-metrics">
+                            <h5>Privacy Metrics</h5>
+                            <div class="metric-item">
+                                <span class="metric-label">Re-identification Risk:</span>
+                                <span id="reidentification-risk" class="metric-value low">Low (&lt; 0.1%)</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Attribute Disclosure Risk:</span>
+                                <span id="attribute-risk" class="metric-value low">Low</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Utility Preservation:</span>
+                                <span id="utility-score" class="metric-value high">95%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Compliance Options -->
+                    <div class="compliance-section">
+                        <h5>Compliance Standards</h5>
+                        <div class="compliance-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="gdpr-compliant"> GDPR Compliant
+                                <span class="help-icon" title="Ensures generated data meets GDPR requirements">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="hipaa-compliant"> HIPAA Compliant
+                                <span class="help-icon" title="Applies healthcare data privacy standards">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="pci-compliant"> PCI-DSS Compliant
+                                <span class="help-icon" title="Follows payment card data security standards">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Anonymization Techniques -->
+                    <div class="anonymization-section">
+                        <h5>Anonymization Techniques</h5>
+                        <div class="technique-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="k-anonymity" checked> k-Anonymity (k=5)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="l-diversity"> l-Diversity
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="t-closeness"> t-Closeness
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="data-masking"> Data Masking for PII
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label for="gen-rows">Number of Rows to Generate:</label>
                         <input type="number" id="gen-rows" value="1000" min="1" max="1000000">
+                        <div class="input-hint" id="row-limit-hint">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Developer plan limit: 1,000 rows per generation</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="gen-format">Output Format:</label>
@@ -84,6 +226,7 @@
                             <option value="csv">CSV</option>
                             <option value="json">JSON</option>
                             <option value="excel">Excel</option>
+                            <option value="parquet">Parquet</option>
                         </select>
                     </div>
                 </div>
@@ -91,13 +234,16 @@
                 <div class="advanced-options">
                     <h4>Advanced Options</h4>
                     <label class="checkbox-label">
-                        <input type="checkbox" id="preserve-relationships"> Preserve column relationships
+                        <input type="checkbox" id="preserve-relationships" checked> Preserve column relationships
                     </label>
                     <label class="checkbox-label">
                         <input type="checkbox" id="include-outliers"> Include outliers (5%)
                     </label>
                     <label class="checkbox-label">
                         <input type="checkbox" id="add-missing"> Add missing values (3%)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hierarchical"> Maintain hierarchical relationships
                     </label>
                 </div>
                 
@@ -109,6 +255,10 @@
                     <div class="summary-item">
                         <span>Estimated Generation Time:</span>
                         <span id="gen-time">&lt; 1 second</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Token Cost:</span>
+                        <span id="gen-token-cost" class="token-cost">0 tokens</span>
                     </div>
                 </div>
                 
@@ -197,6 +347,118 @@
             
             <button id="generate-manual" class="auth-button">
                 <i class="fas fa-cogs"></i> Generate Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Multi-Table Tab -->
+    <div id="multi-table-tab" class="tab-content">
+        <div class="form-section card">
+            <h2>Multi-Table Generation</h2>
+            <p class="section-description">Generate multiple related tables with hierarchical relationships and foreign key constraints</p>
+            
+            <!-- Schema Builder -->
+            <div class="schema-builder">
+                <h3>Database Schema</h3>
+                
+                <!-- Tables Container -->
+                <div id="tables-container" class="tables-container">
+                    <!-- Primary Table -->
+                    <div class="table-definition primary-table" data-table-id="table1">
+                        <div class="table-header">
+                            <input type="text" class="table-name" placeholder="Table Name" value="customers">
+                            <span class="table-type-badge primary">Primary</span>
+                            <button class="remove-table" style="display: none;"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <div class="table-columns">
+                            <div class="column-item">
+                                <input type="text" class="column-name" placeholder="Column name" value="customer_id">
+                                <select class="column-type">
+                                    <option value="id" selected>ID (Primary Key)</option>
+                                    <option value="string">String</option>
+                                    <option value="integer">Integer</option>
+                                    <option value="float">Float</option>
+                                    <option value="date">Date</option>
+                                </select>
+                                <button class="remove-column" disabled><i class="fas fa-times"></i></button>
+                            </div>
+                            <div class="column-item">
+                                <input type="text" class="column-name" placeholder="Column name" value="name">
+                                <select class="column-type">
+                                    <option value="string" selected>String</option>
+                                    <option value="integer">Integer</option>
+                                    <option value="float">Float</option>
+                                    <option value="date">Date</option>
+                                    <option value="boolean">Boolean</option>
+                                </select>
+                                <button class="remove-column"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button class="add-column-btn"><i class="fas fa-plus"></i> Add Column</button>
+                        <div class="table-row-config">
+                            <label>Rows to Generate:</label>
+                            <input type="number" class="table-rows" value="1000" min="1" max="1000000">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add Table Button -->
+                <button id="add-table" class="secondary-button">
+                    <i class="fas fa-plus"></i> Add Related Table
+                </button>
+                
+                <!-- Relationship Builder -->
+                <div id="relationships-container" class="relationships-container" style="display: none;">
+                    <h3>Table Relationships</h3>
+                    <div id="relationships-list" class="relationships-list">
+                        <!-- Relationships will be added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Generation Options -->
+            <div class="generation-options">
+                <h3>Generation Options</h3>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="maintain-referential-integrity" checked>
+                        <span>Maintain Referential Integrity</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="generate-realistic-distributions" checked>
+                        <span>Generate Realistic Data Distributions</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="hierarchical-generation" checked>
+                        <span>Hierarchical Data Generation</span>
+                    </label>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Output Format:</label>
+                        <select id="multi-table-format">
+                            <option value="sql">SQL Script</option>
+                            <option value="csv-zip">CSV Files (ZIP)</option>
+                            <option value="json">JSON</option>
+                            <option value="sqlite">SQLite Database</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Total Size:</label>
+                        <span id="multi-table-size">0 KB</span>
+                    </div>
+                </div>
+                
+                <!-- Token Cost Estimate -->
+                <div class="cost-estimate">
+                    <label>Estimated Token Cost:</label>
+                    <span id="multi-table-token-cost">0 tokens</span>
+                </div>
+            </div>
+            
+            <button id="generate-multi-table" class="auth-button">
+                <i class="fas fa-database"></i> Generate Multi-Table Dataset
             </button>
         </div>
     </div>

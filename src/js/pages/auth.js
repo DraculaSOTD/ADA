@@ -37,13 +37,18 @@ function setupAuthPage() {
     // Handle password toggles
     document.querySelectorAll('.password-toggle').forEach(toggle => {
         toggle.addEventListener('click', () => {
-            const passwordInput = toggle.previousElementSibling; // The input field before the toggle
+            const wrapper = toggle.closest('.password-input-wrapper');
+            const passwordInput = wrapper.querySelector('input[type="password"], input[type="text"]');
+            const icon = toggle.querySelector('i');
+            
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                toggle.textContent = '🙈';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
             } else {
                 passwordInput.type = 'password';
-                toggle.textContent = '👁️';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         });
     });
@@ -52,13 +57,25 @@ function setupAuthPage() {
     if (signInForm) {
         signInForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = signInForm.querySelector('#email').value;
-            const password = signInForm.querySelector('#password').value;
+            const email = signInForm.querySelector('#email').value.trim();
+            const password = signInForm.querySelector('#password').value.trim();
+
+            // Validate inputs
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            // Debug logging
+            console.log('Login attempt with email:', email);
+            console.log('Password length:', password.length);
 
             // FastAPI's OAuth2PasswordRequestForm expects form data
             const formData = new URLSearchParams();
             formData.append('username', email);
             formData.append('password', password);
+
+            console.log('Sending login request with form data:', formData.toString());
 
             const data = await fetchData('/api/login', {
                 method: 'POST',
@@ -70,6 +87,10 @@ function setupAuthPage() {
                 alert(`Login failed: ${data.message}`);
             } else if (data && data.access_token) {
                 localStorage.setItem('token', data.access_token);
+                // Store user email for reference
+                localStorage.setItem('user', email);
+                // Store login time to handle timing issues
+                localStorage.setItem('loginTime', Date.now().toString());
                 loadPage('DashboardPage');
             } else {
                 alert('Login failed! Please check your credentials.');

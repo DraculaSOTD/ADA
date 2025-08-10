@@ -1,0 +1,105 @@
+<div class="dashboard-token-widget">
+    <div class="widget-header">
+        <h3 class="widget-title">
+            <i class="fas fa-coins"></i>
+            Token Usage Overview
+        </h3>
+        <button class="view-details-btn" onclick="window.location.hash = '#/dashboard'; document.querySelector('[data-tab=\"tokens\"]').click();">
+            View Details
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+    
+    <div class="widget-content">
+        <!-- Current Month Usage -->
+        <div class="usage-summary">
+            <div class="usage-item">
+                <span class="usage-label">Current Plan</span>
+                <div class="usage-value">
+                    <span class="plan-badge" id="dashboardPlanBadge">Developer</span>
+                </div>
+            </div>
+            
+            <div class="usage-item">
+                <span class="usage-label">Tokens Used</span>
+                <div class="usage-value">
+                    <span class="token-count" id="dashboardTokensUsed">0</span>
+                    <span class="token-separator">/</span>
+                    <span class="token-limit" id="dashboardTokenLimit">10,000</span>
+                </div>
+            </div>
+            
+            <div class="usage-item">
+                <span class="usage-label">Days Remaining</span>
+                <div class="usage-value">
+                    <span id="dashboardDaysRemaining">30</span> days
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="usage-progress">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="dashboardTokenProgress"></div>
+                <div class="progress-percentage" id="dashboardTokenPercentage">0%</div>
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="dashboardAvgDaily">0</span>
+                    <span class="stat-label">Avg. Daily Usage</span>
+                </div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="dashboardProjectedUsage">0</span>
+                    <span class="stat-label">Projected Monthly</span>
+                </div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="dashboardStatus">Normal</span>
+                    <span class="stat-label">Usage Status</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activities -->
+        <div class="recent-activities">
+            <h4>Recent Token Usage</h4>
+            <div class="activities-list" id="dashboardActivitiesList">
+                <div class="activity-item">
+                    <span class="activity-time">No recent activity</span>
+                    <span class="activity-description">Start using features to see token consumption</span>
+                    <span class="activity-cost">--</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="widget-actions">
+            <button class="action-btn upgrade-btn" onclick="window.location.hash = '#/settings'; setTimeout(() => document.getElementById('upgradePlanBtn')?.click(), 100);">
+                <i class="fas fa-rocket"></i>
+                Upgrade Plan
+            </button>
+            <button class="action-btn buy-tokens-btn" onclick="alert('Token purchasing will be available soon!')">
+                <i class="fas fa-plus-circle"></i>
+                Buy More Tokens
+            </button>
+        </div>
+    </div>
+</div>

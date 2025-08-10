@@ -1,0 +1,288 @@
+/* Industry Template Selector Styles */
+.industry-template-selector {
+    padding: var(--spacing-medium);
+}
+
+.selector-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.selector-title {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-small);
+}
+
+.selector-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* Template Grid */
+.template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-large);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Template Card */
+.template-card {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-large);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.template-card.selected {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+}
+
+.template-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-color);
+}
+
+/* Template Icon */
+.template-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-medium);
+}
+
+.template-icon i {
+    font-size: 1.75rem;
+    color: var(--primary-color);
+}
+
+/* Template Content */
+.template-name {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-small);
+    text-align: center;
+}
+
+.template-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-align: center;
+    margin-bottom: var(--spacing-medium);
+    line-height: 1.5;
+}
+
+/* Template Features */
+.template-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-medium) 0;
+}
+
+.template-features li {
+    padding: var(--spacing-xsmall) 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}
+
+.template-features i {
+    color: var(--success-color);
+    font-size: 0.75rem;
+}
+
+/* Select Template Button */
+.select-template-btn {
+    width: 100%;
+    padding: var(--spacing-medium);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
+}
+
+.select-template-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.template-card.selected .select-template-btn {
+    background: var(--success-color);
+}
+
+.template-card.selected .select-template-btn::before {
+    content: 'Selected';
+}
+
+.template-card.selected .select-template-btn i {
+    display: none;
+}
+
+/* Custom Template Card */
+.template-card.custom {
+    background: var(--secondary-color);
+    border-style: dashed;
+}
+
+.template-card.custom .template-icon {
+    background: white;
+}
+
+/* Selected Template Preview */
+.selected-template-preview {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-large);
+    box-shadow: var(--box-shadow);
+    margin-top: var(--spacing-xl);
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-large);
+    padding-bottom: var(--spacing-medium);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.preview-header h4 {
+    font-size: 1.125rem;
+    color: var(--text-primary);
+}
+
+.change-template-btn {
+    padding: var(--spacing-small) var(--spacing-medium);
+    background: var(--secondary-color);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}
+
+.change-template-btn:hover {
+    background: white;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Preview Content */
+.preview-content {
+    display: grid;
+    gap: var(--spacing-medium);
+}
+
+.preview-section {
+    padding: var(--spacing-medium);
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+}
+
+.preview-section h5 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-small);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}
+
+.preview-section h5 i {
+    color: var(--primary-color);
+}
+
+.preview-options {
+    display: grid;
+    gap: var(--spacing-small);
+}
+
+.preview-option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.preview-option input[type="checkbox"] {
+    accent-color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .template-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-medium);
+    }
+    
+    .preview-header {
+        flex-direction: column;
+        gap: var(--spacing-medium);
+        align-items: flex-start;
+    }
+    
+    .change-template-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Loading State */
+.template-card.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.template-card.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}

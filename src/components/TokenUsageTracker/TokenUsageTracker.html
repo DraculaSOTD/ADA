@@ -1,0 +1,76 @@
+<div class="token-usage-tracker">
+    <div class="token-header">
+        <h3>Token Balance</h3>
+        <button class="token-buy-button" onclick="window.location.hash = '#settings'">
+            <i class="fas fa-cog"></i> Manage Plan
+        </button>
+    </div>
+    
+    <div class="token-content">
+        <div class="token-balance-section">
+            <div class="token-metric">
+                <div class="token-metric-value" id="currentTokens">--</div>
+                <div class="token-metric-label">Available Tokens</div>
+            </div>
+            
+            <div class="token-progress">
+                <div class="token-progress-bar">
+                    <div class="token-progress-fill" id="tokenProgressFill"></div>
+                </div>
+                <div class="token-progress-text">
+                    <span id="usedTokens">0</span> / <span id="totalTokens">0</span> used this month
+                </div>
+            </div>
+            
+            <div class="renewal-info">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="renewalText">Renews in -- days</span>
+            </div>
+        </div>
+        
+        <div class="token-tier-section">
+            <div class="current-tier">
+                <span class="tier-label">Current Tier:</span>
+                <span class="tier-badge" id="currentTierBadge">Free</span>
+            </div>
+            <button class="upgrade-tier-button" onclick="window.location.hash = '#settings'">
+                <i class="fas fa-arrow-up"></i> Upgrade
+            </button>
+        </div>
+        
+        <div class="token-usage-breakdown">
+            <h4>Usage Breakdown</h4>
+            <div class="usage-items">
+                <div class="usage-item">
+                    <span class="usage-label">Data Cleaning</span>
+                    <span class="usage-value" id="cleaningUsage">0</span>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-label">Data Generation</span>
+                    <span class="usage-value" id="generationUsage">0</span>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-label">Model Training</span>
+                    <span class="usage-value" id="trainingUsage">0</span>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-label">Predictions</span>
+                    <span class="usage-value" id="predictionUsage">0</span>
+                </div>
+                <div class="usage-item">
+                    <span class="usage-label">API Calls</span>
+                    <span class="usage-value" id="apiUsage">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="token-actions">
+        <button class="token-action-button" onclick="tokenUsageTracker.viewHistory()">
+            <i class="fas fa-history"></i> View History
+        </button>
+        <button class="token-action-button" onclick="tokenUsageTracker.setupAutoRecharge()">
+            <i class="fas fa-sync"></i> Auto-Recharge
+        </button>
+    </div>
+</div>
