@@ -25,6 +25,7 @@ class User(Base):
     votes = relationship("ModelVote", back_populates="user")
     token_transactions = relationship("TokenTransaction", back_populates="user")
     notifications = relationship("Notification", back_populates="user")
+    notification_preferences = relationship("NotificationPreference", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"

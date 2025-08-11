@@ -145,6 +145,32 @@
     margin-top: var(--spacing-xl);
 }
 
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-large);
+    flex-wrap: wrap;
+    gap: var(--spacing-medium);
+}
+
+.history-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.history-filters {
+    display: flex;
+    gap: var(--spacing-medium);
+    flex-wrap: wrap;
+}
+
+#filter-dropdown-container,
+#time-dropdown-container {
+    min-width: 200px;
+}
+
 .current-balance-section h2 {
     font-size: 1.5em;
     color: var(--primary-color-dark);
@@ -170,22 +196,64 @@
     margin-bottom: var(--spacing-medium);
     background-color: var(--background-color);
     box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.balance-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .balance-item .item-details {
     display: flex;
     flex-direction: column;
+    gap: var(--spacing-xsmall);
+    flex: 1;
+}
+
+.balance-item .item-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+}
+
+.balance-item .item-icon {
+    color: var(--primary-color);
+    font-size: 1.25rem;
 }
 
 .balance-item .item-name {
-    font-weight: bold;
-    color: var(--text-color);
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 1rem;
 }
 
-.balance-item .item-price,
-.balance-item .item-quantity {
-    font-size: var(--font-size-small);
-    color: var(--text-color);
+.balance-item .item-date {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-left: 2.25rem;
+}
+
+.balance-item .item-amount {
+    font-weight: 600;
+    font-size: 1.125rem;
+    min-width: 80px;
+    text-align: right;
+}
+
+.balance-item .item-amount.positive {
+    color: var(--success-color);
+}
+
+.balance-item .item-amount.negative {
+    color: var(--text-primary);
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+    font-size: 1rem;
 }
 
 .balance-item .delete-item-btn {

@@ -103,12 +103,31 @@
         </div>
     </div>
 
-    <!-- Token Cost & Actions -->
-    <div class="bottom-section">
-        <div class="total-tokens-container card">
-            <span>Estimated Token Cost:</span>
-            <span id="total-token-cost" class="token-cost">0</span>
+    <!-- Token Cost Calculation -->
+    <div class="cost-calculation card">
+        <h3><i class="fas fa-coins"></i> Token Cost Calculation</h3>
+        <div class="cost-breakdown">
+            <div class="cost-item">
+                <span>Base Rule Cost:</span>
+                <span>100 tokens</span>
+            </div>
+            <div class="cost-item">
+                <span>Conditions (0):</span>
+                <span>0 tokens</span>
+            </div>
+            <div class="cost-item">
+                <span>Actions (0):</span>
+                <span>0 tokens</span>
+            </div>
+            <div class="cost-item total">
+                <span>Total Cost:</span>
+                <span id="total-token-cost">100 tokens</span>
+            </div>
         </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="bottom-section">
         <div class="action-buttons">
             <button id="test-rule-btn" class="btn btn-secondary" title="Test your rule configuration">
                 <i class="fas fa-play"></i> Test Rule

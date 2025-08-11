@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
-from models.model import Model
-from models import schemas
+from models import Model, schemas
 
 def create_model(db: Session, model: schemas.ModelCreateRequest, user_id: int):
     db_model = Model(**model.dict(), user_id=user_id)
@@ -20,6 +19,9 @@ def get_community_models(db: Session):
 
 def get_pretrained_models(db: Session):
     return db.query(Model).filter(Model.visibility == 'pretrained').all()
+
+def get_model_by_id(db: Session, model_id: int):
+    return db.query(Model).filter(Model.id == model_id).first()
 
 def add_model_to_user_library(db: Session, user_id: int, model_id: int):
     model_to_add = db.query(Model).filter(Model.id == model_id).first()

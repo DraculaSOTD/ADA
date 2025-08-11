@@ -1,69 +1,181 @@
 import { loadComponent, loadComponentCSS } from '../services/componentLoader.js';
 import { fetchAuthenticatedData } from '../services/api.js';
+import { StyledDropdown } from '../../components/StyledDropdown/StyledDropdown.js';
+
+let filterDropdown = null;
+let timeDropdown = null;
+let currentFilter = 'all';
+let currentTimeRange = '30';
+let allTokenData = [];
 
 async function loadTokensData() {
     const data = await fetchAuthenticatedData('/api/tokens/usage');
     if (data) {
-        let totalCost = data.reduce((acc, item) => acc + (item.change || 0), 0);
-        const itemsContainer = document.querySelector('.balance-items');
-        const balanceAmountElement = document.querySelector('.balance-amount');
-        const priceBreakdownElement = document.querySelector('.price-breakdown');
+        allTokenData = data;
+        applyFilters();
+        setupTokenDropdowns();
+    } else {
+        allTokenData = [];
+        applyFilters();
+    }
+}
 
-        if (itemsContainer) {
-            itemsContainer.innerHTML = '';
+function setupTokenDropdowns() {
+    // Only set up dropdowns if we're on the tokens tab
+    const filterContainer = document.getElementById('filter-dropdown-container');
+    const timeContainer = document.getElementById('time-dropdown-container');
+    
+    if (filterContainer && !filterDropdown) {
+        // Load dropdown CSS
+        loadComponentCSS('src/components/StyledDropdown/StyledDropdown.css');
+        
+        filterDropdown = new StyledDropdown(filterContainer, {
+            id: 'token-filter',
+            placeholder: 'All Transactions',
+            options: [
+                { value: 'all', title: 'All Transactions', icon: 'fas fa-list' },
+                { value: 'generation', title: 'Data Generation', icon: 'fas fa-database' },
+                { value: 'training', title: 'Model Training', icon: 'fas fa-brain' },
+                { value: 'prediction', title: 'Predictions', icon: 'fas fa-chart-line' },
+                { value: 'purchase', title: 'Purchases', icon: 'fas fa-plus-circle' },
+                { value: 'bonus', title: 'Bonuses', icon: 'fas fa-gift' }
+            ],
+            value: 'all',
+            onChange: (value) => {
+                currentFilter = value;
+                applyFilters();
+            }
+        });
+    }
+    
+    if (timeContainer && !timeDropdown) {
+        timeDropdown = new StyledDropdown(timeContainer, {
+            id: 'time-filter',
+            placeholder: 'Last 30 days',
+            options: [
+                { value: '7', title: 'Last 7 days', icon: 'fas fa-calendar-week' },
+                { value: '30', title: 'Last 30 days', icon: 'fas fa-calendar-alt' },
+                { value: '90', title: 'Last 90 days', icon: 'fas fa-calendar' },
+                { value: 'all', title: 'All time', icon: 'fas fa-infinity' }
+            ],
+            value: '30',
+            onChange: (value) => {
+                currentTimeRange = value;
+                applyFilters();
+            }
+        });
+    }
+}
+
+function applyFilters() {
+    let filteredData = [...allTokenData];
+    
+    // Apply transaction type filter
+    if (currentFilter !== 'all') {
+        filteredData = filteredData.filter(item => {
+            const reason = item.reason?.toLowerCase() || '';
+            switch(currentFilter) {
+                case 'generation':
+                    return reason.includes('generat');
+                case 'training':
+                    return reason.includes('train') || reason.includes('model');
+                case 'prediction':
+                    return reason.includes('predict');
+                case 'purchase':
+                    return item.change > 0 && reason.includes('purchase');
+                case 'bonus':
+                    return item.change > 0 && (reason.includes('bonus') || reason.includes('reward'));
+                default:
+                    return true;
+            }
+        });
+    }
+    
+    // Apply time range filter
+    if (currentTimeRange !== 'all') {
+        const daysAgo = parseInt(currentTimeRange);
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
+        
+        filteredData = filteredData.filter(item => {
+            const itemDate = new Date(item.created_at);
+            return itemDate >= cutoffDate;
+        });
+    }
+    
+    // Update the display
+    displayTokenData(filteredData);
+}
+
+function displayTokenData(data) {
+    let totalCost = data.reduce((acc, item) => acc + (item.change || 0), 0);
+    const itemsContainer = document.querySelector('.balance-items');
+    const balanceAmountElement = document.querySelector('.balance-amount');
+    const priceBreakdownElement = document.querySelector('.price-breakdown');
+
+    if (itemsContainer) {
+        itemsContainer.innerHTML = '';
+        
+        if (data.length === 0) {
+            itemsContainer.innerHTML = '<div class="empty-state">No transactions found for the selected filters</div>';
+        } else {
             data.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('balance-item', 'card');
+                
+                const isPositive = item.change > 0;
+                const icon = getTransactionIcon(item.reason);
+                const date = new Date(item.created_at).toLocaleDateString();
+                
                 itemDiv.innerHTML = `
                     <div class="item-details">
-                        <span class="item-name">${item.reason}</span>
-                        <span class="item-price">Tokens: ${formatTokenAmount(item.change)}</span>
+                        <div class="item-header">
+                            <i class="${icon} item-icon"></i>
+                            <span class="item-name">${item.reason}</span>
+                        </div>
+                        <span class="item-date">${date}</span>
+                    </div>
+                    <div class="item-amount ${isPositive ? 'positive' : 'negative'}">
+                        ${isPositive ? '+' : ''}${formatTokenAmount(item.change)}
                     </div>
                 `;
                 itemsContainer.appendChild(itemDiv);
             });
         }
+    }
 
-        if (balanceAmountElement) {
-            balanceAmountElement.textContent = formatTokenAmount(totalCost);
-        }
+    if (balanceAmountElement) {
+        balanceAmountElement.textContent = formatTokenAmount(totalCost);
+    }
 
-        if (priceBreakdownElement) {
-            priceBreakdownElement.innerHTML = `
-                <p>Base Price: <span>$${totalCost.toFixed(2)}</span></p>
-                <p>Taxes: <span>$0.00</span></p>
-                <p class="total">Total: <span>$${totalCost.toFixed(2)}</span></p>
-            `;
-        }
-    } else {
-        const itemsContainer = document.querySelector('.balance-items');
-        const balanceAmountElement = document.querySelector('.balance-amount');
-        const priceBreakdownElement = document.querySelector('.price-breakdown');
-
-        if (itemsContainer) {
-            itemsContainer.innerHTML = '';
-        }
-        if (balanceAmountElement) {
-            balanceAmountElement.textContent = '$0.00';
-        }
-        if (priceBreakdownElement) {
-            priceBreakdownElement.innerHTML = `
-                <p>Base Price: <span>$0.00</span></p>
-                <p>Taxes: <span>$0.00</span></p>
-                <p class="total">Total: <span>$0.00</span></p>
-            `;
-        }
+    if (priceBreakdownElement) {
+        priceBreakdownElement.innerHTML = `
+            <p>Base Price: <span>$${totalCost.toFixed(2)}</span></p>
+            <p>Taxes: <span>$0.00</span></p>
+            <p class="total">Total: <span>$${totalCost.toFixed(2)}</span></p>
+        `;
     }
 }
 
+function getTransactionIcon(reason) {
+    const reasonLower = reason?.toLowerCase() || '';
+    if (reasonLower.includes('generat')) return 'fas fa-database';
+    if (reasonLower.includes('train') || reasonLower.includes('model')) return 'fas fa-brain';
+    if (reasonLower.includes('predict')) return 'fas fa-chart-line';
+    if (reasonLower.includes('purchase')) return 'fas fa-shopping-cart';
+    if (reasonLower.includes('bonus') || reasonLower.includes('reward')) return 'fas fa-gift';
+    return 'fas fa-coins';
+}
+
 function formatTokenAmount(amount) {
-    if (amount === 0) {
+    const absAmount = Math.abs(amount);
+    if (absAmount === 0) {
         return '0';
     }
-    if (amount > 9999) {
-        return `${Math.floor(amount / 1000)}k`;
+    if (absAmount > 9999) {
+        return `${Math.floor(absAmount / 1000)}k`;
     }
-    return amount.toString();
+    return absAmount.toString();
 }
 
 async function loadModelPerformanceData() {
@@ -265,6 +377,10 @@ async function setupDashboardPage() {
     loadComponentCSS('src/components/ModelPerformance/ModelPerformance.css');
     loadComponent('NotificationsAlerts', '.notifications-alerts-section');
     loadComponentCSS('src/components/NotificationsAlerts/NotificationsAlerts.css');
+    
+    // Initialize token widget
+    await initializeDashboardTokenWidget();
+    
     // Initial tab content load for Dashboard (All Models tab)
     loadComponent('AllModelsTabContent', '.tab-content');
     loadComponentCSS('src/components/AllModelsTabContent/AllModelsTabContent.css');
@@ -284,7 +400,10 @@ async function setupDashboardPage() {
                 case 'tokens':
                     await loadComponent('TokensTabContent', '.tab-content');
                     loadComponentCSS('src/components/TokensTabContent/TokensTabContent.css');
-                    loadTokensData();
+                    // Reset dropdowns when switching tabs
+                    filterDropdown = null;
+                    timeDropdown = null;
+                    await loadTokensData();
                     // Load TokenUsageTracker component
                     await loadTokenUsageTracker();
                     // Update quick stats
@@ -387,6 +506,29 @@ function updateTokenQuickStats() {
     
     // Stop checking after 5 seconds
     setTimeout(() => clearInterval(checkInterval), 5000);
+}
+
+async function initializeDashboardTokenWidget() {
+    // Load widget CSS
+    loadComponentCSS('src/components/DashboardTokenWidget/DashboardTokenWidget.css');
+    
+    // Load widget JavaScript
+    const script = document.createElement('script');
+    script.src = 'src/components/DashboardTokenWidget/DashboardTokenWidget.js';
+    script.type = 'module';
+    
+    return new Promise((resolve) => {
+        script.onload = () => {
+            // Initialize the widget
+            const widget = new window.DashboardTokenWidget();
+            widget.initialize('dashboard-token-widget');
+            
+            // Store reference for cleanup
+            window.dashboardTokenWidget = widget;
+            resolve();
+        };
+        document.body.appendChild(script);
+    });
 }
 
 export { setupDashboardPage };

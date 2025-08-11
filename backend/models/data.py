@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, Text
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, Text, BigInteger, String
 from sqlalchemy.orm import relationship
 from models.base import Base
 
@@ -9,6 +9,8 @@ class Upload(Base):
     model_id = Column(Integer, ForeignKey("models.id"))
     filename = Column(Text)
     path = Column(Text)
+    file_size = Column(BigInteger, default=0)
+    file_type = Column(String(10))
     uploaded_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="uploads")

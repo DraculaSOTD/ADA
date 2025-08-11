@@ -1043,58 +1043,52 @@ function setupAnonymizationOptions() {
 
 // Update token cost estimate
 function updateTokenCostEstimate() {
+    // Update pattern-based generation cost
     const rows = parseInt(document.getElementById('gen-rows')?.value || 0);
     const tokenCostEl = document.getElementById('gen-token-cost');
     
-    if (!tokenCostEl) return;
-    
-    // Calculate base cost based on method and rows
-    let baseCost = 0;
-    const rowsInMillions = rows / 1000000;
-    
-    switch (selectedMethod) {
-        case 'ctgan':
-            baseCost = Math.ceil(rowsInMillions * 3); // 3 tokens per million rows
-            break;
-        case 'timegan':
-            baseCost = Math.ceil(rowsInMillions * 4); // 4 tokens per million rows
-            break;
-        case 'vae':
-            baseCost = Math.ceil(rowsInMillions * 2); // 2 tokens per million rows
-            break;
+    if (tokenCostEl && rows > 0) {
+        const features = {
+            preserveDistributions: document.getElementById('preserve-distributions')?.checked,
+            preserveCorrelations: document.getElementById('preserve-correlations')?.checked,
+            generateOutliers: document.getElementById('generate-outliers')?.checked,
+            temporalConsistency: document.getElementById('temporal-consistency')?.checked,
+            differentialPrivacy: document.getElementById('differential-privacy')?.checked
+        };
+        
+        const cost = tokenService.calculateGenerationCost(rows, selectedMethod, features);
+        tokenCostEl.textContent = `${cost.toLocaleString()} tokens`;
     }
     
-    // Add cost for privacy if enabled
-    if (document.getElementById('differential-privacy')?.checked) {
-        baseCost = Math.ceil(baseCost * 1.5); // 50% more for privacy
+    // Update manual configuration cost
+    const manualRows = parseInt(document.getElementById('manual-rows')?.value || 0);
+    const manualTokenCostEl = document.getElementById('manual-token-cost');
+    
+    if (manualTokenCostEl && manualRows > 0) {
+        const manualColumns = document.querySelectorAll('#manual-columns .column-config').length || 1;
+        const cost = tokenService.calculateGenerationCost(manualRows, 'manual', { columns: manualColumns });
+        manualTokenCostEl.textContent = `${cost.toLocaleString()} tokens`;
     }
     
-    // Add cost for compliance features
-    if (document.getElementById('gdpr-compliant')?.checked) {
-        baseCost = Math.ceil(baseCost * 1.2); // 20% more for GDPR
-    }
-    if (document.getElementById('hipaa-compliant')?.checked) {
-        baseCost = Math.ceil(baseCost * 1.3); // 30% more for HIPAA
-    }
-    if (document.getElementById('pci-compliant')?.checked) {
-        baseCost = Math.ceil(baseCost * 1.15); // 15% more for PCI
-    }
+    // Update multi-table cost
+    updateMultiTableTokenCost();
     
-    // Add cost for anonymization techniques
-    const anonymizationCost = 
-        (document.getElementById('k-anonymity')?.checked ? 0.1 : 0) +
-        (document.getElementById('l-diversity')?.checked ? 0.15 : 0) +
-        (document.getElementById('t-closeness')?.checked ? 0.2 : 0) +
-        (document.getElementById('data-masking')?.checked ? 0.05 : 0);
-    
-    if (anonymizationCost > 0) {
-        baseCost = Math.ceil(baseCost * (1 + anonymizationCost));
+    // Update time estimate
+    if (rows > 0) {
+        updateGenerationTimeEstimate(rows);
     }
+}
+
+// Update multi-table token cost display
+function updateMultiTableTokenCost() {
+    const multiTableTokenCostEl = document.getElementById('multi-table-token-cost');
+    if (!multiTableTokenCostEl) return;
     
-    tokenCostEl.textContent = `${baseCost} tokens`;
-    
-    // Update time estimate based on method
-    updateGenerationTimeEstimate(rows);
+    const tables = document.querySelectorAll('.table-definition');
+    if (tables.length > 0) {
+        const cost = calculateMultiTableTokenCost(tables);
+        multiTableTokenCostEl.textContent = `${cost.toLocaleString()} tokens`;
+    }
 }
 
 // Update generation time estimate based on method

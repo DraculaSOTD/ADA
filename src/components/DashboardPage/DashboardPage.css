@@ -31,6 +31,10 @@
     overflow-y: auto;
 }
 
+.dashboard-token-widget {
+    min-height: 500px;
+}
+
 .dashboard-title {
     font-size: 2em;
     color: var(--dark-purple);

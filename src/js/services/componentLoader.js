@@ -13,7 +13,18 @@ async function loadComponent(componentName, targetSelector) {
 }
 
 function loadComponentCSS(cssPath) {
-    const fullPath = `/${cssPath}`;
+    // Handle different path formats
+    let fullPath = cssPath;
+    
+    // If path doesn't start with / or src/, assume it's a component path
+    if (!cssPath.startsWith('/') && !cssPath.startsWith('src/')) {
+        // Convert component path like "AllModelsPage/AllModelsTable" to full CSS path
+        fullPath = `/src/components/${cssPath}.css`;
+    } else if (!cssPath.startsWith('/')) {
+        // If it starts with src/, prepend /
+        fullPath = `/${cssPath}`;
+    }
+    
     if (!document.querySelector(`link[href="${fullPath}"]`)) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';

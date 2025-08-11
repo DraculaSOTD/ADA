@@ -1,0 +1,142 @@
+/* Token Cost Calculation Styles */
+.cost-calculation {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.cost-calculation h3 {
+    margin: 0 0 1rem 0;
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cost-calculation h3::before {
+    content: '\f51e'; /* Font Awesome coin icon */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+
+.cost-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cost-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95rem;
+}
+
+.cost-item span:first-child {
+    color: var(--text-secondary);
+}
+
+.cost-item span:last-child {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cost-item.total {
+    margin-top: 0.5rem;
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--primary);
+}
+
+.cost-item.total span:first-child {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cost-item.total span:last-child {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* Style for plus/minus buttons in model creation */
+.custom-model-creation-container .minus-button,
+.custom-model-creation-container .plus-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    line-height: 1;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Number input group styling */
+.number-input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.number-input-group span {
+    min-width: 2rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Dropdown container styling */
+.custom-model-creation-container .dropdown-container {
+    width: 100%;
+}
+
+/* Data tags container */
+.data-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    min-height: 60px;
+}
+
+.data-tags-container p {
+    margin: 0;
+    padding: 0.25rem 0.75rem;
+    background: var(--primary);
+    color: white;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cost-breakdown {
+        font-size: 0.875rem;
+    }
+    
+    .cost-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .cost-item.total {
+        flex-direction: row;
+        align-items: center;
+    }
+}

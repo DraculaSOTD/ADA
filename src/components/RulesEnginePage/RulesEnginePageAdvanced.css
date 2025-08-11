@@ -660,6 +660,73 @@
     letter-spacing: 0.025em;
 }
 
+/* Cost Calculation Section */
+.cost-calculation {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.cost-calculation h3 {
+    margin: 0 0 1rem 0;
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cost-calculation h3 i {
+    color: var(--primary);
+}
+
+.cost-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cost-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95rem;
+}
+
+.cost-item span:first-child {
+    color: var(--text-secondary);
+}
+
+.cost-item span:last-child {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cost-item.total {
+    margin-top: 0.5rem;
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--primary);
+}
+
+.cost-item.total span:first-child {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cost-item.total span:last-child {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
 .token-cost {
     font-size: 2rem;
     font-weight: 700;

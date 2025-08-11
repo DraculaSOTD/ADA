@@ -1,4 +1,5 @@
 import { fetchAuthenticatedData } from '../services/api.js';
+import tokenService from '../services/token_service.js';
 
 class AdvancedRulesEngine {
     constructor() {
@@ -1680,26 +1681,67 @@ class AdvancedRulesEngine {
     }
 
     updateTokenCost() {
-        // Calculate estimated token cost based on rule complexity
-        const baseTokens = 100;
-        const conditionTokens = this.countConditions(this.ruleData.conditions) * 50;
-        const actionTokens = this.ruleData.actions.length * 200;
+        // Calculate estimated token cost using tokenService
+        const conditionCount = this.countConditions(this.ruleData.conditions);
+        const actionCount = this.ruleData.actions.length;
         
-        // Add cost for API inputs
-        let apiTokens = 0;
-        if (this.ruleData.apiConfig?.inputs?.webhook?.enabled) {
-            apiTokens += 150;
+        // Get the complexity of the rule based on actions
+        let complexity = 'basic';
+        const hasModelTrigger = this.ruleData.actions.some(a => a.type === 'trigger_model');
+        const hasMultipleActions = actionCount > 3;
+        const hasComplexConditions = conditionCount > 5;
+        const hasApiWebhook = this.ruleData.apiConfig?.inputs?.webhook?.enabled;
+        const hasMultipleOutputs = (this.ruleData.apiConfig?.outputs?.length || 0) > 2;
+        
+        if (hasModelTrigger || hasMultipleActions || hasComplexConditions || hasApiWebhook || hasMultipleOutputs) {
+            complexity = 'advanced';
         }
-        apiTokens += (this.ruleData.apiConfig?.inputs?.schema?.length || 0) * 20;
         
-        // Add cost for API outputs
-        apiTokens += (this.ruleData.apiConfig?.outputs?.length || 0) * 100;
+        if (hasModelTrigger && (hasMultipleActions || hasComplexConditions) && (hasApiWebhook || hasMultipleOutputs)) {
+            complexity = 'complex';
+        }
         
-        const totalTokens = baseTokens + conditionTokens + actionTokens + apiTokens;
+        // Use tokenService to calculate cost
+        const totalTokens = tokenService.calculateRulesCost(conditionCount, actionCount, complexity);
 
         const tokenCostElement = document.getElementById('total-token-cost');
         if (tokenCostElement) {
-            tokenCostElement.textContent = totalTokens;
+            tokenCostElement.textContent = totalTokens.toLocaleString();
+            
+            // Update cost breakdown if available
+            const breakdownElement = document.querySelector('.cost-breakdown');
+            if (breakdownElement) {
+                breakdownElement.innerHTML = `
+                    <div class="cost-item">
+                        <span>Base Rule Cost:</span>
+                        <span>${tokenService.costs.rules.baseCost.toLocaleString()} tokens</span>
+                    </div>
+                    <div class="cost-item">
+                        <span>Conditions (${conditionCount}):</span>
+                        <span>${(conditionCount * tokenService.costs.rules.perCondition).toLocaleString()} tokens</span>
+                    </div>
+                    <div class="cost-item">
+                        <span>Actions (${actionCount}):</span>
+                        <span>${(actionCount * tokenService.costs.rules.perAction).toLocaleString()} tokens</span>
+                    </div>
+                    ${hasApiWebhook ? `
+                        <div class="cost-item">
+                            <span>API Webhook:</span>
+                            <span>${tokenService.costs.rules.webhookCost.toLocaleString()} tokens</span>
+                        </div>
+                    ` : ''}
+                    ${complexity !== 'basic' ? `
+                        <div class="cost-item">
+                            <span>Complexity Multiplier (${complexity}):</span>
+                            <span>×${tokenService.costs.rules.complexityMultiplier[complexity]}</span>
+                        </div>
+                    ` : ''}
+                    <div class="cost-item total">
+                        <span>Total Cost:</span>
+                        <span>${totalTokens.toLocaleString()} tokens</span>
+                    </div>
+                `;
+            }
         }
     }
 

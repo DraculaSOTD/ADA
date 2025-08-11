@@ -337,6 +337,3 @@ class TokenUsageTracker {
         }
     }
 }
-
-// Export for module usage
-export default TokenUsageTracker;

@@ -1,0 +1,16 @@
+<div class="styled-dropdown-container">
+    <label class="dropdown-label" id="dropdown-label-{{id}}">{{label}}</label>
+    <div class="dropdown-wrapper">
+        <div class="dropdown-trigger" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="dropdown-label-{{id}}">
+            <div class="selected-option">
+                <i class="option-icon fas"></i>
+                <span class="option-text">{{placeholder}}</span>
+            </div>
+            <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </div>
+        <div class="dropdown-menu" role="listbox" aria-labelledby="dropdown-label-{{id}}">
+            <!-- Options will be dynamically inserted here -->
+        </div>
+    </div>
+    <small class="dropdown-helper-text">{{helperText}}</small>
+</div>

@@ -1,0 +1,252 @@
+/* Model Editor Page Styles */
+.generate-predictions-container .card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Dropdown containers */
+.dropdown-container {
+    width: 100%;
+}
+
+.dropdown-container.inline-dropdown {
+    display: inline-block;
+    width: auto;
+    min-width: 120px;
+}
+
+/* Tagged data styling */
+.tagged-data .data-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.tagged-data .data-row-header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* New fields row styling */
+.new-fields-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.new-fields-row .detail-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.new-fields-row .detail-value {
+    width: 100px;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+/* History and scheduler controls */
+.history-controls,
+.scheduler-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.history-controls .cost,
+.scheduler-controls .cost {
+    margin-left: auto;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.scheduler-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.scheduler-info p {
+    margin: 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Metrics styling */
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.metric-item label {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.metric-item .metric-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.metric-item.highlight {
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid var(--primary);
+}
+
+.metric-value.primary {
+    color: var(--primary);
+}
+
+/* Page actions */
+.page-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Button styling consistency */
+.generate-predictions-container .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.generate-predictions-container .btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.generate-predictions-container .btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.generate-predictions-container .btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.generate-predictions-container .btn-secondary:hover {
+    background: var(--bg-tertiary);
+}
+
+.generate-predictions-container .btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Plus/Minus buttons specific styling */
+.minus-button,
+.plus-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+/* Upload section */
+.data-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.upload-label {
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-label:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--primary);
+}
+
+#file-name {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.progress-container {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tagged-data .data-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .tagged-data .data-row-header {
+        display: none;
+    }
+    
+    .new-fields-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .page-actions {
+        flex-direction: column;
+    }
+    
+    .page-actions .btn {
+        width: 100%;
+    }
+}

@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, Text
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, func, Text, String
 from sqlalchemy.orm import relationship
 from models.base import Base
+from core.db_types import JSONField
 
 class ModelJob(Base):
     __tablename__ = "model_jobs"
@@ -10,12 +11,30 @@ class ModelJob(Base):
     job_type = Column(Text)
     progress = Column(Integer, default=0)
     status = Column(Text)
+    parameters = Column(JSONField)
     token_cost = Column(Integer)
-    started_at = Column(DateTime, server_default=func.now())
-    ended_at = Column(DateTime)
+    error_message = Column(Text)
+    duration_seconds = Column(Integer)
+    retry_of_job_id = Column(Integer, ForeignKey("model_jobs.id"))
+    created_at = Column(DateTime, server_default=func.now())
+    started_at = Column(DateTime)
+    completed_at = Column(DateTime)
+    ended_at = Column(DateTime)  # Keep for backwards compatibility
 
     user = relationship("User", back_populates="jobs")
     model = relationship("Model", back_populates="jobs")
+    logs = relationship("JobLog", back_populates="job", cascade="all, delete-orphan")
+    retry_of = relationship("ModelJob", remote_side=[id])
+
+class JobLog(Base):
+    __tablename__ = "job_logs"
+    id = Column(Integer, primary_key=True)
+    job_id = Column(Integer, ForeignKey("model_jobs.id"))
+    timestamp = Column(DateTime, server_default=func.now())
+    log_level = Column(String(20), default="INFO")
+    message = Column(Text)
+
+    job = relationship("ModelJob", back_populates="logs")
 
 class PredictionResult(Base):
     __tablename__ = "prediction_results"

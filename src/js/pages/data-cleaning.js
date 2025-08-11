@@ -1,5 +1,6 @@
 // Data Cleaning Page Controller
 import tokenService from '../services/token_service.js';
+import { DataTable, ProgressBar, Modal, toastManager } from '../../components/common/index.js';
 
 class DataCleaningPage {
     constructor() {
@@ -167,14 +168,84 @@ class DataCleaningPage {
         document.getElementById('totalColumns').textContent = '24';
         document.getElementById('qualityScore').textContent = '78%';
 
-        // Generate column profiles
+        // Generate column profiles using DataTable
         const columnProfiles = document.getElementById('columnProfiles');
         columnProfiles.innerHTML = `
             <h3>Column Analysis</h3>
-            <div class="column-grid">
-                ${this.generateColumnProfiles()}
-            </div>
+            <div id="columnAnalysisTable"></div>
         `;
+
+        // Create column analysis data
+        const columns = [
+            { name: 'customer_id', type: 'integer', nulls: 0, nullsPercent: '0%', unique: 100, uniquePercent: '100%', quality: 100 },
+            { name: 'email', type: 'string', nulls: 2.3, nullsPercent: '2.3%', unique: 98.5, uniquePercent: '98.5%', quality: 95 },
+            { name: 'purchase_date', type: 'date', nulls: 0, nullsPercent: '0%', unique: 15, uniquePercent: '15%', quality: 98 },
+            { name: 'amount', type: 'decimal', nulls: 1.2, nullsPercent: '1.2%', unique: 45, uniquePercent: '45%', quality: 97 }
+        ];
+
+        // Configure DataTable for column analysis
+        const columnTableConfig = {
+            columns: [
+                {
+                    key: 'name',
+                    label: 'Column Name',
+                    sortable: true,
+                    render: (value) => `<code>${value}</code>`
+                },
+                {
+                    key: 'type',
+                    label: 'Data Type',
+                    sortable: true,
+                    render: (value) => {
+                        const typeIcons = {
+                            'integer': 'hashtag',
+                            'string': 'font',
+                            'date': 'calendar',
+                            'decimal': 'percentage'
+                        };
+                        return `<i class="fas fa-${typeIcons[value] || 'question'}"></i> ${value}`;
+                    }
+                },
+                {
+                    key: 'nullsPercent',
+                    label: 'Null Values',
+                    sortable: true,
+                    render: (value, row) => {
+                        const color = row.nulls > 5 ? 'danger' : row.nulls > 2 ? 'warning' : 'success';
+                        return `<span class="text-${color}">${value}</span>`;
+                    }
+                },
+                {
+                    key: 'uniquePercent',
+                    label: 'Unique Values',
+                    sortable: true,
+                    render: (value) => `<span class="text-info">${value}</span>`
+                },
+                {
+                    key: 'quality',
+                    label: 'Quality Score',
+                    sortable: true,
+                    render: (value) => {
+                        const color = value >= 95 ? 'success' : value >= 85 ? 'warning' : 'danger';
+                        return `
+                            <div class="quality-score">
+                                <div class="quality-bar" style="width: 100px; height: 20px; background: #f0f0f0; border-radius: 10px; overflow: hidden;">
+                                    <div class="quality-fill bg-${color}" style="width: ${value}%; height: 100%;"></div>
+                                </div>
+                                <span class="text-${color} ml-2">${value}%</span>
+                            </div>
+                        `;
+                    }
+                }
+            ],
+            data: columns,
+            sortable: true,
+            compact: true,
+            pageSize: 10,
+            emptyMessage: 'No columns found'
+        };
+
+        new DataTable(document.getElementById('columnAnalysisTable'), columnTableConfig);
     }
 
     generateColumnProfiles() {
@@ -1055,27 +1126,117 @@ class DataCleaningPage {
             return;
         }
 
-        historyContainer.innerHTML = jobs.map(job => `
-            <div class="history-item">
-                <div class="history-info">
-                    <h4>${job.filename}</h4>
-                    <div class="history-meta">
-                        <span><i class="fas fa-calendar"></i> ${job.date}</span>
-                        <span><i class="fas fa-database"></i> ${job.rows.toLocaleString()} rows</span>
-                        <span><i class="fas fa-layer-group"></i> ${job.tier} tier</span>
-                        <span><i class="fas fa-coins"></i> ${job.tokens} tokens</span>
-                    </div>
-                </div>
-                <div class="history-actions">
-                    <button class="secondary-button" onclick="dataCleaningPage.downloadResults(${job.id})">
-                        <i class="fas fa-download"></i> Download
-                    </button>
-                    <button class="secondary-button" onclick="dataCleaningPage.viewReport(${job.id})">
-                        <i class="fas fa-chart-bar"></i> Report
-                    </button>
-                </div>
-            </div>
-        `).join('');
+        // Create a wrapper for the DataTable
+        historyContainer.innerHTML = '<div id="cleaningHistoryTable"></div>';
+
+        // Configure DataTable columns
+        const columns = [
+            {
+                key: 'filename',
+                label: 'File Name',
+                sortable: true,
+                render: (value) => `<strong>${value}</strong>`
+            },
+            {
+                key: 'date',
+                label: 'Date',
+                sortable: true,
+                type: 'date'
+            },
+            {
+                key: 'rows',
+                label: 'Rows',
+                sortable: true,
+                type: 'number',
+                render: (value) => value.toLocaleString()
+            },
+            {
+                key: 'tier',
+                label: 'Tier',
+                sortable: true,
+                render: (value) => {
+                    const tierColors = {
+                        'basic': 'info',
+                        'advanced': 'warning',
+                        'ai-powered': 'success'
+                    };
+                    return `<span class="badge badge-${tierColors[value] || 'secondary'}">${value}</span>`;
+                }
+            },
+            {
+                key: 'status',
+                label: 'Status',
+                sortable: true,
+                render: (value) => {
+                    const statusIcons = {
+                        'completed': 'check-circle',
+                        'processing': 'spinner fa-spin',
+                        'failed': 'times-circle'
+                    };
+                    const statusColors = {
+                        'completed': 'success',
+                        'processing': 'warning',
+                        'failed': 'danger'
+                    };
+                    return `<i class="fas fa-${statusIcons[value]} text-${statusColors[value]}"></i> ${value}`;
+                }
+            },
+            {
+                key: 'tokens',
+                label: 'Tokens Used',
+                sortable: true,
+                type: 'number',
+                render: (value) => `<span class="text-primary">${value.toLocaleString()}</span>`
+            }
+        ];
+
+        // Configure actions
+        const actions = [
+            {
+                key: 'download',
+                label: 'Download',
+                icon: 'fas fa-download',
+                class: 'btn-sm btn-primary',
+                handler: (row) => this.downloadResults(row.id)
+            },
+            {
+                key: 'report',
+                label: 'Report',
+                icon: 'fas fa-chart-bar',
+                class: 'btn-sm btn-secondary',
+                handler: (row) => this.viewReport(row.id)
+            },
+            {
+                key: 'delete',
+                label: '',
+                icon: 'fas fa-trash',
+                class: 'btn-sm btn-danger',
+                tooltip: 'Delete',
+                handler: (row) => {
+                    Modal.confirm({
+                        title: 'Delete Cleaning Job',
+                        message: `Are you sure you want to delete the cleaning job for "${row.filename}"?`,
+                        confirmText: 'Delete',
+                        confirmClass: 'btn-danger',
+                        onConfirm: () => this.deleteCleaningJob(row.id)
+                    });
+                }
+            }
+        ];
+
+        // Create DataTable instance
+        this.historyTable = new DataTable(document.getElementById('cleaningHistoryTable'), {
+            columns,
+            data: jobs,
+            actions,
+            sortable: true,
+            filterable: true,
+            paginated: true,
+            pageSize: 10,
+            striped: true,
+            hoverable: true,
+            emptyMessage: 'No cleaning jobs found'
+        });
     }
 
     saveCleaningHistory() {
@@ -1091,8 +1252,83 @@ class DataCleaningPage {
     }
 
     viewReport(jobId) {
-        this.showNotification('Opening cleaning report...', 'info');
-        // Would open a detailed report modal
+        const job = this.cleaningJobs.find(j => j.id === jobId);
+        if (!job) {
+            this.showNotification('Job not found', 'error');
+            return;
+        }
+
+        Modal.alert({
+            title: `Cleaning Report: ${job.filename}`,
+            size: 'large',
+            message: `
+                <div class="cleaning-report">
+                    <div class="report-section">
+                        <h4>Summary</h4>
+                        <div class="report-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Rows Processed:</span>
+                                <span class="stat-value">${job.rows.toLocaleString()}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Cleaning Tier:</span>
+                                <span class="stat-value">${job.tier}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Tokens Used:</span>
+                                <span class="stat-value">${job.tokens}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Processing Date:</span>
+                                <span class="stat-value">${job.date}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-section">
+                        <h4>Data Quality Improvements</h4>
+                        <div class="quality-metrics">
+                            <div class="metric">
+                                <div class="metric-label">Duplicates Removed</div>
+                                <div class="metric-value">12,345</div>
+                                <div class="metric-change positive">-15.2%</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Missing Values Handled</div>
+                                <div class="metric-value">8,901</div>
+                                <div class="metric-change positive">-8.7%</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Format Standardizations</div>
+                                <div class="metric-value">45,678</div>
+                                <div class="metric-change">36.6%</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Quality Score</div>
+                                <div class="metric-value">94%</div>
+                                <div class="metric-change positive">+16%</div>
+                            </div>
+                        </div>
+                    </div>
+                    ${job.tier === 'advanced' || job.tier === 'ai-powered' ? `
+                        <div class="report-section">
+                            <h4>Advanced Operations</h4>
+                            <ul class="operations-list">
+                                <li><i class="fas fa-check text-success"></i> AI-powered anomaly detection completed</li>
+                                <li><i class="fas fa-check text-success"></i> Fuzzy matching applied to 3,456 records</li>
+                                <li><i class="fas fa-check text-success"></i> Smart column mapping resolved 12 ambiguities</li>
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `
+        });
+    }
+    
+    deleteCleaningJob(jobId) {
+        this.cleaningJobs = this.cleaningJobs.filter(job => job.id !== jobId);
+        this.saveCleaningHistory();
+        this.loadCleaningHistory();
+        this.showNotification('Cleaning job deleted', 'success');
     }
 
     showPricingModal() {
@@ -1110,27 +1346,7 @@ class DataCleaningPage {
     }
 
     showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 
-                             type === 'error' ? 'exclamation-circle' : 
-                             'info-circle'}"></i>
-            <span>${message}</span>
-        `;
-        
-        // Add to page
-        document.body.appendChild(notification);
-        
-        // Animate in
-        setTimeout(() => notification.classList.add('show'), 10);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
+        toastManager[type](message);
     }
 }
 

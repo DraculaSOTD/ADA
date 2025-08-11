@@ -55,10 +55,28 @@ class Notification(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     title = Column(Text)
     message = Column(Text)
-    read = Column(Boolean, default=False)
-    timestamp = Column(DateTime, server_default=func.now())
+    type = Column(Text, default="info")
+    data = Column(JSONField)
+    is_read = Column(Boolean, default=False)
+    read_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
+    timestamp = Column(DateTime, server_default=func.now())  # Keep for backwards compatibility
 
     user = relationship("User", back_populates="notifications")
+
+class NotificationPreference(Base):
+    __tablename__ = "notification_preferences"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
+    email_notifications = Column(Boolean, default=True)
+    model_completion_alerts = Column(Boolean, default=True)
+    api_usage_warnings = Column(Boolean, default=True)
+    weekly_reports = Column(Boolean, default=False)
+    marketing_emails = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    user = relationship("User", back_populates="notification_preferences")
 
 class RuleExecution(Base):
     __tablename__ = "rule_executions"

@@ -21,7 +21,7 @@ class Model(ModelBase):
     retrain_from: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserBase(BaseModel):
     email: str
@@ -39,7 +39,7 @@ class UserProfile(BaseModel):
     avatar_url: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class User(UserBase):
     id: int
@@ -51,7 +51,7 @@ class User(UserBase):
     profile: UserProfile
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Upload(BaseModel):
     id: int
@@ -62,7 +62,7 @@ class Upload(BaseModel):
     uploaded_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ModelJobBase(BaseModel):
     user_id: int
@@ -81,7 +81,7 @@ class ModelJob(ModelJobBase):
     ended_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class GeneratedDataBase(BaseModel):
     user_id: int
@@ -101,7 +101,7 @@ class GeneratedData(GeneratedDataBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RuleBase(BaseModel):
     rule_name: str
@@ -149,7 +149,7 @@ class Rule(RuleBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RuleResponse(Rule):
     pass
@@ -164,7 +164,7 @@ class RuleListItem(BaseModel):
     linked_model_id: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RuleDetail(Rule):
     pass
@@ -201,7 +201,7 @@ class RuleExecutionListItem(BaseModel):
     completed_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RuleModelListItem(BaseModel):
     id: int
@@ -213,7 +213,7 @@ class RuleModelListItem(BaseModel):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RuleCloneRequest(BaseModel):
     new_name: str
@@ -233,7 +233,7 @@ class TokenTransaction(TokenTransactionBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ModelVoteBase(BaseModel):
     user_id: int
@@ -247,7 +247,15 @@ class ModelVote(ModelVoteBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class VoteStats(BaseModel):
+    model_id: int
+    upvotes: int = 0
+    downvotes: int = 0
+    total_votes: int = 0
+    net_votes: int = 0
+    upvote_percentage: float = 0
 
 class PredictionResultBase(BaseModel):
     user_id: int
@@ -262,23 +270,34 @@ class PredictionResult(PredictionResultBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class NotificationBase(BaseModel):
     user_id: int
     title: str
     message: str
-    read: bool
+    type: str = "info"
+    data: Optional[dict] = None
+    is_read: bool = False
 
 class NotificationCreate(NotificationBase):
     pass
 
 class Notification(NotificationBase):
     id: int
-    timestamp: datetime
+    read_at: Optional[datetime] = None
+    created_at: datetime
+    timestamp: datetime  # Keep for backwards compatibility
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class NotificationPreferences(BaseModel):
+    email_notifications: bool = True
+    model_completion_alerts: bool = True
+    api_usage_warnings: bool = True
+    weekly_reports: bool = False
+    marketing_emails: bool = False
 
 class UserSettingsBase(BaseModel):
     dark_mode: Optional[bool] = None
@@ -303,4 +322,4 @@ class UserSettings(UserSettingsBase):
     user_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

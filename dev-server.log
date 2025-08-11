@@ -1,0 +1,919 @@
+=========================================
+Starting DataPulse V2 development servers
+=========================================
+[0;32mSetting up Python environment...[0m
+[0;32mChecking Python dependencies...[0m
+[0;32mChecking npm dependencies...[0m
+[0;32mStarting Python backend...[0m
+INFO:     Will watch for changes in these directories: ['/home/calvin/Websites/ADA/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [45025] using WatchFiles
+INFO:     Started server process [45028]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[0;32mStarting Vite frontend...[0m
+
+> datapulsev2-frontend@0.0.0 dev
+> vite
+
+
+  VITE v6.3.5  ready in 92 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+[0;32m=========================================[0m
+[0;32mDevelopment servers started![0m
+Frontend: [1;33mhttp://localhost:5173[0m (or 5174 if port is in use)
+Backend:  [1;33mhttp://localhost:8000[0m
+API Docs: [1;33mhttp://localhost:8000/docs[0m
+[0;32m=========================================[0m
+Press [0;31mCtrl+C[0m to stop both servers
+INFO:     127.0.0.1:39718 - "GET /health HTTP/1.1" 200 OK
+(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     127.0.0.1:41128 - "POST /api/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33444 - "POST /api/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33448 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33474 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33464 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33484 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33500 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33506 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33522 - "GET /api/tokens/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47382 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47394 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47402 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45400 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60966 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60970 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60978 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43332 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43348 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43362 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43368 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43374 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43390 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43406 - "GET /api/models/community HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43408 - "GET /api/models/pretrained HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43410 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43424 - "GET /api/models/community HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43440 - "GET /api/models/pretrained HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43450 - "GET /api/models/community HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43458 - "GET /api/models/pretrained HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43474 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56640 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56642 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56632 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56658 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56668 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56660 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56672 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56676 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56678 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51950 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51958 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51966 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51982 - "GET /api/tokens/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45988 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45992 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45994 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46002 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46016 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46012 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55270 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55262 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55274 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38306 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38308 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38316 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38318 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38332 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38338 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60286 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60300 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60312 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60328 - "GET /api/generator/history HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60336 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60350 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60366 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60376 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60382 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60396 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60404 - "GET /api/models/in-progress HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60414 - "GET /api/models/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60424 - "GET /api/tokens/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60436 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60452 - "GET /api/tokens/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41406 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41432 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41416 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41440 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41450 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41460 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55214 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55228 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55232 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55246 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55252 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55266 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51056 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51062 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51088 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51100 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+Database connection error: 404: Settings not found
+INFO:     127.0.0.1:49342 - "GET /api/settings/ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/calvin/Websites/ADA/backend/core/database.py", line 13, in get_db
+    yield db
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/fastapi/concurrency.py", line 27, in contextmanager_in_threadpool
+    yield await run_in_threadpool(cm.__enter__)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 215, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/concurrency.py", line 38, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2476, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "/home/calvin/Websites/ADA/backend/routes/settings.py", line 17, in get_settings
+    raise HTTPException(status_code=404, detail="Settings not found")
+fastapi.exceptions.HTTPException: 404: Settings not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/uvicorn/protocols/http/httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/fastapi/routing.py", line 291, in app
+    async with AsyncExitStack() as async_exit_stack:
+               ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/contextlib.py", line 768, in __aexit__
+    raise exc
+  File "/usr/lib/python3.13/contextlib.py", line 751, in __aexit__
+    cb_suppress = await cb(*exc_details)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/contextlib.py", line 235, in __aexit__
+    await self.gen.athrow(value)
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/fastapi/concurrency.py", line 30, in contextmanager_in_threadpool
+    await anyio.to_thread.run_sync(
+        cm.__exit__, type(e), e, e.__traceback__, limiter=exit_limiter
+    )
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2476, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/calvin/Websites/ADA/backend/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "/usr/lib/python3.13/contextlib.py", line 198, in __exit__
+    raise RuntimeError("generator didn't stop after throw()")
+RuntimeError: generator didn't stop after throw()
+INFO:     127.0.0.1:49328 - "GET /api/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49346 - "GET /api/tokens/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49370 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49362 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49386 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49398 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49404 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49410 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49422 - "GET /api/tokens/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57422 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57426 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57432 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57438 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57442 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57450 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42470 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42480 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42496 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42498 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42512 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42516 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47762 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47776 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47784 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59988 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59990 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60006 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60014 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60020 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60022 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60038 - "GET /api/models/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54772 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54776 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54786 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54792 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54802 - "GET /api/models/pretrained HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54798 - "GET /api/models/community HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54806 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54812 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54842 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54828 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54870 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54858 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54876 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54892 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54886 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54894 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52038 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52012 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52024 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53310 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53320 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53334 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53360 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53344 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53362 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51756 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51766 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51774 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51776 - "GET /api/models/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51794 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51790 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51810 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51822 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51834 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51836 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56310 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56324 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56338 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49890 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49896 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49908 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49924 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49932 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49946 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49950 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49962 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49970 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49984 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49992 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50008 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37176 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37192 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37194 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37196 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37210 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37224 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37226 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37240 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37242 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34896 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34908 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34914 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50790 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50812 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50806 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50816 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50826 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50834 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50848 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50846 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50854 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53202 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53210 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53220 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53236 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53248 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53250 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53262 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53264 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53276 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53006 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53020 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32942 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32954 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32964 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32980 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32988 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33004 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33008 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33028 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33018 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44310 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44326 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44332 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44340 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44344 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44356 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44364 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44378 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44392 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45700 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45706 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45710 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45720 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45722 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45738 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45752 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45748 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45764 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57116 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57132 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57146 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57152 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57166 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57170 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57176 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57196 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57190 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46020 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46004 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46008 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46026 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46040 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46046 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46050 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46064 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46072 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46446 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46448 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46454 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46458 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46468 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46474 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36268 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36278 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36294 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36300 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36316 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36324 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36352 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36336 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36356 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34704 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34708 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34714 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34728 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34716 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34738 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34750 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34760 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34766 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55370 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55382 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55394 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55408 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55418 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55434 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50620 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50624 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50636 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50652 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50640 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50664 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50680 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50696 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50682 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50710 - "GET /api/models/community HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50722 - "GET /api/models/pretrained HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50730 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53710 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53712 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53728 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53734 - "GET /api/notifications/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53730 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53748 - "GET /api/models/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53760 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53776 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53754 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53790 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53802 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53794 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53814 - "GET /api/generator/history HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53828 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53838 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53844 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44254 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44270 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44284 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44286 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44300 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44302 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56292 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56312 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56306 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56318 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56334 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56338 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56356 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56346 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56360 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43638 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43642 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43658 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43674 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43668 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43676 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43692 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43694 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43698 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43714 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43708 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43726 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55670 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55678 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55692 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55708 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55722 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55736 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39656 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39672 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39682 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39686 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39688 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39702 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39708 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39734 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39718 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37810 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37812 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37816 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37824 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37830 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37834 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37848 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37862 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37864 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37878 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37882 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37880 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37400 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37414 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37430 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37446 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37432 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37450 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36376 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36372 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36380 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36396 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36410 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36412 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36428 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36422 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36436 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44848 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44850 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44866 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44870 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44874 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44876 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44884 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44880 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44898 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44910 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44922 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44938 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49064 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49050 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49070 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49084 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49104 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49100 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55990 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56006 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56012 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56014 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56018 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56034 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56024 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56050 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35418 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35434 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35446 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35458 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35478 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35472 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35484 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35500 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35496 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35510 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35522 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35532 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49290 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49302 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49308 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49314 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49322 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49328 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49890 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49906 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49896 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49914 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49938 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49930 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49954 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49964 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49956 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43638 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43640 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43654 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43668 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43678 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43686 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43694 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43700 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43710 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43718 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43728 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43736 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50320 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50336 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50332 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50352 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50362 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50374 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47000 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46992 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46994 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47014 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47022 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47024 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47032 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47036 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47050 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43060 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43074 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43084 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43092 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43100 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43102 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43108 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43138 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43122 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47704 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47716 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47718 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47730 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47740 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47754 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47760 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47774 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47764 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52902 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52900 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52918 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52936 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52928 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52952 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52968 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52984 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52972 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41648 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41636 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41660 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41664 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41676 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41688 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41708 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41696 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41716 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37062 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37064 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37068 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37078 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37088 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37094 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37104 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37110 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37118 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48384 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48374 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48390 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48392 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48398 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48414 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48418 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48424 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48426 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42326 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42342 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42358 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42368 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42390 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42380 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42398 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42410 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42422 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57178 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57184 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57190 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57212 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57206 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57208 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57214 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57230 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57242 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45628 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45638 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45640 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45646 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45656 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45672 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45674 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45690 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45692 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49650 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49664 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49640 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49682 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49674 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49692 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49702 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49708 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45110 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45116 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45120 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45144 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45136 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45138 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45156 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45166 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45178 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53074 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53066 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53076 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53092 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53098 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53102 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53122 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53108 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53136 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57294 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57308 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57310 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57318 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57324 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57336 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57352 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57360 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57374 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41978 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41986 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41974 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42002 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42018 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42008 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42028 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42040 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42050 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45374 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45388 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45404 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45416 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45426 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45430 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45446 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45454 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45448 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59700 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59706 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59720 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59726 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59736 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59750 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59764 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59774 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59752 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51230 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51254 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51246 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51270 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51274 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51288 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51296 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51304 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51312 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38528 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38526 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38538 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38556 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38570 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38548 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38580 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38582 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38596 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43832 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43858 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43846 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43866 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43878 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43880 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43886 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43888 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43900 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46086 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46092 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46108 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46118 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46128 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46124 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46140 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46148 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46154 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52650 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52658 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52672 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52684 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52694 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52704 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52708 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52714 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52716 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48710 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48716 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48720 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48736 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48746 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48742 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48750 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48752 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48764 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51568 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51578 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51588 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51604 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51608 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51620 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51628 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51642 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51648 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37980 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37982 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37992 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38006 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38034 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38018 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38048 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38054 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38068 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46578 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46604 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46592 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46614 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46628 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46636 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46640 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46646 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46662 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59222 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59234 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59244 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59248 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59254 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59270 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59276 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59280 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59286 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51970 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51982 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51974 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52010 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51994 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51992 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52032 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52018 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52048 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39014 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39034 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39020 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39044 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39050 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39064 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39080 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39068 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39084 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58258 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58268 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58280 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58282 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58294 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58296 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58300 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58308 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58324 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49634 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49642 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49648 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49660 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49674 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49688 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49702 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32962 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32966 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32968 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32984 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32982 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32994 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33008 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33016 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33032 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36692 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36684 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36698 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36712 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36710 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36726 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36734 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36740 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36752 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39082 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39076 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39096 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39122 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39112 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39126 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39152 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39136 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39154 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42030 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42016 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42006 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42042 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42072 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42058 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42084 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42104 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42092 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51432 - "GET /api/tokens/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51416 - "GET /api/tokens/analytics?period=week HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51446 - "GET /api/tokens/usage?limit=5 HTTP/1.1" 200 OK
+
+[1;33mStopping development servers...[0m
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [45028]

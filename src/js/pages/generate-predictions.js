@@ -1,6 +1,9 @@
 import { fetchAuthenticatedData } from '../services/api.js';
+import { modelEditorPage } from './model-editor.js';
 
-function setupGeneratePredictionsPage() {
+async function setupGeneratePredictionsPage() {
+    // Initialize the model editor with styled dropdowns
+    await modelEditorPage.initialize();
     const modelSearch = document.getElementById('model-search');
     const modelOptions = document.getElementById('model-options');
     const csvUpload = document.getElementById('csv-upload');

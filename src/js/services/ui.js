@@ -1,4 +1,5 @@
 import { loadComponent, loadComponentCSS } from './componentLoader.js';
+import { fetchAuthenticatedData } from './api.js';
 
 function updateActiveSidebarLink(pageName) {
     const pageNameWithoutSuffix = pageName.replace(/Page$/, '');
@@ -71,6 +72,21 @@ function setupThemeSwitcher() {
     updateThemeIcon(); // Set initial icon
 }
 
+async function updateTokenBalance() {
+    try {
+        const balanceData = await fetchAuthenticatedData('/api/tokens/balance');
+        if (balanceData) {
+            const tokenAmountElement = document.querySelector('.sidebar .token-amount');
+            if (tokenAmountElement) {
+                tokenAmountElement.textContent = balanceData.current_balance || 0;
+            }
+        }
+    } catch (error) {
+        console.error('Failed to update token balance:', error);
+        // Don't show error to user - just keep the default value
+    }
+}
+
 async function setupChat() {
     await loadComponent('Chat/Chat', '#chat-container');
     loadComponentCSS('src/components/Chat/Chat.css');
@@ -91,4 +107,4 @@ async function setupChat() {
     }
 }
 
-export { updateActiveSidebarLink, setupHeaderDropdown, setupThemeSwitcher, setupChat };
+export { updateActiveSidebarLink, setupHeaderDropdown, setupThemeSwitcher, setupChat, updateTokenBalance };

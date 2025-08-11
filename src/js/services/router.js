@@ -11,7 +11,7 @@ import { setupRuleHistory } from '../pages/rule-history.js';
 import { setupSettingsPage } from '../pages/settings.js';
 import { setupUserProfilePage } from '../pages/user-profile.js';
 import { setupContactUsPage } from '../pages/contact-us.js';
-import { updateActiveSidebarLink, setupHeaderDropdown, setupThemeSwitcher, setupChat } from './ui.js';
+import { updateActiveSidebarLink, setupHeaderDropdown, setupThemeSwitcher, setupChat, updateTokenBalance } from './ui.js';
 
 const routes = {
     'AuthPage': {
@@ -104,6 +104,9 @@ async function setupMainLayout() {
     setupHeaderDropdown(loadPage);
     setupThemeSwitcher();
     await setupChat();
+    
+    // Update token balance in sidebar
+    updateTokenBalance();
 
     // Handle sidebar navigation for authenticated pages
     document.querySelector('.sidebar-nav').addEventListener('click', async (event) => {
