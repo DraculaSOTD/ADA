@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA - Adaptive Distributed Architecture Platform</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/themes.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app">
+        <!-- Navigation Header -->
+        <header id="main-header" class="main-header">
+            <nav id="main-nav" class="main-nav">
+                <div class="nav-brand">
+                    <h1>ADA Platform</h1>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <!-- Navigation items will be loaded here -->
+                </div>
+                <div class="nav-user" id="nav-user">
+                    <!-- User menu will be loaded here -->
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="main-content">
+            <!-- Dynamic content will be loaded here -->
+            <div id="page-container" class="page-container">
+                <!-- Page components render here -->
+            </div>
+        </main>
+
+        <!-- Sidebar (for admin/settings) -->
+        <aside id="sidebar" class="sidebar" style="display: none;">
+            <div id="sidebar-content">
+                <!-- Sidebar content loads here -->
+            </div>
+        </aside>
+
+        <!-- Modal Container -->
+        <div id="modal-container" class="modal-container">
+            <!-- Modals will be rendered here -->
+        </div>
+
+        <!-- Notification Container -->
+        <div id="notification-container" class="notification-container">
+            <!-- Notifications will appear here -->
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Component Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/component-loader.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/websocket-manager.js"></script>
+    <script src="js/data-binding.js"></script>
+    <script src="js/services/api-service.js"></script>
+    
+    <!-- Core Components -->
+    <script src="components/core/base-component.js"></script>
+    <script src="components/core/button.js"></script>
+    <script src="components/core/input.js"></script>
+    <script src="components/core/modal.js"></script>
+    <script src="components/core/data-table.js"></script>
+    <script src="components/core/card.js"></script>
+    <script src="components/core/progress-bar.js"></script>
+    
+    <!-- Dynamic Components -->
+    <script src="components/dynamic/dynamic-ui-manager.js"></script>
+    <script src="components/dynamic/form-builder.js"></script>
+    
+    <!-- Page Components -->
+    <script src="components/pages/dashboard.js"></script>
+    <script src="components/pages/model-creation.js"></script>
+    <script src="components/pages/data-generation.js"></script>
+    <script src="components/pages/rules-engine.js"></script>
+    <script src="components/pages/admin-dashboard.js"></script>
+    
+    <!-- Main Application Entry -->
+    <script src="js/main.js"></script>
+</body>
+</html>
