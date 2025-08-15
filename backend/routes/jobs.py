@@ -6,7 +6,7 @@ from models import schemas
 from services import job_service, security
 from core.database import get_db
 
-router = APIRouter(prefix="/jobs", tags=["Jobs"])
+router = APIRouter(prefix="/api/jobs", tags=["Jobs"])
 
 @router.post("/", response_model=schemas.ModelJob)
 def create_job(

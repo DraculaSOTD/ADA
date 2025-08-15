@@ -16,7 +16,7 @@ from services.synthetic_data_generator import SyntheticDataGenerator
 from core.database import get_db
 from services.security import get_current_user
 
-router = APIRouter(prefix="/generator", tags=["Generator"])
+router = APIRouter(prefix="/api/generator", tags=["Generator"])
 
 # Initialize services
 pattern_analyzer = PatternAnalyzer()
@@ -30,7 +30,7 @@ def create_generated_data(data: schemas.GeneratedDataCreate, db: Session = Depen
 @router.post("/analyze")
 async def analyze_file(
     file: UploadFile = File(...),
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Analyze uploaded file and detect patterns"""
@@ -71,7 +71,7 @@ async def analyze_file(
 async def generate_data(
     request: Dict[str, Any],
     background_tasks: BackgroundTasks,
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Generate synthetic data based on patterns or configuration"""
@@ -136,7 +136,7 @@ async def generate_data(
         
         # Save to database
         db_data = GeneratedData(
-            user_id=current_user['id'],
+            user_id=current_user.id,
             instance_name=request.get('name', f'Generated Data {timestamp}'),
             description=request.get('description', ''),
             rows=num_rows,
@@ -171,14 +171,14 @@ async def generate_data(
 
 @router.get("/history")
 async def get_generation_history(
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.User = Depends(get_current_user),
     db: Session = Depends(get_db),
     limit: int = 50
 ):
     """Get user's generation history"""
     try:
         history = db.query(GeneratedData)\
-            .filter(GeneratedData.user_id == current_user['id'])\
+            .filter(GeneratedData.user_id == current_user.id)\
             .order_by(GeneratedData.created_at.desc())\
             .limit(limit)\
             .all()
@@ -205,14 +205,14 @@ async def get_generation_history(
 @router.get("/download/{data_id}")
 async def download_generated_data(
     data_id: int,
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Download generated data file"""
     try:
         # Get data record
         data_record = db.query(GeneratedData)\
-            .filter(GeneratedData.id == data_id, GeneratedData.user_id == current_user['id'])\
+            .filter(GeneratedData.id == data_id, GeneratedData.user_id == current_user.id)\
             .first()
         
         if not data_record:
@@ -256,7 +256,7 @@ async def download_generated_data(
 @router.get("/preview/{data_id}")
 async def preview_generated_data(
     data_id: int,
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.User = Depends(get_current_user),
     db: Session = Depends(get_db),
     rows: int = 10
 ):
@@ -264,7 +264,7 @@ async def preview_generated_data(
     try:
         # Get data record
         data_record = db.query(GeneratedData)\
-            .filter(GeneratedData.id == data_id, GeneratedData.user_id == current_user['id'])\
+            .filter(GeneratedData.id == data_id, GeneratedData.user_id == current_user.id)\
             .first()
         
         if not data_record:
@@ -309,14 +309,14 @@ async def preview_generated_data(
 @router.delete("/{data_id}")
 async def delete_generated_data(
     data_id: int,
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Delete generated data"""
     try:
         # Get data record
         data_record = db.query(GeneratedData)\
-            .filter(GeneratedData.id == data_id, GeneratedData.user_id == current_user['id'])\
+            .filter(GeneratedData.id == data_id, GeneratedData.user_id == current_user.id)\
             .first()
         
         if not data_record:
@@ -336,3 +336,4 @@ async def delete_generated_data(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

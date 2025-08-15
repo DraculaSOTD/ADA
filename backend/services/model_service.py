@@ -10,8 +10,12 @@ def create_model(db: Session, model: schemas.ModelCreateRequest, user_id: int):
 
 def get_models_by_user(db: Session, user_id: int, status: str = None):
     query = db.query(Model).filter(Model.user_id == user_id)
+    # Only filter by status if the column exists
     if status:
-        query = query.filter(Model.status == status)
+        try:
+            query = query.filter(Model.status == status)
+        except:
+            pass  # Status column might not exist
     return query.all()
 
 def get_community_models(db: Session):

@@ -23,6 +23,11 @@ async function setupGeneratePredictionsPage() {
     }
 
     function renderModelOptions(modelsToRender) {
+        if (!modelOptions) {
+            console.warn('Model options container not found');
+            return;
+        }
+        
         modelOptions.innerHTML = '';
 
         const createModelOption = document.createElement('div');
@@ -44,33 +49,43 @@ async function setupGeneratePredictionsPage() {
         });
     }
 
-    modelSearch.addEventListener('click', () => {
-        renderModelOptions(models);
-        modelOptions.style.display = 'block';
-    });
+    // Add null checks before adding event listeners
+    if (modelSearch) {
+        modelSearch.addEventListener('click', () => {
+            if (modelOptions) {
+                renderModelOptions(models);
+                modelOptions.style.display = 'block';
+            }
+        });
 
-    modelSearch.addEventListener('input', () => {
-        const searchTerm = modelSearch.value.toLowerCase();
-        const filteredModels = models.filter(model => model.name.toLowerCase().includes(searchTerm));
-        renderModelOptions(filteredModels);
-        modelOptions.style.display = 'block';
-    });
+        modelSearch.addEventListener('input', () => {
+            const searchTerm = modelSearch.value.toLowerCase();
+            const filteredModels = models.filter(model => model.name.toLowerCase().includes(searchTerm));
+            if (modelOptions) {
+                renderModelOptions(filteredModels);
+                modelOptions.style.display = 'block';
+            }
+        });
+    }
 
     document.addEventListener('click', (e) => {
-        if (!modelSearch.contains(e.target)) {
+        if (modelSearch && modelOptions && !modelSearch.contains(e.target)) {
             modelOptions.style.display = 'none';
         }
     });
 
-    csvUpload.addEventListener('change', () => {
-        if (csvUpload.files.length > 0) {
-            fileName.textContent = csvUpload.files[0].name;
-        } else {
-            fileName.textContent = 'No file chosen';
-        }
-    });
+    if (csvUpload) {
+        csvUpload.addEventListener('change', () => {
+            if (csvUpload.files.length > 0 && fileName) {
+                fileName.textContent = csvUpload.files[0].name;
+            } else if (fileName) {
+                fileName.textContent = 'No file chosen';
+            }
+        });
+    }
 
-    uploadButton.addEventListener('click', async () => {
+    if (uploadButton) {
+        uploadButton.addEventListener('click', async () => {
         if (csvUpload.files.length === 0) {
             alert('Please select a file to upload.');
             return;
@@ -106,7 +121,8 @@ async function setupGeneratePredictionsPage() {
         };
 
         xhr.send(formData);
-    });
+        });
+    }
 
     loadModels();
 }

@@ -17,9 +17,13 @@ export function setupGeneratePredictionsPage() {
     const uploadStatus = document.getElementById('upload-status');
     const eta = document.getElementById('eta');
 
-    if (!modelSearch || !modelOptions) {
-        console.error('Model search or options container not found');
+    if (!modelSearch) {
+        console.error('Model search element not found');
         return;
+    }
+    
+    if (!modelOptions) {
+        console.warn('Model options container not found - will be created dynamically');
     }
 
     let selectedFile = null;
@@ -48,6 +52,8 @@ export function setupGeneratePredictionsPage() {
         });
 
     function populateModelOptions(filteredModels) {
+        if (!modelOptions) return; // Exit if modelOptions doesn't exist
+        
         modelOptions.innerHTML = ''; // Clear existing options
 
         // Add "Create New" option first
@@ -97,48 +103,56 @@ export function setupGeneratePredictionsPage() {
     });
 
     modelSearch.addEventListener('focus', () => {
-        modelOptions.style.display = 'block';
+        if (modelOptions) {
+            modelOptions.style.display = 'block';
+        }
     });
 
     document.addEventListener('click', (event) => {
-        if (!modelSearch.contains(event.target) && !modelOptions.contains(event.target)) {
+        if (modelOptions && !modelSearch.contains(event.target) && !modelOptions.contains(event.target)) {
             modelOptions.style.display = 'none';
         }
     });
 
-    modelOptions.addEventListener('click', (event) => {
-        if (event.target.tagName === 'DIV') {
-            const selectedValue = event.target.dataset.value;
-            if (selectedValue === 'create-new') {
-                clearFormFields();
-                modelSearch.value = '';
-            } else {
-                const selectedModel = models.find(m => m.id == selectedValue);
-                if (selectedModel) {
-                    populateFormFields(selectedModel);
-                    modelSearch.value = selectedModel.name;
+    if (modelOptions) {
+        modelOptions.addEventListener('click', (event) => {
+            if (event.target.tagName === 'DIV') {
+                const selectedValue = event.target.dataset.value;
+                if (selectedValue === 'create-new') {
+                    clearFormFields();
+                    modelSearch.value = '';
+                } else {
+                    const selectedModel = models.find(m => m.id == selectedValue);
+                    if (selectedModel) {
+                        populateFormFields(selectedModel);
+                        modelSearch.value = selectedModel.name;
+                    }
                 }
+                modelOptions.style.display = 'none';
             }
-            modelOptions.style.display = 'none';
-        }
-    });
+        });
+    }
 
-    csvUpload.addEventListener('change', (event) => {
-        selectedFile = event.target.files[0];
-        if (selectedFile) {
-            fileName.textContent = selectedFile.name;
-        } else {
-            fileName.textContent = 'No file chosen';
-        }
-    });
+    if (csvUpload) {
+        csvUpload.addEventListener('change', (event) => {
+            selectedFile = event.target.files[0];
+            if (selectedFile && fileName) {
+                fileName.textContent = selectedFile.name;
+            } else if (fileName) {
+                fileName.textContent = 'No file chosen';
+            }
+        });
+    }
 
-    uploadButton.addEventListener('click', () => {
-        if (selectedFile) {
-            uploadFile(selectedFile);
-        } else {
-            alert('Please select a file to upload.');
-        }
-    });
+    if (uploadButton) {
+        uploadButton.addEventListener('click', () => {
+            if (selectedFile) {
+                uploadFile(selectedFile);
+            } else {
+                alert('Please select a file to upload.');
+            }
+        });
+    }
 
     function uploadFile(file) {
         const xhr = new XMLHttpRequest();

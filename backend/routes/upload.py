@@ -7,7 +7,7 @@ from models import schemas
 from services import upload_service, security
 from core.database import get_db
 
-router = APIRouter(prefix="/upload", tags=["Upload"])
+router = APIRouter(prefix="/api/upload", tags=["Upload"])
 
 # Allowed file types and size limits
 ALLOWED_EXTENSIONS = {".csv", ".json", ".xlsx", ".xls", ".txt", ".pdf"}

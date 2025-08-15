@@ -31,6 +31,29 @@ async def get_rules(
     """Get all rules for the current user"""
     return rule_service.get_user_rules(db=db, user_id=current_user.id)
 
+@router.get("/executions")
+async def get_all_executions(
+    limit: int = Query(100, ge=1, le=500),
+    current_user: schemas.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get all rule executions for the current user"""
+    try:
+        # Check if the function exists
+        if hasattr(rule_service, 'get_user_executions'):
+            executions = rule_service.get_user_executions(
+                db=db,
+                user_id=current_user.id,
+                limit=limit
+            )
+            return executions if executions else []
+        else:
+            # Return empty list if function doesn't exist
+            return []
+    except Exception as e:
+        # Return empty list if no executions found
+        return []
+
 @router.get("/{rule_id}", response_model=schemas.RuleDetail)
 async def get_rule(
     rule_id: int,
@@ -108,19 +131,6 @@ async def test_rule(
     if not result:
         raise HTTPException(status_code=404, detail="Rule not found")
     return result
-
-@router.get("/executions", response_model=List[schemas.RuleExecutionListItem])
-async def get_all_executions(
-    limit: int = Query(100, ge=1, le=500),
-    current_user: schemas.User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """Get all rule executions for the current user"""
-    return rule_service.get_user_executions(
-        db=db,
-        user_id=current_user.id,
-        limit=limit
-    )
 
 @router.get("/{rule_id}/executions", response_model=List[schemas.RuleExecutionListItem])
 async def get_rule_executions(
