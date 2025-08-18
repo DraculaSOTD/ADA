@@ -1,3 +1,5 @@
+import { StyledDropdown } from '../components/StyledDropdown/StyledDropdown.js';
+
 export function setupGeneratePredictionsPage() {
     const modelSearch = document.getElementById('model-search');
     const modelOptions = document.getElementById('model-options');
@@ -8,14 +10,16 @@ export function setupGeneratePredictionsPage() {
     const hiddenLayersInput = document.getElementById('hidden-layers');
     const batchSizeInput = document.getElementById('batch-size');
     const testingDataSizeInput = document.getElementById('testing-data-size');
-    const testingDataUnitInput = document.getElementById('testing-data-unit');
-    const testingDataFromInput = document.getElementById('testing-data-from');
     const csvUpload = document.getElementById('csv-upload');
     const fileName = document.getElementById('file-name');
     const uploadButton = document.getElementById('upload-button');
     const progressBar = document.getElementById('progress-bar');
     const uploadStatus = document.getElementById('upload-status');
     const eta = document.getElementById('eta');
+    
+    // StyledDropdown instances
+    let testingDataUnitDropdown = null;
+    let testingDataFromDropdown = null;
 
     if (!modelSearch) {
         console.error('Model search element not found');
@@ -28,6 +32,46 @@ export function setupGeneratePredictionsPage() {
 
     let selectedFile = null;
     let models = [];
+
+    // Initialize StyledDropdowns for testing data options
+    initializeDropdowns();
+    
+    function initializeDropdowns() {
+        // Initialize Testing Data Unit dropdown
+        const unitContainer = document.getElementById('testing-data-unit-container');
+        if (unitContainer) {
+            testingDataUnitDropdown = new StyledDropdown(unitContainer, {
+                id: 'testing-data-unit',
+                placeholder: '%',
+                options: [
+                    { value: 'percentage', title: '%', icon: 'fas fa-percent' },
+                    { value: 'rows', title: 'Rows', icon: 'fas fa-table' }
+                ],
+                value: 'percentage',
+                onChange: (value) => {
+                    console.log('Testing data unit changed to:', value);
+                }
+            });
+        }
+        
+        // Initialize Testing Data From dropdown
+        const fromContainer = document.getElementById('testing-data-from-container');
+        if (fromContainer) {
+            testingDataFromDropdown = new StyledDropdown(fromContainer, {
+                id: 'testing-data-from',
+                placeholder: 'Random',
+                options: [
+                    { value: 'random', title: 'Random', icon: 'fas fa-random' },
+                    { value: 'first', title: 'First', icon: 'fas fa-arrow-up' },
+                    { value: 'last', title: 'Last', icon: 'fas fa-arrow-down' }
+                ],
+                value: 'random',
+                onChange: (value) => {
+                    console.log('Testing data from changed to:', value);
+                }
+            });
+        }
+    }
 
     // Fetch models and populate dropdown
     fetch('/api/models/me', {
@@ -80,8 +124,12 @@ export function setupGeneratePredictionsPage() {
         hiddenLayersInput.value = '';
         batchSizeInput.value = '';
         testingDataSizeInput.value = '';
-        testingDataUnitInput.value = 'percentage';
-        testingDataFromInput.value = 'random';
+        if (testingDataUnitDropdown) {
+            testingDataUnitDropdown.setValue('percentage');
+        }
+        if (testingDataFromDropdown) {
+            testingDataFromDropdown.setValue('random');
+        }
     }
 
     function populateFormFields(model) {
@@ -92,8 +140,12 @@ export function setupGeneratePredictionsPage() {
         hiddenLayersInput.value = model.hidden_layers || '';
         batchSizeInput.value = model.batch_size || '';
         testingDataSizeInput.value = model.testing_data_size || '';
-        testingDataUnitInput.value = model.testing_data_unit || 'percentage';
-        testingDataFromInput.value = model.testing_data_from || 'random';
+        if (testingDataUnitDropdown) {
+            testingDataUnitDropdown.setValue(model.testing_data_unit || 'percentage');
+        }
+        if (testingDataFromDropdown) {
+            testingDataFromDropdown.setValue(model.testing_data_from || 'random');
+        }
     }
 
     modelSearch.addEventListener('input', () => {

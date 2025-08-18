@@ -14,7 +14,9 @@ const hashToPage = {
     '#settings': 'SettingsPage',
     '#user-profile': 'UserProfilePage',
     '#contact-us': 'ContactUsPage',
-    '#login': 'AuthPage'
+    '#login': 'AuthPage',
+    '#tokens': 'TokenPurchasePage',
+    '#billing': 'TokenPurchasePage'
 };
 
 // Handle hash changes

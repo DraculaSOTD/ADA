@@ -11,6 +11,7 @@ import { setupRuleHistory } from '../pages/rule-history.js';
 import { setupSettingsPage } from '../pages/settings.js';
 import { setupUserProfilePage } from '../pages/user-profile.js';
 import { setupContactUsPage } from '../pages/contact-us.js';
+import { TokenPurchasePage } from '../pages/tokens.js';
 import { updateActiveSidebarLink, setupHeaderDropdown, setupThemeSwitcher, setupChat, updateTokenBalance } from './ui.js';
 
 const routes = {
@@ -27,7 +28,15 @@ const routes = {
     'AllModelsPage': {
         component: 'AllModelsPage',
         css: 'src/components/AllModelsPage/AllModelsPage.css',
-        setup: setupAllModelsPage
+        setup: async () => {
+            // Initialize the new AllModelsPage component
+            if (window.AllModelsPage) {
+                window.allModelsPage = new window.AllModelsPage();
+            } else {
+                // Fallback to old setup
+                await setupAllModelsPage();
+            }
+        }
     },
     'CustomModelCreationPage': {
         component: 'CustomModelCreationPage',
@@ -47,8 +56,13 @@ const routes = {
     'DataCleaningPage': {
         component: 'DataCleaningPage',
         css: 'src/components/DataCleaningPage/DataCleaningPage.css',
-        setup: () => {
-            if (window.dataCleaningPage) {
+        setup: async () => {
+            // Wait a bit for DOM to be ready
+            await new Promise(resolve => setTimeout(resolve, 100));
+            // Initialize the new DataCleaningPage component
+            if (window.DataCleaningPage) {
+                window.dataCleaningPage = new window.DataCleaningPage();
+            } else if (window.dataCleaningPage) {
                 window.dataCleaningPage.initialize();
             }
         }
@@ -61,7 +75,18 @@ const routes = {
     'RulesListPage': {
         component: 'RulesListPage',
         css: 'src/components/RulesListPage/RulesListPage.css',
-        setup: setupRulesList
+        setup: async () => {
+            // Use the initialization function which includes proper timing
+            if (window.initializeRulesListPage) {
+                window.initializeRulesListPage();
+            } else if (window.RulesListPage) {
+                // Fallback with delay
+                await new Promise(resolve => setTimeout(resolve, 100));
+                window.rulesListPage = new window.RulesListPage();
+            } else {
+                await setupRulesList();
+            }
+        }
     },
     'RuleHistoryPage': {
         component: 'RuleHistoryPage',
@@ -82,6 +107,18 @@ const routes = {
         component: 'ContactUsPage',
         css: 'src/components/ContactUsPage/ContactUsPage.css',
         setup: setupContactUsPage
+    },
+    'TokenPurchasePage': {
+        component: 'TokenPurchasePage',
+        css: 'src/css/payment.css',
+        setup: () => {
+            const page = new TokenPurchasePage();
+            const container = document.querySelector('.page-content-area');
+            if (container) {
+                container.innerHTML = page.render();
+                page.afterRender();
+            }
+        }
     }
 };
 

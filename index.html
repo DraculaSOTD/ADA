@@ -12,10 +12,14 @@
     <link rel="stylesheet" href="/src/components/ProgressBar/ProgressBar.css">
     <link rel="stylesheet" href="/src/components/Modal/Modal.css">
     <link rel="stylesheet" href="/src/components/Toast/Toast.css">
+    <link rel="stylesheet" href="/src/components/shared/TabNavigation.css">
+    <link rel="stylesheet" href="/src/components/shared/SearchBar.css">
+    <link rel="stylesheet" href="/src/components/StyledDropdown/StyledDropdown.css">
     <link rel="stylesheet" href="/src/components/DataCleaningPage/DataCleaningReportModal.css">
     <link rel="stylesheet" href="/src/components/AllModelsPage/ModelDetailsModal.css">
     <link rel="stylesheet" href="/src/components/AllModelsPage/AllModelsTable.css">
     <link rel="stylesheet" href="/src/components/AllModelsPage/AllModelsPage.css">
+    <link rel="stylesheet" href="/src/components/RulesListPage/RulesListPage.css">
     <link rel="stylesheet" href="/src/components/GeneratePredictionsPage/ModelEditorStyles.css">
     <link rel="stylesheet" href="/src/components/CustomModelCreationPage/TokenCostDisplay.css">
 </head>
@@ -26,9 +30,16 @@
     <div id="chat-container"></div>
 <!-- Core Services -->
 <script src="src/js/services/token-service.js"></script>
+<!-- Shared Components -->
+<script type="module" src="src/components/shared/index.js"></script>
+<!-- Page Components -->
+<script type="module" src="src/components/AllModelsPage/AllModelsPage.js"></script>
+<script type="module" src="src/components/DataCleaningPage/DataCleaningPage.js"></script>
+<script type="module" src="src/components/RulesListPage/RulesListPage.js"></script>
 <!-- Main Application -->
 <script type="module" src="src/js/main.js"></script>
 <script type="module" src="src/js/generate-predictions.js"></script>
+<script type="module" src="src/js/pages/all-models.js"></script>
 <script type="module" src="src/js/pages/data-cleaning.js"></script>
 <script type="module" src="src/js/pages/rules-engine-advanced.js"></script>
 </body>

@@ -25,6 +25,7 @@
     /* Additional spacing values */
     --spacing-xsmall: 4px;
     --spacing-xl: 32px;
+    --spacing-xxl: 48px;
     
     /* Additional colors */
     --primary-light: #e0e0ff;
@@ -37,6 +38,7 @@
     
     /* Box shadows */
     --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
     
     /* Extended Design System Variables */
     --primary: #6a5acd;
@@ -409,6 +411,54 @@ body.dark-mode {
 
 .step-remove:hover {
     color: var(--error-color);
+}
+
+/* Standard Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-large);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-small);
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
 }
 
 /* Token Modal Styles */

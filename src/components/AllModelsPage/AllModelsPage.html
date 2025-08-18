@@ -1,17 +1,22 @@
 <div class="all-models-page-container">
-    <h2>All Models</h2>
-    <div class="all-models-tabs-container">
-        <div class="tab-item active" data-tab="all-models-overview">
-            <span>All Models</span>
-        </div>
-        <div class="tab-item" data-tab="community-models">
-            <span>Community Models</span>
-        </div>
-        <div class="tab-item" data-tab="pretrained-models">
-            <span>Pretrained Models</span>
-        </div>
+    <div class="page-header">
+        <h1 class="page-title">All Models</h1>
+        <p class="page-subtitle">Explore and manage AI models across different categories</p>
     </div>
-    <div class="tab-content">
-        <!-- Content for selected tab will be loaded here -->
+    
+    <!-- Tab Navigation Container -->
+    <div id="allModelsTabContainer"></div>
+    
+    <!-- Tab Content -->
+    <div class="tab-panels">
+        <div class="tab-panel active" data-panel="all-models">
+            <!-- All Models content will be loaded here -->
+        </div>
+        <div class="tab-panel" data-panel="community">
+            <!-- Community Models content will be loaded here -->
+        </div>
+        <div class="tab-panel" data-panel="pretrained">
+            <!-- Pretrained Models content will be loaded here -->
+        </div>
     </div>
 </div>

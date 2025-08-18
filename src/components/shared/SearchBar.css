@@ -1,0 +1,117 @@
+/* Standardized Search Bar Component Styles */
+.search-bar {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-icon {
+    position: absolute;
+    left: var(--spacing-medium);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--spacing-medium) var(--spacing-xl) var(--spacing-medium) calc(var(--spacing-medium) * 2.5);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background: var(--input-bg);
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.1);
+}
+
+.search-input:hover {
+    border-color: var(--primary-color-light);
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-clear {
+    position: absolute;
+    right: var(--spacing-medium);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-xsmall);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.search-clear:hover {
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.search-clear.hidden {
+    display: none;
+}
+
+/* Compact variant */
+.search-bar.compact .search-input {
+    padding: var(--spacing-small) var(--spacing-large) var(--spacing-small) calc(var(--spacing-medium) * 2.5);
+    font-size: 0.875rem;
+}
+
+.search-bar.compact .search-icon {
+    font-size: 0.875rem;
+}
+
+/* Large variant */
+.search-bar.large .search-input {
+    padding: var(--spacing-large) var(--spacing-xl) var(--spacing-large) calc(var(--spacing-large) * 2);
+    font-size: 1.125rem;
+}
+
+.search-bar.large .search-icon {
+    left: var(--spacing-large);
+    font-size: 1.125rem;
+}
+
+/* With button variant */
+.search-bar-with-button {
+    display: flex;
+    gap: var(--spacing-small);
+}
+
+.search-bar-with-button .search-bar {
+    flex: 1;
+}
+
+/* Dark mode support */
+body.dark-mode .search-input {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+body.dark-mode .search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-bar {
+        max-width: 100%;
+    }
+}

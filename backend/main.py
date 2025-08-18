@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from core.database import get_db
-from routes import models, auth, upload, jobs, generator, rules, tokens, votes, settings, notifications
+from routes import models, auth, upload, jobs, generator, rules, tokens, votes, settings, notifications, payment
 
 app = FastAPI()
 
@@ -27,6 +27,7 @@ app.include_router(tokens.router)
 app.include_router(votes.router)
 app.include_router(settings.router)
 app.include_router(notifications.router)
+app.include_router(payment.router)
 
 
 @app.get("/")

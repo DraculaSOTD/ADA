@@ -12,7 +12,47 @@
     flex-wrap: wrap;
 }
 
-/* Search Box */
+/* Search Bar Container - matching dashboard style */
+.search-bar-container {
+    display: flex;
+    gap: var(--spacing-medium);
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-bar-container .search-input {
+    flex-grow: 1;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.search-bar-container .search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.1);
+}
+
+.search-bar-container .search-button {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-medium);
+    transition: background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.search-bar-container .search-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+/* Legacy search box styles (kept for compatibility) */
 .search-box {
     position: relative;
     flex: 1;
