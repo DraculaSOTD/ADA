@@ -11,6 +11,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    force: true, // Force re-optimization of dependencies
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
@@ -18,5 +19,8 @@ export default defineConfig({
         secure: false
       }
     }
+  },
+  optimizeDeps: {
+    force: true // Clear the cache on server start
   }
 });

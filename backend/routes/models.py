@@ -43,7 +43,7 @@ def add_model_to_library(model_id: int, db: Session = Depends(get_db), current_u
         raise HTTPException(status_code=404, detail="Model not found")
     return new_model
 
-@router.get("/active")
+@router.get("/active", response_model=list[schemas.Model])
 def get_active_models(db: Session = Depends(get_db), current_user: schemas.User = Depends(security.get_current_user)):
     try:
         # Get all models for now since status might not be in database
@@ -55,7 +55,7 @@ def get_active_models(db: Session = Depends(get_db), current_user: schemas.User 
         # Return empty list if no models found
         return []
 
-@router.get("/in-progress")
+@router.get("/in-progress", response_model=list[schemas.Model])
 def get_in_progress_models(db: Session = Depends(get_db), current_user: schemas.User = Depends(security.get_current_user)):
     try:
         # Get all models for now since status might not be in database

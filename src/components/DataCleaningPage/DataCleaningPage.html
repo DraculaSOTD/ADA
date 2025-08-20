@@ -125,46 +125,6 @@
             </div>
         </div>
 
-        <!-- Workflow Builder Tab -->
-        <div class="tab-content" id="workflowTab">
-            <div class="card">
-                <h2>Visual Workflow Builder</h2>
-                <div class="workflow-container">
-                    <div class="workflow-sidebar">
-                        <h3>Available Steps</h3>
-                        <div class="workflow-tools">
-                            <div class="workflow-tool" draggable="true" data-tool="dedupe">
-                                <i class="fas fa-copy"></i> Deduplication
-                            </div>
-                            <div class="workflow-tool" draggable="true" data-tool="validate">
-                                <i class="fas fa-check-circle"></i> Validation
-                            </div>
-                            <div class="workflow-tool" draggable="true" data-tool="transform">
-                                <i class="fas fa-exchange-alt"></i> Transform
-                            </div>
-                            <div class="workflow-tool" draggable="true" data-tool="ai-clean">
-                                <i class="fas fa-brain"></i> AI Cleaning
-                            </div>
-                            <div class="workflow-tool" draggable="true" data-tool="export">
-                                <i class="fas fa-download"></i> Export
-                            </div>
-                        </div>
-                    </div>
-                    <div class="workflow-canvas" id="workflowCanvas">
-                        <p class="workflow-placeholder">Drag tools here to build your workflow</p>
-                    </div>
-                </div>
-                <div class="workflow-actions">
-                    <button class="secondary-button" onclick="dataCleaningPage.saveWorkflow()">
-                        <i class="fas fa-save"></i> Save Workflow
-                    </button>
-                    <button class="auth-button" onclick="dataCleaningPage.runWorkflow()">
-                        <i class="fas fa-play"></i> Run Workflow
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Cleaning History Tab -->
         <div class="tab-content" id="historyTab">
             <div class="card">

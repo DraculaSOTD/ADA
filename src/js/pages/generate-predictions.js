@@ -111,6 +111,11 @@ async function setupGeneratePredictionsPage() {
             if (xhr.status === 200) {
                 uploadStatus.textContent = 'Upload complete!';
                 eta.textContent = '';
+                
+                // Parse the CSV file and update the model editor
+                if (modelEditorPage && modelEditorPage.handleFileUpload) {
+                    modelEditorPage.handleFileUpload(file);
+                }
             } else {
                 uploadStatus.textContent = 'Upload failed.';
             }

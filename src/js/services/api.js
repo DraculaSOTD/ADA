@@ -51,6 +51,19 @@ async function fetchData(url, options = {}) {
                 }
             }
             
+            // Handle 500 errors that might be auth-related (fallback)
+            if (response.status === 500 && !url.includes('/api/login')) {
+                // Check if error message indicates auth issue
+                if (errorMessage && (errorMessage.includes('401') || errorMessage.includes('credentials'))) {
+                    console.warn('500 error appears to be auth-related, redirecting to login');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('loginTime');
+                    window.location.hash = '#login';
+                    throw new Error('Session expired. Please login again.');
+                }
+            }
+            
             throw new Error(errorMessage);
         }
         

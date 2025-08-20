@@ -27,7 +27,6 @@ export class DataCleaningPage {
         this.tabNavigation.setTabs([
             { id: 'upload', label: 'Upload & Profile', icon: 'fas fa-upload' },
             { id: 'configure', label: 'Configure Cleaning', icon: 'fas fa-cog' },
-            { id: 'workflow', label: 'Workflow Builder', icon: 'fas fa-project-diagram' },
             { id: 'history', label: 'Cleaning History', icon: 'fas fa-history' }
         ]);
     }
@@ -297,74 +296,6 @@ export class DataCleaningPage {
         }
     }
 
-    initializeWorkflowBuilder() {
-        const tools = document.querySelectorAll('.workflow-tool');
-        const canvas = document.getElementById('workflowCanvas');
-
-        tools.forEach(tool => {
-            tool.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('tool', e.target.dataset.tool);
-            });
-        });
-
-        if (canvas) {
-            canvas.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            canvas.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const tool = e.dataTransfer.getData('tool');
-                this.addWorkflowStep(tool);
-            });
-        }
-    }
-
-    addWorkflowStep(tool) {
-        const canvas = document.getElementById('workflowCanvas');
-        if (!canvas) return;
-
-        // Remove placeholder if exists
-        const placeholder = canvas.querySelector('.workflow-placeholder');
-        if (placeholder) placeholder.remove();
-
-        const stepElement = document.createElement('div');
-        stepElement.className = 'workflow-step';
-        stepElement.innerHTML = `
-            <div class="step-header">
-                <i class="fas fa-${this.getToolIcon(tool)}"></i>
-                <span>${this.getToolName(tool)}</span>
-                <button class="step-remove" onclick="this.parentElement.parentElement.remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-
-        canvas.appendChild(stepElement);
-    }
-
-    getToolIcon(tool) {
-        const icons = {
-            'dedupe': 'copy',
-            'validate': 'check-circle',
-            'transform': 'exchange-alt',
-            'ai-clean': 'brain',
-            'export': 'download'
-        };
-        return icons[tool] || 'cog';
-    }
-
-    getToolName(tool) {
-        const names = {
-            'dedupe': 'Deduplication',
-            'validate': 'Validation',
-            'transform': 'Transform',
-            'ai-clean': 'AI Cleaning',
-            'export': 'Export'
-        };
-        return names[tool] || tool;
-    }
-
     formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -455,28 +386,6 @@ export class DataCleaningPage {
     loadInitialContent() {
         // Initialize any default content
         console.log('Data Cleaning Page initialized');
-    }
-
-    saveWorkflow() {
-        const steps = document.querySelectorAll('.workflow-step');
-        if (steps.length === 0) {
-            alert('Please add steps to your workflow');
-            return;
-        }
-
-        // Save workflow logic
-        console.log('Saving workflow with', steps.length, 'steps');
-        this.showNotification('Workflow saved successfully!', 'success');
-    }
-
-    runWorkflow() {
-        const steps = document.querySelectorAll('.workflow-step');
-        if (steps.length === 0) {
-            alert('Please add steps to your workflow');
-            return;
-        }
-
-        this.startCleaning();
     }
 }
 

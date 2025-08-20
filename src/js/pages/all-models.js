@@ -20,8 +20,6 @@ function renderModelTable(models, containerSelector, tableType = 'all') {
                 <div class="search-bar-container">
                     <input type="text" id="model-search-${tableType}" placeholder="Search models..." class="search-input">
                     <button class="search-button"><i class="fas fa-search"></i></button>
-                </div>
-                <div class="table-actions">
                     <button class="btn btn-primary" id="refresh-models-${tableType}">
                         <i class="fas fa-sync-alt"></i> Refresh
                     </button>
