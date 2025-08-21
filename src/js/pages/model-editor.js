@@ -18,6 +18,11 @@ class ModelEditorPage {
             modelComplexity: 0,
             modelQuality: 0
         };
+        this.modelType = null; // 'template' or 'new'
+        this.selectedModelId = null;
+        this.requiredColumns = []; // For template models
+        this.trainingColumns = []; // Selected training columns
+        this.predictionColumns = []; // Selected prediction columns
     }
 
     async initialize() {
@@ -52,53 +57,7 @@ class ModelEditorPage {
             );
         }
 
-        // Replace all dropdowns in tagged data section
-        const taggedDataSection = document.querySelector('.tagged-data');
-        if (taggedDataSection) {
-            const dropdownSelects = taggedDataSection.querySelectorAll('select.description-dropdown');
-            dropdownSelects.forEach((select, index) => {
-                const container = document.createElement('div');
-                container.className = 'dropdown-container';
-                select.parentNode.replaceChild(container, select);
-
-                const isTrainValue = index % 4 === 0;
-                const isTrainDesc = index % 4 === 1;
-                const isPredictValue = index % 4 === 2;
-                const isPredictDesc = index % 4 === 3;
-
-                let options = [];
-                if (isTrainValue || isPredictValue) {
-                    options = [
-                        { value: 'val1', title: 'Customer ID', icon: 'fas fa-id-card' },
-                        { value: 'val2', title: 'Purchase Amount', icon: 'fas fa-dollar-sign' },
-                        { value: 'val3', title: 'Product Category', icon: 'fas fa-tags' },
-                        { value: 'val4', title: 'Date', icon: 'fas fa-calendar' }
-                    ];
-                } else {
-                    options = [
-                        { value: 'col1', title: 'Column 1', icon: 'fas fa-columns' },
-                        { value: 'col2', title: 'Column 2', icon: 'fas fa-columns' },
-                        { value: 'col3', title: 'Column 3', icon: 'fas fa-columns' },
-                        { value: 'col4', title: 'Column 4', icon: 'fas fa-columns' }
-                    ];
-                }
-
-                const dropdownId = `dropdown-${index}`;
-                this.dropdowns[dropdownId] = new StyledDropdown(container, {
-                    id: dropdownId,
-                    placeholder: isTrainValue ? 'Select train value' : 
-                                isTrainDesc ? 'Select column' :
-                                isPredictValue ? 'Select predict value' : 
-                                'Select column',
-                    options: options,
-                    size: 'small',
-                    onChange: () => {
-                        // Update metrics when dropdown selection changes
-                        this.updateMetricsDisplay();
-                    }
-                });
-            });
-        }
+        // Tagged data section will be initialized dynamically when model is selected and data is uploaded
 
         // Testing data dropdowns
         const testingDataUnitContainer = document.getElementById('testing-data-unit-container');
@@ -274,13 +233,18 @@ class ModelEditorPage {
     }
 
     loadModelData(modelId) {
-        // Load model data when selected
+        this.selectedModelId = modelId;
+        
         if (modelId === 'new') {
-            // Clear form for new model
+            // New model - allow all columns
+            this.modelType = 'new';
             this.clearForm();
+            this.initializeTaggedDataSection();
         } else {
-            // Load existing model data
-            console.log('Loading model:', modelId);
+            // Template model - load requirements
+            this.modelType = 'template';
+            this.loadTemplateRequirements(modelId);
+            console.log('Loading template model:', modelId);
         }
     }
 
@@ -291,6 +255,257 @@ class ModelEditorPage {
         document.getElementById('epoch').value = '';
         document.getElementById('hidden-layers').value = '';
         document.getElementById('batch-size').value = '';
+    }
+
+    initializeTaggedDataSection() {
+        const container = document.getElementById('tagged-data-content');
+        if (!container) return;
+
+        // Clear any existing content
+        container.innerHTML = '';
+
+        if (!this.uploadedData || !this.columnNames || this.columnNames.length === 0) {
+            // Show placeholder if no data is uploaded
+            container.innerHTML = `
+                <div class="placeholder-message">
+                    <i class="fas fa-database"></i>
+                    <p>${this.modelType ? 'Upload a CSV file to configure column mappings' : 'Select a model and upload data to configure column mappings'}</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Build UI based on model type
+        if (this.modelType === 'template') {
+            this.buildTemplateColumnMapping(container);
+        } else if (this.modelType === 'new') {
+            this.buildCustomColumnSelector(container);
+        }
+    }
+
+    buildTemplateColumnMapping(container) {
+        // Build UI for template models with required columns
+        const mappingHTML = `
+            <div class="template-mapping">
+                <div class="mapping-header">
+                    <h4>Map CSV columns to required fields</h4>
+                </div>
+                <div class="mapping-rows">
+                    ${this.requiredColumns.map((reqCol, index) => `
+                        <div class="mapping-row">
+                            <div class="csv-column-select" id="template-map-${index}"></div>
+                            <span class="arrow">→</span>
+                            <div class="required-field">
+                                <input type="text" readonly value="${reqCol.name}" />
+                                <span class="field-type">${reqCol.type || 'Any'}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        container.innerHTML = mappingHTML;
+
+        // Initialize dropdowns for each mapping
+        this.requiredColumns.forEach((reqCol, index) => {
+            const dropdownContainer = document.getElementById(`template-map-${index}`);
+            if (dropdownContainer) {
+                const columnOptions = this.columnNames.map((col, colIndex) => ({
+                    value: `col_${colIndex}`,
+                    title: col,
+                    icon: 'fas fa-columns'
+                }));
+
+                this.dropdowns[`template-map-${index}`] = new StyledDropdown(dropdownContainer, {
+                    id: `template-map-${index}`,
+                    placeholder: 'Select CSV column',
+                    options: columnOptions,
+                    size: 'small',
+                    onChange: () => this.updateMetricsDisplay()
+                });
+            }
+        });
+    }
+
+    buildCustomColumnSelector(container) {
+        // Build UI for custom models with add/remove capabilities
+        const selectorHTML = `
+            <div class="column-builder">
+                <div class="column-section training-section">
+                    <h4>Training Columns</h4>
+                    <div class="column-list" id="training-column-list">
+                        ${this.trainingColumns.length > 0 ? 
+                            this.trainingColumns.map(col => this.createColumnItem(col, 'training')).join('') :
+                            '<p class="no-columns">No columns selected. Add columns from available list.</p>'
+                        }
+                    </div>
+                    <button class="btn btn-sm btn-secondary add-column-btn" onclick="modelEditorPage.showColumnSelector('training')">
+                        <i class="fas fa-plus"></i> Add Column
+                    </button>
+                </div>
+                
+                <div class="column-section prediction-section">
+                    <h4>Prediction Columns</h4>
+                    <div class="column-list" id="prediction-column-list">
+                        ${this.predictionColumns.length > 0 ?
+                            this.predictionColumns.map(col => this.createColumnItem(col, 'prediction')).join('') :
+                            '<p class="no-columns">No columns selected. Add columns from available list.</p>'
+                        }
+                    </div>
+                    <button class="btn btn-sm btn-secondary add-column-btn" onclick="modelEditorPage.showColumnSelector('prediction')">
+                        <i class="fas fa-plus"></i> Add Column
+                    </button>
+                </div>
+            </div>
+            
+            <div class="available-columns">
+                <h4>Available Columns</h4>
+                <div class="column-chips">
+                    ${this.columnNames.map((col, index) => {
+                        const isUsed = this.trainingColumns.includes(col) || this.predictionColumns.includes(col);
+                        return `
+                            <div class="column-chip ${isUsed ? 'used' : ''}" data-column="${col}">
+                                <span>${col}</span>
+                                ${!isUsed ? `
+                                    <button class="add-to-training" onclick="modelEditorPage.addColumnToSection('training', '${col}')">
+                                        <i class="fas fa-plus"></i> Train
+                                    </button>
+                                    <button class="add-to-prediction" onclick="modelEditorPage.addColumnToSection('prediction', '${col}')">
+                                        <i class="fas fa-plus"></i> Predict
+                                    </button>
+                                ` : '<span class="used-label">In use</span>'}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+        container.innerHTML = selectorHTML;
+    }
+
+    createColumnItem(columnName, section) {
+        return `
+            <div class="column-item" data-column="${columnName}" data-section="${section}">
+                <i class="fas fa-columns"></i>
+                <span class="column-name">${columnName}</span>
+                <button class="remove-btn" onclick="modelEditorPage.removeColumnFromSection('${section}', '${columnName}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    addColumnToSection(section, columnName) {
+        if (section === 'training') {
+            if (!this.trainingColumns.includes(columnName)) {
+                this.trainingColumns.push(columnName);
+            }
+        } else if (section === 'prediction') {
+            if (!this.predictionColumns.includes(columnName)) {
+                this.predictionColumns.push(columnName);
+            }
+        }
+        
+        this.initializeTaggedDataSection();
+        this.updateMetricsDisplay();
+    }
+
+    removeColumnFromSection(section, columnName) {
+        if (section === 'training') {
+            this.trainingColumns = this.trainingColumns.filter(col => col !== columnName);
+        } else if (section === 'prediction') {
+            this.predictionColumns = this.predictionColumns.filter(col => col !== columnName);
+        }
+        
+        this.initializeTaggedDataSection();
+        this.updateMetricsDisplay();
+    }
+
+    showColumnSelector(section) {
+        // This could open a modal or dropdown to select columns
+        // For now, using the available columns section
+        const availableSection = document.querySelector('.available-columns');
+        if (availableSection) {
+            availableSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    loadTemplateRequirements(modelId) {
+        // Comprehensive template configurations
+        // In production, this would fetch from API
+        const templateConfigurations = {
+            'model1': {
+                name: 'Customer Churn Predictor',
+                description: 'Predicts customer churn probability based on purchase history and behavior patterns',
+                modelFunction: 'Binary Classification (Logistic Regression)',
+                epoch: 50,
+                hiddenLayers: 3,
+                batchSize: 32,
+                requiredColumns: [
+                    { name: 'Customer ID', type: 'ID', required: true },
+                    { name: 'Purchase Amount', type: 'Number', required: true },
+                    { name: 'Product Category', type: 'Category', required: true },
+                    { name: 'Date', type: 'Date', required: true }
+                ]
+            },
+            'model2': {
+                name: 'Sales Forecast Model',
+                description: 'Forecasts future sales based on historical data and seasonal patterns using time series analysis',
+                modelFunction: 'Time Series Regression (LSTM)',
+                epoch: 100,
+                hiddenLayers: 4,
+                batchSize: 64,
+                requiredColumns: [
+                    { name: 'Sales Date', type: 'Date', required: true },
+                    { name: 'Revenue', type: 'Number', required: true },
+                    { name: 'Region', type: 'Category', required: true }
+                ]
+            },
+            'model3': {
+                name: 'Sentiment Analyzer',
+                description: 'Analyzes text sentiment and classifies as positive, negative, or neutral using NLP',
+                modelFunction: 'Multi-class Classification (BERT)',
+                epoch: 30,
+                hiddenLayers: 12,
+                batchSize: 16,
+                requiredColumns: [
+                    { name: 'Text Content', type: 'Text', required: true },
+                    { name: 'Sentiment Score', type: 'Number', required: false }
+                ]
+            }
+        };
+
+        const templateConfig = templateConfigurations[modelId];
+        if (templateConfig) {
+            // Populate form fields with template defaults
+            this.populateFormWithTemplate(templateConfig);
+            
+            // Set required columns for Tagged Data section
+            this.requiredColumns = templateConfig.requiredColumns || [];
+            this.initializeTaggedDataSection();
+        }
+    }
+
+    populateFormWithTemplate(templateConfig) {
+        // Populate all form fields with template default values
+        const modelNameField = document.getElementById('model-name');
+        const modelDescField = document.getElementById('model-description');
+        const modelFunctionField = document.getElementById('model-function');
+        const epochField = document.getElementById('epoch');
+        const hiddenLayersField = document.getElementById('hidden-layers');
+        const batchSizeField = document.getElementById('batch-size');
+
+        if (modelNameField) modelNameField.value = templateConfig.name || '';
+        if (modelDescField) modelDescField.value = templateConfig.description || '';
+        if (modelFunctionField) modelFunctionField.value = templateConfig.modelFunction || '';
+        if (epochField) epochField.value = templateConfig.epoch || '';
+        if (hiddenLayersField) hiddenLayersField.value = templateConfig.hiddenLayers || '';
+        if (batchSizeField) batchSizeField.value = templateConfig.batchSize || '';
+
+        // Update metrics display to reflect the populated values
+        this.updateMetricsDisplay();
+        
+        console.log('Template loaded:', templateConfig.name);
     }
 
     parseCSVData(csvText) {
@@ -507,22 +722,8 @@ class ModelEditorPage {
     updateDropdownsWithColumns() {
         if (!this.columnNames || this.columnNames.length === 0) return;
 
-        // Create options from column names
-        const columnOptions = this.columnNames.map((col, index) => ({
-            value: `col_${index}`,
-            title: col,
-            icon: 'fas fa-columns'
-        }));
-
-        // Update all existing dropdowns in the tagged data section
-        Object.keys(this.dropdowns).forEach(dropdownId => {
-            if (dropdownId.startsWith('dropdown-')) {
-                const dropdown = this.dropdowns[dropdownId];
-                if (dropdown && dropdown.setOptions) {
-                    dropdown.setOptions(columnOptions);
-                }
-            }
-        });
+        // Initialize Tagged Data section with columns
+        this.initializeTaggedDataSection();
         
         // Update metrics after dropdown update
         this.updateMetricsDisplay();

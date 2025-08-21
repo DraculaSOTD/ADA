@@ -19,6 +19,214 @@
 }
 
 /* Tagged data styling */
+.tagged-data-content {
+    min-height: 150px;
+}
+
+.placeholder-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.placeholder-message i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.placeholder-message p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Template mapping styles */
+.template-mapping {
+    padding: 1rem;
+}
+
+.mapping-header h4 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.mapping-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.csv-column-select {
+    flex: 1;
+}
+
+.arrow {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+}
+
+.required-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.required-field input {
+    flex: 1;
+    padding: 0.5rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+}
+
+.field-type {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Custom column selector styles */
+.column-builder {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.column-section {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.column-section h4 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.column-list {
+    min-height: 100px;
+    margin-bottom: 1rem;
+}
+
+.column-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius-sm);
+    transition: background 0.2s;
+}
+
+.column-item:hover {
+    background: var(--bg-tertiary);
+}
+
+.column-item i {
+    color: var(--text-secondary);
+}
+
+.column-name {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: opacity 0.2s;
+}
+
+.remove-btn:hover {
+    opacity: 0.7;
+}
+
+.no-columns {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 1rem;
+    margin: 0;
+}
+
+.add-column-btn {
+    width: 100%;
+}
+
+/* Available columns section */
+.available-columns {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+}
+
+.available-columns h4 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.column-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.column-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.column-chip.used {
+    opacity: 0.6;
+    background: var(--bg-tertiary);
+}
+
+.column-chip button {
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-sm);
+    transition: background 0.2s;
+}
+
+.column-chip button:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.used-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
 .tagged-data .data-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

@@ -9,13 +9,14 @@ class TokenUsageTracker {
             enterprise: Infinity     // Unlimited
         };
         
-        // Initialize with default values
+        // Initialize with loading state
         this.tier = 'developer';
-        this.monthlyLimit = this.tierAllocations[this.tier];
-        this.currentTokens = this.monthlyLimit;
+        this.monthlyLimit = 0;
+        this.currentTokens = 0;
         this.usedTokens = 0;
         this.renewalDate = this.getNextRenewalDate();
         this.additionalTokens = 0; // Tokens purchased separately
+        this.isLoading = true
         
         this.usage = {
             cleaning: 0,
@@ -27,33 +28,104 @@ class TokenUsageTracker {
         };
     }
 
-    initialize(containerId) {
+    async initialize(containerId) {
         this.container = document.getElementById(containerId);
         if (!this.container) {
             console.error('TokenUsageTracker: Container not found');
             return;
         }
         
+        // Show loading state
+        this.showLoadingState();
+        
+        // Load real token data from API
+        await this.loadTokenDataFromAPI();
+        
+        // Also load any cached data
         this.loadTokenData();
+        
+        // Update display with real data
         this.updateDisplay();
         this.setupEventListeners();
         
+        // Subscribe to token sync service if available
+        if (window.tokenSyncService) {
+            window.tokenSyncService.addListener((data) => {
+                this.handleBalanceUpdate(data);
+            });
+        }
+        
         // Update every 30 seconds
-        this.updateInterval = setInterval(() => this.updateDisplay(), 30000);
+        this.updateInterval = setInterval(() => this.loadTokenDataFromAPI(), 30000);
     }
 
+    async loadTokenDataFromAPI() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.warn('No auth token found');
+                return;
+            }
+            
+            const response = await fetch('/api/tokens/balance', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Update with real API data
+                this.currentTokens = data.current_balance || 0;
+                this.monthlyLimit = data.token_limit || 10000;
+                this.usedTokens = data.monthly_usage || 0;
+                
+                // Calculate days until reset
+                if (data.days_until_reset) {
+                    const resetDate = new Date();
+                    resetDate.setDate(resetDate.getDate() + data.days_until_reset);
+                    this.renewalDate = resetDate.toISOString();
+                }
+                
+                // Get user tier from localStorage
+                const userData = localStorage.getItem('user');
+                if (userData) {
+                    try {
+                        const user = JSON.parse(userData);
+                        this.tier = user.subscription_tier || 'developer';
+                    } catch (e) {
+                        console.error('Failed to parse user data:', e);
+                    }
+                }
+                
+                this.isLoading = false;
+                this.saveTokenData();
+                this.updateDisplay();
+            }
+        } catch (error) {
+            console.error('Failed to fetch token balance:', error);
+            this.isLoading = false;
+            // Fall back to cached data
+            this.loadTokenData();
+        }
+    }
+    
     loadTokenData() {
-        // Load from localStorage or API
+        // Load from localStorage as fallback
         const savedData = localStorage.getItem('tokenUsageData');
         if (savedData) {
             const data = JSON.parse(savedData);
-            this.tier = data.tier || this.tier;
-            this.monthlyLimit = this.tierAllocations[this.tier];
-            this.usedTokens = data.usedTokens || 0;
-            this.currentTokens = this.monthlyLimit - this.usedTokens + (data.additionalTokens || 0);
-            this.additionalTokens = data.additionalTokens || 0;
-            this.renewalDate = data.renewalDate || this.getNextRenewalDate();
-            this.usage = data.usage || this.usage;
+            // Only use cached data if we don't have API data
+            if (this.isLoading || this.currentTokens === 0) {
+                this.tier = data.tier || this.tier;
+                this.monthlyLimit = data.monthlyLimit || this.tierAllocations[this.tier];
+                this.usedTokens = data.usedTokens || 0;
+                this.currentTokens = data.currentTokens || 0;
+                this.additionalTokens = data.additionalTokens || 0;
+                this.renewalDate = data.renewalDate || this.getNextRenewalDate();
+                this.usage = data.usage || this.usage;
+            }
             
             // Check if renewal date has passed
             if (new Date() >= new Date(this.renewalDate)) {
@@ -62,9 +134,25 @@ class TokenUsageTracker {
         }
     }
 
+    showLoadingState() {
+        const currentTokensEl = this.container.querySelector('#currentTokens');
+        if (currentTokensEl) {
+            currentTokensEl.textContent = 'Loading...';
+        }
+    }
+    
+    handleBalanceUpdate(data) {
+        if (data && data.balance !== undefined) {
+            this.currentTokens = data.balance;
+            this.updateDisplay();
+        }
+    }
+    
     saveTokenData() {
         const data = {
             tier: this.tier,
+            currentTokens: this.currentTokens,
+            monthlyLimit: this.monthlyLimit,
             usedTokens: this.usedTokens,
             additionalTokens: this.additionalTokens,
             renewalDate: this.renewalDate,
@@ -189,6 +277,13 @@ class TokenUsageTracker {
     }
 
     formatNumber(num) {
+        // Handle zero and small values properly
+        if (num === 0) {
+            return '0';
+        }
+        if (num < 1000) {
+            return num.toLocaleString();
+        }
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'M';
         } else if (num >= 1000) {

@@ -74,17 +74,66 @@ function setupThemeSwitcher() {
 
 async function updateTokenBalance() {
     try {
-        const balanceData = await fetchAuthenticatedData('/api/tokens/balance');
-        if (balanceData) {
-            const tokenAmountElement = document.querySelector('.sidebar .token-amount');
-            if (tokenAmountElement) {
-                tokenAmountElement.textContent = balanceData.current_balance || 0;
+        // Use the token sync service if available
+        if (window.tokenSyncService) {
+            await window.tokenSyncService.forceUpdate();
+        } else {
+            // Fallback to direct API call
+            const balanceData = await fetchAuthenticatedData('/api/tokens/balance');
+            if (balanceData) {
+                const tokenAmountElement = document.querySelector('.sidebar .token-amount');
+                if (tokenAmountElement) {
+                    // Format the balance with K/M suffixes
+                    const formattedBalance = formatTokenAmount(balanceData.current_balance || 0);
+                    tokenAmountElement.textContent = formattedBalance;
+                    
+                    // Store in localStorage
+                    const userData = localStorage.getItem('user');
+                    if (userData) {
+                        try {
+                            const user = JSON.parse(userData);
+                            user.token_balance = balanceData.current_balance || 0;
+                            localStorage.setItem('user', JSON.stringify(user));
+                        } catch (e) {
+                            console.error('Failed to update user data:', e);
+                        }
+                    }
+                }
             }
         }
     } catch (error) {
         console.error('Failed to update token balance:', error);
-        // Don't show error to user - just keep the default value
+        // Try to use cached value from localStorage
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            try {
+                const user = JSON.parse(userData);
+                const tokenAmountElement = document.querySelector('.sidebar .token-amount');
+                if (tokenAmountElement && user.token_balance !== undefined) {
+                    tokenAmountElement.textContent = formatTokenAmount(user.token_balance);
+                }
+            } catch (e) {
+                // Keep default value
+            }
+        }
     }
+}
+
+function formatTokenAmount(amount) {
+    // Handle zero and small values
+    if (amount === 0) {
+        return '0';
+    }
+    if (amount < 1000) {
+        return amount.toLocaleString();
+    }
+    // Apply K/M formatting only for 1000+
+    if (amount >= 1000000) {
+        return `${(amount / 1000000).toFixed(1)}M`;
+    } else if (amount >= 1000) {
+        return `${(amount / 1000).toFixed(1)}K`;
+    }
+    return amount.toLocaleString();
 }
 
 async function setupChat() {

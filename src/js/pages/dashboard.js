@@ -243,12 +243,12 @@ async function loadTokenUsageTracker() {
             // Load the JavaScript for the tracker
             const script = document.createElement('script');
             script.src = 'src/components/TokenUsageTracker/TokenUsageTracker.js';
-            script.onload = () => {
+            script.onload = async () => {
                 // Initialize the tracker after the script loads
                 if (!window.tokenUsageTracker) {
                     window.tokenUsageTracker = new TokenUsageTracker();
                 }
-                window.tokenUsageTracker.initialize('tokenUsageTrackerContainer');
+                await window.tokenUsageTracker.initialize('tokenUsageTrackerContainer');
             };
             document.body.appendChild(script);
         } else {
@@ -258,7 +258,7 @@ async function loadTokenUsageTracker() {
             } else {
                 window.tokenUsageTracker = new TokenUsageTracker();
             }
-            window.tokenUsageTracker.initialize('tokenUsageTrackerContainer');
+            await window.tokenUsageTracker.initialize('tokenUsageTrackerContainer');
         }
     }
 }
@@ -403,6 +403,26 @@ async function setupDashboardPage() {
                     // Reset dropdowns when switching tabs
                     filterDropdown = null;
                     timeDropdown = null;
+                    
+                    // Initialize token sync service if available
+                    if (window.tokenSyncService) {
+                        await window.tokenSyncService.forceUpdate();
+                        // Update balance display in the tokens tab
+                        const balanceElements = document.querySelectorAll('[data-token-balance]');
+                        const userData = localStorage.getItem('user');
+                        if (userData) {
+                            try {
+                                const user = JSON.parse(userData);
+                                const formattedBalance = window.tokenSyncService.formatTokenAmount(user.token_balance || 0);
+                                balanceElements.forEach(el => {
+                                    el.textContent = formattedBalance;
+                                });
+                            } catch (e) {
+                                console.error('Failed to parse user data:', e);
+                            }
+                        }
+                    }
+                    
                     await loadTokensData();
                     // Load TokenUsageTracker component
                     await loadTokenUsageTracker();

@@ -13,6 +13,7 @@ import { setupUserProfilePage } from '../pages/user-profile.js';
 import { setupContactUsPage } from '../pages/contact-us.js';
 import { TokenPurchasePage } from '../pages/tokens.js';
 import { updateActiveSidebarLink, setupHeaderDropdown, setupThemeSwitcher, setupChat, updateTokenBalance } from './ui.js';
+import { tokenSyncService } from './tokenSyncService.js';
 
 const routes = {
     'AuthPage': {
@@ -142,8 +143,13 @@ async function setupMainLayout() {
     setupThemeSwitcher();
     await setupChat();
     
-    // Update token balance in sidebar
-    updateTokenBalance();
+    // Initialize token sync service and update balance
+    if (window.tokenSyncService) {
+        await window.tokenSyncService.initialize();
+    } else {
+        // Fallback to simple update
+        updateTokenBalance();
+    }
 
     // Handle sidebar navigation for authenticated pages
     document.querySelector('.sidebar-nav').addEventListener('click', async (event) => {

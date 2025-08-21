@@ -57,6 +57,36 @@
 
 .token-amount {
     font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.token-amount.balance-updated {
+    animation: pulseBalance 0.5s ease;
+    color: var(--success-color);
+}
+
+@keyframes pulseBalance {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.token-label {
+    position: relative;
+}
+
+.warning-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    color: var(--error-color);
+    font-size: 0.8rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
 .sidebar-nav-links ul {

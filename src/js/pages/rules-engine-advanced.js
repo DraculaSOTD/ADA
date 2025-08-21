@@ -2039,6 +2039,21 @@ class AdvancedRulesEngine {
             if (response && (response.id || this.ruleId)) {
                 const message = this.ruleId ? 'Rule Engine updated successfully!' : 'Rule Engine saved successfully! It will now appear in your models list.';
                 alert(message);
+                
+                // Update token balance after rule creation/update
+                if (window.tokenSyncService) {
+                    await window.tokenSyncService.forceUpdate();
+                    // Track usage
+                    const tokensUsed = response.tokens_used || rulePayload.token_cost || 0;
+                    if (tokensUsed > 0) {
+                        window.tokenSyncService.trackUsage('rule_creation', tokensUsed, {
+                            ruleName: this.ruleData.name,
+                            conditions: this.ruleData.conditions.children?.length || 0,
+                            actions: this.ruleData.actions?.length || 0
+                        });
+                    }
+                }
+                
                 // Clear saved state and reset unsaved changes flag
                 sessionStorage.removeItem('rulesEngineState');
                 this.hasUnsavedChanges = false;

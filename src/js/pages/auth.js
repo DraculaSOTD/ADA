@@ -87,10 +87,26 @@ function setupAuthPage() {
                 alert(`Login failed: ${data.message}`);
             } else if (data && data.access_token) {
                 localStorage.setItem('token', data.access_token);
-                // Store user email for reference
-                localStorage.setItem('user', email);
+                // Store user data for reference
+                const userData = {
+                    email: email,
+                    token_balance: 0 // Will be updated after fetching
+                };
+                localStorage.setItem('user', JSON.stringify(userData));
                 // Store login time to handle timing issues
                 localStorage.setItem('loginTime', Date.now().toString());
+                
+                // Fetch initial token balance
+                try {
+                    const balanceResponse = await fetchAuthenticatedData('/api/tokens/balance');
+                    if (balanceResponse && balanceResponse.current_balance !== undefined) {
+                        userData.token_balance = balanceResponse.current_balance;
+                        localStorage.setItem('user', JSON.stringify(userData));
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch initial token balance:', error);
+                }
+                
                 loadPage('DashboardPage');
             } else {
                 alert('Login failed! Please check your credentials.');
@@ -124,6 +140,26 @@ function setupAuthPage() {
                 });
                 if (loginData && loginData.access_token) {
                     localStorage.setItem('token', loginData.access_token);
+                    // Store user data for reference
+                    const userData = {
+                        email: email,
+                        full_name: fullName,
+                        token_balance: 1000 // New users get 1000 tokens
+                    };
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    localStorage.setItem('loginTime', Date.now().toString());
+                    
+                    // Fetch initial token balance
+                    try {
+                        const balanceResponse = await fetchAuthenticatedData('/api/tokens/balance');
+                        if (balanceResponse && balanceResponse.current_balance !== undefined) {
+                            userData.token_balance = balanceResponse.current_balance;
+                            localStorage.setItem('user', JSON.stringify(userData));
+                        }
+                    } catch (error) {
+                        console.error('Failed to fetch initial token balance:', error);
+                    }
+                    
                     loadPage('DashboardPage');
                 } else {
                     alert('Registration succeeded, but login failed.');

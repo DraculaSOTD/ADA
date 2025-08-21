@@ -39,8 +39,14 @@ def get_token_balance(
     """Get current token balance and usage summary."""
     transactions = token_service.get_token_transactions_by_user(db=db, user_id=current_user.id)
     
-    # Calculate balance
-    current_balance = sum(t.change for t in transactions)
+    # Calculate balance from transactions
+    transaction_balance = sum(t.change for t in transactions)
+    
+    # If no transactions, use user's stored balance (for initial tokens)
+    if not transactions and hasattr(current_user, 'token_balance'):
+        current_balance = current_user.token_balance or 0
+    else:
+        current_balance = transaction_balance
     
     # Calculate monthly usage
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)

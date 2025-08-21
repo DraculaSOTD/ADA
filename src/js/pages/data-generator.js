@@ -1,13 +1,21 @@
 import { fetchAuthenticatedData } from '../services/api.js';
 import tokenService from '../services/token_service.js';
+import { StyledDropdown } from '../../components/StyledDropdown/StyledDropdown.js';
+import { loadComponentCSS } from '../services/componentLoader.js';
 
 let currentFile = null;
 let analysisResult = null;
 let generationHistory = [];
 let selectedMethod = 'ctgan'; // Default generation method
+let dropdowns = {}; // Store dropdown instances
 
 async function setupDataGenerator() {
     console.log('Setting up advanced data generator...');
+    
+    // Load StyledDropdown CSS
+    loadComponentCSS('src/components/StyledDropdown/StyledDropdown.css');
+    // Load Model Editor styles for consistent form styling
+    loadComponentCSS('src/components/GeneratePredictionsPage/ModelEditorStyles.css');
     
     // Load IndustryTemplateSelector
     await loadIndustryTemplateSelector();
@@ -20,6 +28,7 @@ async function setupDataGenerator() {
     setupManualConfiguration();
     setupMultiTableGeneration();
     setupHistoryTab();
+    setupStyledDropdowns(); // Initialize styled dropdowns
     loadGenerationHistory();
     updateMethodAvailability();
     updateRowLimits();
@@ -45,6 +54,155 @@ async function setupDataGenerator() {
     setupEstimateUpdates();
 }
 
+function setupStyledDropdowns() {
+    // Replace Output Format select with StyledDropdown
+    const genFormatSelect = document.getElementById('gen-format');
+    if (genFormatSelect) {
+        const container = document.createElement('div');
+        container.className = 'dropdown-container';
+        genFormatSelect.parentNode.replaceChild(container, genFormatSelect);
+        
+        dropdowns.outputFormat = new StyledDropdown(container, {
+            id: 'gen-format',
+            placeholder: 'Select output format',
+            options: [
+                { value: 'csv', title: 'CSV', icon: 'fas fa-file-csv' },
+                { value: 'json', title: 'JSON', icon: 'fas fa-file-code' },
+                { value: 'excel', title: 'Excel', icon: 'fas fa-file-excel' },
+                { value: 'parquet', title: 'Parquet', icon: 'fas fa-database' }
+            ],
+            value: 'csv',
+            onChange: (value) => {
+                console.log('Output format changed to:', value);
+                updateEstimates();
+            }
+        });
+    }
+    
+    // Replace Data Type select with StyledDropdown (Manual tab)
+    const dataTypeSelect = document.getElementById('data-type');
+    if (dataTypeSelect) {
+        const container = document.createElement('div');
+        container.className = 'dropdown-container';
+        dataTypeSelect.parentNode.replaceChild(container, dataTypeSelect);
+        
+        dropdowns.dataType = new StyledDropdown(container, {
+            id: 'data-type',
+            placeholder: 'Select data type',
+            searchable: true,
+            options: [
+                { value: 'people', title: 'People Data (names, demographics)', icon: 'fas fa-users' },
+                { value: 'numeric', title: 'Numeric Data (measurements, values)', icon: 'fas fa-chart-line' },
+                { value: 'timeseries', title: 'Time Series Data', icon: 'fas fa-clock' },
+                { value: 'categorical', title: 'Categorical Data', icon: 'fas fa-tags' },
+                { value: 'mixed', title: 'Mixed Types', icon: 'fas fa-random' }
+            ],
+            value: 'people',
+            onChange: (value) => {
+                console.log('Data type changed to:', value);
+                updateColumnTemplates(value);
+            }
+        });
+    }
+    
+    // Replace Manual Output Format select with StyledDropdown
+    const manualFormatSelect = document.getElementById('manual-format');
+    if (manualFormatSelect) {
+        const container = document.createElement('div');
+        container.className = 'dropdown-container';
+        manualFormatSelect.parentNode.replaceChild(container, manualFormatSelect);
+        
+        dropdowns.manualFormat = new StyledDropdown(container, {
+            id: 'manual-format',
+            placeholder: 'Select output format',
+            options: [
+                { value: 'csv', title: 'CSV', icon: 'fas fa-file-csv' },
+                { value: 'json', title: 'JSON', icon: 'fas fa-file-code' },
+                { value: 'excel', title: 'Excel', icon: 'fas fa-file-excel' },
+                { value: 'parquet', title: 'Parquet', icon: 'fas fa-database' }
+            ],
+            value: 'csv',
+            onChange: (value) => {
+                console.log('Manual output format changed to:', value);
+                updateManualEstimates();
+            }
+        });
+    }
+    
+    // Replace Multi-Table Output Format select with StyledDropdown
+    const multiTableFormatSelect = document.getElementById('multi-table-format');
+    if (multiTableFormatSelect) {
+        const container = document.createElement('div');
+        container.className = 'dropdown-container';
+        multiTableFormatSelect.parentNode.replaceChild(container, multiTableFormatSelect);
+        
+        dropdowns.multiTableFormat = new StyledDropdown(container, {
+            id: 'multi-table-format',
+            placeholder: 'Select output format',
+            options: [
+                { value: 'sql', title: 'SQL Script', icon: 'fas fa-database' },
+                { value: 'csv-zip', title: 'CSV Files (ZIP)', icon: 'fas fa-file-archive' },
+                { value: 'json', title: 'JSON', icon: 'fas fa-file-code' },
+                { value: 'sqlite', title: 'SQLite Database', icon: 'fas fa-server' }
+            ],
+            value: 'sql',
+            onChange: (value) => {
+                console.log('Multi-table output format changed to:', value);
+                updateMultiTableEstimates();
+            }
+        });
+    }
+    
+    // Convert existing column type dropdowns
+    convertColumnTypeDropdowns();
+}
+
+// Function to convert column-type select elements to StyledDropdowns
+function convertColumnTypeDropdowns() {
+    const columnTypeSelects = document.querySelectorAll('.column-type:not([data-converted])');
+    
+    columnTypeSelects.forEach((select, index) => {
+        const container = document.createElement('div');
+        container.className = 'dropdown-container column-type-dropdown';
+        select.parentNode.replaceChild(container, select);
+        
+        // Get current value if any
+        const currentValue = select.value || 'string';
+        
+        // Create options based on context (manual vs multi-table)
+        const isMultiTable = select.closest('.table-definition') !== null;
+        const options = isMultiTable ? [
+            { value: 'id', title: 'ID (Primary Key)', icon: 'fas fa-key' },
+            { value: 'string', title: 'String', icon: 'fas fa-font' },
+            { value: 'integer', title: 'Integer', icon: 'fas fa-hashtag' },
+            { value: 'float', title: 'Float', icon: 'fas fa-percentage' },
+            { value: 'date', title: 'Date', icon: 'fas fa-calendar' },
+            { value: 'boolean', title: 'Boolean', icon: 'fas fa-toggle-on' }
+        ] : [
+            { value: 'string', title: 'Text', icon: 'fas fa-font' },
+            { value: 'integer', title: 'Integer', icon: 'fas fa-hashtag' },
+            { value: 'float', title: 'Decimal', icon: 'fas fa-percentage' },
+            { value: 'date', title: 'Date', icon: 'fas fa-calendar' },
+            { value: 'boolean', title: 'Boolean', icon: 'fas fa-toggle-on' },
+            { value: 'category', title: 'Category', icon: 'fas fa-tags' }
+        ];
+        
+        new StyledDropdown(container, {
+            id: `column-type-${Date.now()}-${index}`,
+            placeholder: 'Select type',
+            options: options,
+            value: currentValue,
+            size: 'small',
+            onChange: (value) => {
+                console.log('Column type changed to:', value);
+                updateEstimates();
+            }
+        });
+        
+        // Mark as converted to avoid re-converting
+        container.setAttribute('data-converted', 'true');
+    });
+}
 
 function updateMethodAvailability() {
     const methodCards = document.querySelectorAll('.method-card');
@@ -474,22 +632,44 @@ function createColumnItem() {
     const div = document.createElement('div');
     div.className = 'column-item';
     
-    div.innerHTML = `
-        <input type="text" placeholder="Column name" class="column-name">
-        <select class="column-type">
-            <option value="string">Text</option>
-            <option value="integer">Integer</option>
-            <option value="float">Decimal</option>
-            <option value="date">Date</option>
-            <option value="boolean">Boolean</option>
-            <option value="category">Category</option>
-        </select>
-        <button class="remove-column"><i class="fas fa-times"></i></button>
-    `;
+    // Create input for column name
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Column name';
+    nameInput.className = 'column-name';
+    div.appendChild(nameInput);
     
-    // Add remove functionality
-    const removeBtn = div.querySelector('.remove-column');
+    // Create dropdown container for column type
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.className = 'dropdown-container column-type-dropdown';
+    div.appendChild(dropdownContainer);
+    
+    // Create styled dropdown
+    new StyledDropdown(dropdownContainer, {
+        id: `column-type-${Date.now()}`,
+        placeholder: 'Select type',
+        options: [
+            { value: 'string', title: 'Text', icon: 'fas fa-font' },
+            { value: 'integer', title: 'Integer', icon: 'fas fa-hashtag' },
+            { value: 'float', title: 'Decimal', icon: 'fas fa-percentage' },
+            { value: 'date', title: 'Date', icon: 'fas fa-calendar' },
+            { value: 'boolean', title: 'Boolean', icon: 'fas fa-toggle-on' },
+            { value: 'category', title: 'Category', icon: 'fas fa-tags' }
+        ],
+        value: 'string',
+        size: 'small',
+        onChange: (value) => {
+            console.log('New column type:', value);
+            updateManualEstimates();
+        }
+    });
+    
+    // Create remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-column';
+    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
     removeBtn.addEventListener('click', () => div.remove());
+    div.appendChild(removeBtn);
     
     return div;
 }
@@ -641,6 +821,20 @@ async function generateData(config, mode) {
         
         // Add to history
         addToHistory(response);
+        
+        // Update token balance after data generation
+        if (window.tokenSyncService) {
+            await window.tokenSyncService.forceUpdate();
+            // Track usage
+            const tokensUsed = response.tokens_used || config.token_cost || 0;
+            if (tokensUsed > 0) {
+                window.tokenSyncService.trackUsage('data_generation', tokensUsed, {
+                    rows: config.rows,
+                    columns: config.columns || Object.keys(config.columns || {}).length,
+                    mode: mode
+                });
+            }
+        }
         
     } catch (error) {
         console.error('Generation error:', error);
