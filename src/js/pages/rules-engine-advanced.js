@@ -1049,6 +1049,9 @@ class AdvancedRulesEngine {
 
             // Re-attach event listeners for the new elements
             this.attachConditionEventListeners();
+            
+            // Initialize drag and drop
+            this.initializeSortable();
             console.log('✅ renderConditions() completed successfully');
         } catch (error) {
             console.error('❌ Error in renderConditions():', error);
@@ -1069,7 +1072,7 @@ class AdvancedRulesEngine {
                         <button class="btn-remove" data-id="${group.id}">×</button>
                     </div>
                 ` : ''}
-                <div class="group-children">
+                <div class="group-children sortable-container" data-group-id="${group.id}">
                     ${hasChildren ? group.children.map((child, index) => {
                         let html = '';
                         
@@ -1123,7 +1126,10 @@ class AdvancedRulesEngine {
         const fieldOptions = [...this.availableFields];
 
         return `
-            <div class="condition-item" data-id="${condition.id}" style="margin-left: ${indent}px">
+            <div class="condition-item sortable-item" data-id="${condition.id}" style="margin-left: ${indent}px">
+                <div class="drag-handle">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
                 <select class="condition-field" data-id="${condition.id}">
                     <option value="">Select field</option>
                     ${fieldOptions.map(opt => 
@@ -1140,6 +1146,64 @@ class AdvancedRulesEngine {
                 <button class="btn-remove" data-id="${condition.id}">×</button>
             </div>
         `;
+    }
+
+    initializeSortable() {
+        console.log('🔄 Initializing sortable functionality...');
+        
+        // Initialize sortable for all condition groups
+        const sortableContainers = document.querySelectorAll('.sortable-container');
+        
+        sortableContainers.forEach(container => {
+            const groupId = container.dataset.groupId;
+            
+            Sortable.create(container, {
+                group: 'conditions',
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                onEnd: (evt) => {
+                    console.log('🔄 Drag ended:', evt);
+                    this.handleConditionReorder(evt, groupId);
+                }
+            });
+        });
+        
+        console.log('✅ Sortable initialization complete');
+    }
+
+    handleConditionReorder(evt, groupId) {
+        console.log('🔄 Handling condition reorder for group:', groupId);
+        
+        const group = this.findConditionById(this.ruleData.conditions, groupId);
+        if (!group || !group.children) {
+            console.error('❌ Group not found or has no children:', groupId);
+            return;
+        }
+
+        // Get the moved item's ID
+        const movedItemId = evt.item.dataset.id;
+        const oldIndex = evt.oldIndex;
+        const newIndex = evt.newIndex;
+        
+        console.log(`Moving item ${movedItemId} from index ${oldIndex} to ${newIndex}`);
+        
+        // Reorder the children array
+        const movedItem = group.children.splice(oldIndex, 1)[0];
+        group.children.splice(newIndex, 0, movedItem);
+        
+        // Update connectors for all items except the first
+        group.children.forEach((child, index) => {
+            if (index > 0 && !child.connector) {
+                child.connector = 'AND';
+            }
+        });
+        
+        // Save the updated state
+        this.saveState();
+        console.log('✅ Condition reorder complete');
     }
 
     renderActions() {

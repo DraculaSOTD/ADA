@@ -70,7 +70,7 @@ const routes = {
     },
     'RulesEnginePage': {
         component: 'RulesEnginePage',
-        css: 'src/components/RulesEnginePage/RulesEnginePageAdvanced_enhanced.css',
+        css: 'src/components/RulesEnginePage/RulesEnginePageAdvanced.css',
         setup: setupAdvancedRulesEngine
     },
     'RulesListPage': {
