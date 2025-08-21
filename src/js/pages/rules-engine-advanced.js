@@ -88,15 +88,52 @@ class AdvancedRulesEngine {
         }
         return false;
     }
+    
+    destroy() {
+        console.log('🧹 Destroying rules engine instance');
+        
+        // Remove event listeners
+        const beforeUnloadHandler = (e) => {
+            if (this.hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        };
+        window.removeEventListener('beforeunload', beforeUnloadHandler);
+        
+        // Clear any intervals or timeouts if they exist
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+        }
+        
+        // Reset state
+        this.initialized = false;
+        this.hasUnsavedChanges = false;
+        
+        // Clear DOM event listeners
+        const triggerType = document.getElementById('trigger-type');
+        if (triggerType) {
+            triggerType.replaceWith(triggerType.cloneNode(true));
+        }
+        
+        const executionMode = document.getElementById('execution-mode');
+        if (executionMode) {
+            executionMode.replaceWith(executionMode.cloneNode(true));
+        }
+        
+        const errorHandling = document.getElementById('error-handling');
+        if (errorHandling) {
+            errorHandling.replaceWith(errorHandling.cloneNode(true));
+        }
+        
+        console.log('✅ Rules engine instance destroyed');
+    }
 
     async init() {
-        // Prevent multiple initializations
-        if (this.initialized) {
-            console.log('🔄 Rules engine already initialized, skipping...');
-            return;
-        }
-
         console.log('🚀 Initializing Advanced Rules Engine');
+        
+        // Reset initialization state for fresh start
+        this.initialized = false;
         console.log('📄 Document ready state:', document.readyState);
         console.log('🌐 DOM loaded:', document.body ? 'Yes' : 'No');
         
@@ -152,9 +189,16 @@ class AdvancedRulesEngine {
         // Mark as initialized AFTER rendering to prevent race conditions
         this.initialized = true;
         
+        // Initialize form fields with default/empty values
+        this.initializeFormFields();
+        
         // Load API data in background (won't affect UI rendering)
         console.log('🌐 Loading API data in background...');
         this.loadAvailableModelsAsync();
+        
+        // Load additional data for dropdowns
+        this.loadRulesListAsync();
+        this.loadAPIEndpointsAsync();
         
         // Check if we're in edit mode
         const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
@@ -175,6 +219,64 @@ class AdvancedRulesEngine {
         });
     }
 
+    initializeFormFields() {
+        console.log('📝 Initializing form fields...');
+        
+        // Initialize rule name and description
+        const ruleName = document.getElementById('rule-name');
+        const ruleDescription = document.getElementById('rule-description');
+        
+        if (ruleName) {
+            ruleName.value = this.ruleData.name || '';
+            ruleName.addEventListener('input', (e) => {
+                this.ruleData.name = e.target.value;
+                this.saveState();
+            });
+        }
+        
+        if (ruleDescription) {
+            ruleDescription.value = this.ruleData.description || '';
+            ruleDescription.addEventListener('input', (e) => {
+                this.ruleData.description = e.target.value;
+                this.saveState();
+            });
+        }
+        
+        // Initialize settings dropdowns
+        const executionMode = document.getElementById('execution-mode');
+        const errorHandling = document.getElementById('error-handling');
+        const maxRetries = document.getElementById('max-retries');
+        
+        if (executionMode) {
+            executionMode.value = this.ruleData.settings.executionMode || 'sequential';
+            executionMode.addEventListener('change', (e) => {
+                this.ruleData.settings.executionMode = e.target.value;
+                this.saveState();
+                this.updateTokenCost();
+            });
+        }
+        
+        if (errorHandling) {
+            errorHandling.value = this.ruleData.settings.errorHandling || 'stop';
+            errorHandling.addEventListener('change', (e) => {
+                this.ruleData.settings.errorHandling = e.target.value;
+                this.saveState();
+                this.updateTokenCost();
+            });
+        }
+        
+        if (maxRetries) {
+            maxRetries.value = this.ruleData.settings.maxRetries || 3;
+            maxRetries.addEventListener('input', (e) => {
+                this.ruleData.settings.maxRetries = parseInt(e.target.value) || 0;
+                this.saveState();
+                this.updateTokenCost();
+            });
+        }
+        
+        console.log('✅ Form fields initialized');
+    }
+    
     // Async version that doesn't block initialization
     async loadAvailableModelsAsync() {
         try {
@@ -189,6 +291,44 @@ class AdvancedRulesEngine {
             console.error('⚠️ Failed to load models (UI still functional):', error);
             this.availableModels = [];
         }
+    }
+    
+    async loadRulesListAsync() {
+        try {
+            console.log('📡 Fetching existing rules...');
+            const rules = await fetchAuthenticatedData('/api/rules');
+            if (rules && rules.length > 0) {
+                console.log('✅ Rules loaded:', rules.length);
+                // Update any dropdowns that reference other rules
+                this.updateRuleDependentSections(rules);
+            }
+        } catch (error) {
+            console.error('⚠️ Failed to load rules list:', error);
+        }
+    }
+    
+    async loadAPIEndpointsAsync() {
+        try {
+            console.log('📡 Fetching API endpoints...');
+            const endpoints = await fetchAuthenticatedData('/api/endpoints');
+            if (endpoints) {
+                console.log('✅ API endpoints loaded');
+                // Update webhook URL suggestions if needed
+                this.updateAPIEndpointSuggestions(endpoints);
+            }
+        } catch (error) {
+            console.error('⚠️ Failed to load API endpoints:', error);
+        }
+    }
+    
+    updateRuleDependentSections(rules) {
+        // Update any UI that depends on rules list
+        console.log('🔄 Updating rule-dependent sections');
+    }
+    
+    updateAPIEndpointSuggestions(endpoints) {
+        // Update webhook URL suggestions
+        console.log('🔄 Updating API endpoint suggestions');
     }
 
     // Async version that doesn't block initialization  
@@ -369,6 +509,8 @@ class AdvancedRulesEngine {
         if (triggerTypeSelect) {
             triggerTypeSelect.addEventListener('change', (e) => {
                 this.ruleData.triggers.type = e.target.value;
+                this.saveState();
+                this.updateTokenCost();
                 this.renderTriggerConfig();
             });
         }
@@ -411,6 +553,7 @@ class AdvancedRulesEngine {
         }
         parent.children.push(newCondition);
         this.saveState();
+        this.updateTokenCost();
         return newCondition;
     }
 
@@ -428,12 +571,14 @@ class AdvancedRulesEngine {
         }
         parent.children.push(newGroup);
         this.saveState();
+        this.updateTokenCost();
         return newGroup;
     }
 
     removeCondition(parent, conditionId) {
         parent.children = parent.children.filter(child => child.id !== conditionId);
         this.saveState();
+        this.updateTokenCost();
     }
 
     addAction() {
@@ -446,6 +591,7 @@ class AdvancedRulesEngine {
         this.initializeActionConfig(newAction);
         this.ruleData.actions.push(newAction);
         this.saveState();
+        this.updateTokenCost();
         return newAction;
     }
 
@@ -500,6 +646,7 @@ class AdvancedRulesEngine {
     removeAction(actionId) {
         this.ruleData.actions = this.ruleData.actions.filter(action => action.id !== actionId);
         this.saveState();
+        this.updateTokenCost();
     }
 
     renderRule() {
@@ -575,6 +722,8 @@ class AdvancedRulesEngine {
         if (triggerTypeSelect) {
             triggerTypeSelect.addEventListener('change', (e) => {
                 this.ruleData.triggers.type = e.target.value;
+                this.saveState();
+                this.updateTokenCost();
                 this.renderTriggerConfig();
             });
         }
@@ -1449,6 +1598,7 @@ class AdvancedRulesEngine {
                 if (condition) {
                     condition.connector = e.target.value;
                     this.saveState();
+                    this.updateTokenCost();
                 }
             });
         });
@@ -1461,6 +1611,7 @@ class AdvancedRulesEngine {
                 if (condition) {
                     condition.field = e.target.value;
                     this.saveState();
+                    this.updateTokenCost();
                 }
             });
         });
@@ -1473,6 +1624,7 @@ class AdvancedRulesEngine {
                 if (condition) {
                     condition.operator = e.target.value;
                     this.saveState();
+                    this.updateTokenCost();
                 }
             });
         });
@@ -1485,6 +1637,7 @@ class AdvancedRulesEngine {
                 if (condition) {
                     condition.value = e.target.value;
                     this.saveState();
+                    this.updateTokenCost();
                 }
             });
         });
@@ -1517,6 +1670,8 @@ class AdvancedRulesEngine {
                 if (action) {
                     action.type = e.target.value;
                     this.initializeActionConfig(action);
+                    this.saveState();
+                    this.updateTokenCost();
                     this.renderActions();
                 }
             });
@@ -1529,6 +1684,8 @@ class AdvancedRulesEngine {
                 const action = this.ruleData.actions.find(a => a.id === actionId);
                 if (action) {
                     action.config.modelId = e.target.value;
+                    this.saveState();
+                    this.updateTokenCost();
                 }
             });
         });
@@ -1739,7 +1896,12 @@ class AdvancedRulesEngine {
 
     removeConditionById(node, id) {
         if (node.children) {
+            const originalLength = node.children.length;
             node.children = node.children.filter(child => child.id !== id);
+            if (originalLength !== node.children.length) {
+                this.saveState();
+                this.updateTokenCost();
+            }
             node.children.forEach(child => this.removeConditionById(child, id));
         }
     }
@@ -2190,13 +2352,18 @@ class AdvancedRulesEngine {
 }
 
 function setupAdvancedRulesEngine() {
-    // Prevent multiple instances
-    if (window.rulesEngine && window.rulesEngine.initialized) {
-        console.log('🛡️ Rules engine already exists and initialized, skipping setup');
-        return;
+    console.log('🏗️ Setting up rules engine instance...');
+    
+    // Clean up existing instance if present
+    if (window.rulesEngine) {
+        console.log('🧹 Cleaning up existing rules engine instance');
+        if (window.rulesEngine.destroy) {
+            window.rulesEngine.destroy();
+        }
+        window.rulesEngine = null;
     }
-
-    console.log('🏗️ Setting up new rules engine instance...');
+    
+    // Create fresh instance
     const rulesEngine = new AdvancedRulesEngine();
     rulesEngine.init();
     window.rulesEngine = rulesEngine;
