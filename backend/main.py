@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from core.database import get_db
-from routes import models, auth, upload, jobs, generator, rules, tokens, votes, settings, notifications, payment
+from routes import models, auth, upload, jobs, generator, rules, tokens, votes, settings, notifications, payment, cleaning
 
 app = FastAPI()
 
@@ -22,6 +22,7 @@ app.include_router(auth.router)
 app.include_router(upload.router)
 app.include_router(jobs.router)
 app.include_router(generator.router)
+app.include_router(cleaning.router)
 app.include_router(rules.router)
 app.include_router(tokens.router)
 app.include_router(votes.router)

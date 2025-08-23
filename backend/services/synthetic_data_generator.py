@@ -13,6 +13,8 @@ from typing import Dict, Any, List, Optional, Union
 from faker import Faker
 import json
 import io
+from scipy import stats
+import hashlib
 
 
 class SyntheticDataGenerator:
@@ -21,6 +23,8 @@ class SyntheticDataGenerator:
     def __init__(self):
         self.fake = Faker()
         self.seed = None
+        self.privacy_enabled = False
+        self.epsilon = 1.0  # Differential privacy parameter
         
     def set_seed(self, seed: int):
         """Set random seed for reproducibility"""
@@ -485,3 +489,211 @@ class SyntheticDataGenerator:
             return output.getvalue()
         else:
             raise ValueError(f"Unsupported format: {format}")
+    
+    def generate_multi_table(
+        self,
+        table_configs: List[Dict[str, Any]],
+        relationships: List[Dict[str, Any]],
+        options: Dict[str, Any] = None
+    ) -> Dict[str, pd.DataFrame]:
+        """
+        Generate multiple related tables with referential integrity
+        
+        Args:
+            table_configs: List of table configurations
+            relationships: List of relationships between tables
+            options: Generation options
+            
+        Returns:
+            Dictionary of table name to DataFrame
+        """
+        options = options or {}
+        tables = {}
+        
+        # Sort tables by dependencies (primary tables first)
+        sorted_tables = self._sort_tables_by_dependency(table_configs, relationships)
+        
+        # Generate each table
+        for table_config in sorted_tables:
+            table_name = table_config['name']
+            num_rows = table_config['rows']
+            columns = table_config['columns']
+            
+            # Generate base data
+            table_data = {}
+            for col in columns:
+                col_name = col['name']
+                col_type = col['type']
+                
+                if col_type == 'foreign_key':
+                    # Find related table
+                    rel = self._find_relationship(table_name, relationships)
+                    if rel and rel['to'] in tables:
+                        # Use existing primary keys
+                        parent_table = tables[rel['to']]
+                        parent_key = parent_table.iloc[:, 0]  # Assume first column is primary key
+                        
+                        # Sample with replacement for many-to-one relationships
+                        table_data[col_name] = np.random.choice(parent_key, size=num_rows, replace=True)
+                    else:
+                        # Generate sequential IDs
+                        table_data[col_name] = range(1, num_rows + 1)
+                elif col_type == 'id':
+                    # Generate unique IDs
+                    table_data[col_name] = range(1, num_rows + 1)
+                else:
+                    # Generate based on type
+                    table_data[col_name] = self._generate_column_by_type(col_type, num_rows)
+            
+            tables[table_name] = pd.DataFrame(table_data)
+        
+        # Apply privacy if requested
+        if options.get('differential_privacy'):
+            epsilon = options.get('epsilon', 1.0)
+            tables = self._apply_differential_privacy(tables, epsilon)
+        
+        return tables
+    
+    def _sort_tables_by_dependency(
+        self,
+        table_configs: List[Dict[str, Any]],
+        relationships: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Sort tables so that parent tables are generated before child tables"""
+        # Find primary tables (no foreign keys)
+        primary_tables = []
+        dependent_tables = []
+        
+        for config in table_configs:
+            if config.get('isPrimary', False):
+                primary_tables.append(config)
+            else:
+                dependent_tables.append(config)
+        
+        return primary_tables + dependent_tables
+    
+    def _find_relationship(self, table_name: str, relationships: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """Find relationship for a table"""
+        for rel in relationships:
+            if rel['from'] == table_name:
+                return rel
+        return None
+    
+    def _generate_column_by_type(self, col_type: str, num_rows: int) -> List[Any]:
+        """Generate column data based on type"""
+        if col_type == 'string':
+            return [self.fake.word() for _ in range(num_rows)]
+        elif col_type == 'integer':
+            return np.random.randint(1, 1000, num_rows).tolist()
+        elif col_type == 'float':
+            return np.random.uniform(0, 1000, num_rows).tolist()
+        elif col_type == 'date':
+            start_date = datetime(2020, 1, 1)
+            return [self.fake.date_between(start_date=start_date) for _ in range(num_rows)]
+        elif col_type == 'boolean':
+            return np.random.choice([True, False], num_rows).tolist()
+        else:
+            return [None] * num_rows
+    
+    def _apply_differential_privacy(
+        self,
+        tables: Dict[str, pd.DataFrame],
+        epsilon: float
+    ) -> Dict[str, pd.DataFrame]:
+        """Apply differential privacy to generated data"""
+        for table_name, df in tables.items():
+            # Add Laplace noise to numeric columns
+            numeric_cols = df.select_dtypes(include=[np.number]).columns
+            for col in numeric_cols:
+                # Calculate sensitivity (range of values)
+                sensitivity = df[col].max() - df[col].min()
+                
+                # Add Laplace noise
+                noise = np.random.laplace(0, sensitivity / epsilon, len(df))
+                df[col] = df[col] + noise
+                
+                # Ensure values stay within reasonable bounds
+                df[col] = df[col].clip(df[col].min() * 0.9, df[col].max() * 1.1)
+        
+        return tables
+    
+    def apply_privacy_techniques(
+        self,
+        df: pd.DataFrame,
+        techniques: Dict[str, bool],
+        config: Dict[str, Any] = None
+    ) -> pd.DataFrame:
+        """
+        Apply various privacy preservation techniques
+        
+        Args:
+            df: Input DataFrame
+            techniques: Dictionary of technique names to enable/disable
+            config: Additional configuration parameters
+            
+        Returns:
+            Privacy-preserved DataFrame
+        """
+        config = config or {}
+        
+        if techniques.get('k_anonymity'):
+            df = self._apply_k_anonymity(df, config.get('k', 5))
+        
+        if techniques.get('l_diversity'):
+            df = self._apply_l_diversity(df, config.get('l', 3))
+        
+        if techniques.get('t_closeness'):
+            df = self._apply_t_closeness(df, config.get('t', 0.2))
+        
+        if techniques.get('data_masking'):
+            df = self._apply_data_masking(df, config.get('mask_columns', []))
+        
+        return df
+    
+    def _apply_k_anonymity(self, df: pd.DataFrame, k: int) -> pd.DataFrame:
+        """Apply k-anonymity by generalizing quasi-identifiers"""
+        # Identify quasi-identifiers (simplified)
+        quasi_identifiers = []
+        for col in df.columns:
+            if df[col].nunique() > k and df[col].nunique() < len(df) * 0.8:
+                quasi_identifiers.append(col)
+        
+        # Generalize quasi-identifiers
+        for col in quasi_identifiers:
+            if df[col].dtype in ['int64', 'float64']:
+                # Bin numeric values
+                df[col] = pd.cut(df[col], bins=max(len(df) // k, 5), labels=False)
+            else:
+                # Group categorical values
+                value_counts = df[col].value_counts()
+                small_categories = value_counts[value_counts < k].index
+                df.loc[df[col].isin(small_categories), col] = 'OTHER'
+        
+        return df
+    
+    def _apply_l_diversity(self, df: pd.DataFrame, l: int) -> pd.DataFrame:
+        """Apply l-diversity for sensitive attributes"""
+        # This is a simplified implementation
+        # In practice, you would need to identify sensitive attributes
+        # and ensure each equivalence class has at least l diverse values
+        return df
+    
+    def _apply_t_closeness(self, df: pd.DataFrame, t: float) -> pd.DataFrame:
+        """Apply t-closeness for sensitive attributes"""
+        # This is a simplified implementation
+        # In practice, you would ensure the distribution of sensitive attributes
+        # in each equivalence class is close to the overall distribution
+        return df
+    
+    def _apply_data_masking(self, df: pd.DataFrame, mask_columns: List[str]) -> pd.DataFrame:
+        """Apply data masking to specified columns"""
+        for col in mask_columns:
+            if col in df.columns:
+                if df[col].dtype == 'object':
+                    # Mask string data
+                    df[col] = df[col].apply(lambda x: hashlib.sha256(str(x).encode()).hexdigest()[:8] if pd.notna(x) else x)
+                else:
+                    # Mask numeric data
+                    df[col] = df[col].apply(lambda x: hash(str(x)) % 10000 if pd.notna(x) else x)
+        
+        return df

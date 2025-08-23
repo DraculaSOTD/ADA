@@ -26,6 +26,7 @@ class User(Base):
     token_transactions = relationship("TokenTransaction", back_populates="user")
     notifications = relationship("Notification", back_populates="user")
     notification_preferences = relationship("NotificationPreference", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    cleaning_jobs = relationship("CleaningJob", back_populates="user")
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"

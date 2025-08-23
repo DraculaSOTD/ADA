@@ -22,6 +22,71 @@ router = APIRouter(prefix="/api/generator", tags=["Generator"])
 pattern_analyzer = PatternAnalyzer()
 data_generator = SyntheticDataGenerator()
 
+def export_tables_to_sql(tables: Dict[str, pd.DataFrame]) -> str:
+    """Export multiple tables to SQL script"""
+    sql_script = []
+    
+    for table_name, df in tables.items():
+        # Create table statement
+        sql_script.append(f"-- Table: {table_name}")
+        sql_script.append(f"CREATE TABLE {table_name} (")
+        
+        columns = []
+        for col in df.columns:
+            dtype = str(df[col].dtype)
+            if 'int' in dtype:
+                sql_type = 'INTEGER'
+            elif 'float' in dtype:
+                sql_type = 'FLOAT'
+            elif 'bool' in dtype:
+                sql_type = 'BOOLEAN'
+            elif 'datetime' in dtype:
+                sql_type = 'DATETIME'
+            else:
+                sql_type = 'VARCHAR(255)'
+            columns.append(f"  {col} {sql_type}")
+        
+        sql_script.append(",\n".join(columns))
+        sql_script.append(");")
+        sql_script.append("")
+        
+        # Insert statements
+        sql_script.append(f"-- Data for {table_name}")
+        for _, row in df.iterrows():
+            values = []
+            for val in row:
+                if pd.isna(val):
+                    values.append("NULL")
+                elif isinstance(val, str):
+                    values.append(f"'{val}'")
+                else:
+                    values.append(str(val))
+            sql_script.append(f"INSERT INTO {table_name} VALUES ({', '.join(values)});")
+        
+        sql_script.append("")
+    
+    return "\n".join(sql_script)
+
+def export_tables_to_zip(tables: Dict[str, pd.DataFrame]) -> bytes:
+    """Export multiple tables to ZIP file with CSV files"""
+    import zipfile
+    from io import BytesIO
+    
+    zip_buffer = BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        for table_name, df in tables.items():
+            csv_data = df.to_csv(index=False)
+            zip_file.writestr(f"{table_name}.csv", csv_data)
+    
+    return zip_buffer.getvalue()
+
+def export_tables_to_json(tables: Dict[str, pd.DataFrame]) -> str:
+    """Export multiple tables to JSON"""
+    result = {}
+    for table_name, df in tables.items():
+        result[table_name] = df.to_dict('records')
+    return json.dumps(result, indent=2)
+
 @router.post("/", response_model=schemas.GeneratedData)
 def create_generated_data(data: schemas.GeneratedDataCreate, db: Session = Depends(get_db)):
     """Legacy endpoint for backward compatibility"""
@@ -88,10 +153,49 @@ async def generate_data(
                 'preserve_relationships': request.get('preserve_relationships', False),
                 'include_outliers': request.get('include_outliers', False),
                 'add_missing': request.get('add_missing', False),
-                'relationships': request.get('relationships', {})
+                'relationships': request.get('relationships', {}),
+                'differential_privacy': request.get('differential_privacy', False),
+                'epsilon': request.get('epsilon', 1.0)
             }
             
             df = data_generator.generate_from_patterns(patterns, num_rows, options)
+            
+            # Apply privacy techniques if requested
+            privacy_config = request.get('anonymization', {})
+            if any(privacy_config.values()):
+                df = data_generator.apply_privacy_techniques(df, privacy_config)
+            
+        elif mode == 'multi-table':
+            # Multi-table generation
+            tables_config = request.get('tables', [])
+            relationships = request.get('relationships', [])
+            options = request.get('options', {})
+            
+            tables = data_generator.generate_multi_table(tables_config, relationships, options)
+            
+            # Export multi-table data
+            if output_format == 'sql':
+                output_data = export_tables_to_sql(tables)
+            elif output_format == 'csv-zip':
+                output_data = export_tables_to_zip(tables)
+            else:
+                output_data = export_tables_to_json(tables)
+            
+            # Save and return (simplified for multi-table)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"multi_table_{timestamp}.{output_format}"
+            file_path = os.path.join(tempfile.gettempdir(), filename)
+            
+            with open(file_path, 'wb' if isinstance(output_data, bytes) else 'w') as f:
+                f.write(output_data)
+            
+            return {
+                "success": True,
+                "id": timestamp,
+                "tables": len(tables),
+                "format": output_format,
+                "file_path": file_path
+            }
             
         else:
             # Manual configuration
