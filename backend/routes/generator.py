@@ -145,8 +145,44 @@ async def generate_data(
         num_rows = request.get('rows', 1000)
         output_format = request.get('format', 'csv')
         
+        # Handle job tracking if job_id is provided
+        job_id = request.get('job_id')
+        job = None
+        
+        if job_id:
+            # Get the job and update its status
+            from models.job import ModelJob
+            job = db.query(ModelJob).filter(
+                ModelJob.id == job_id,
+                ModelJob.user_id == current_user.id
+            ).first()
+            
+            if job:
+                job.status = 'running'
+                job.started_at = datetime.now()
+                job.progress = 10  # Initial progress
+                db.commit()
+                
+                # Update progress periodically during generation
+                def update_progress(progress_value):
+                    if job:
+                        job.progress = min(progress_value, 100)
+                        db.commit()
+        
         # Generate data based on mode
-        if mode == 'pattern':
+        if mode == 'template':
+            # Template-based generation with industry-specific patterns
+            industry = request.get('industry', 'custom')
+            template_config = request.get('template_config', {})
+            
+            df = data_generator.generate_from_template(template_config, num_rows, industry)
+            
+            # Apply additional privacy if requested
+            privacy_config = request.get('anonymization', {})
+            if any(privacy_config.values()):
+                df = data_generator.apply_privacy_techniques(df, privacy_config)
+                
+        elif mode == 'pattern':
             # Pattern-based generation
             patterns = request.get('patterns', {})
             options = {
@@ -260,6 +296,24 @@ async def generate_data(
         db.commit()
         db.refresh(db_data)
         
+        # Update job status if job tracking is enabled
+        if job:
+            job.status = 'completed'
+            job.progress = 100
+            job.completed_at = datetime.now()
+            job.duration_seconds = int((job.completed_at - job.started_at).total_seconds()) if job.started_at else 0
+            # Store result reference in job parameters
+            if not job.parameters:
+                job.parameters = {}
+            job.parameters['result'] = {
+                'id': db_data.id,
+                'file_path': filename,
+                'rows': num_rows,
+                'columns': len(df.columns),
+                'file_size': file_size
+            }
+            db.commit()
+        
         # Return success response
         return {
             'id': db_data.id,
@@ -271,6 +325,13 @@ async def generate_data(
         }
         
     except Exception as e:
+        # Update job status to failed if job tracking is enabled
+        if job:
+            job.status = 'failed'
+            job.error_message = str(e)
+            job.completed_at = datetime.now()
+            db.commit()
+        
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/history")

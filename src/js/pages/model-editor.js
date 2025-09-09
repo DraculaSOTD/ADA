@@ -179,36 +179,16 @@ class ModelEditorPage {
     }
 
     initializeMetricsDisplay() {
-        // Show all metrics as 0 initially
-        const metricsSection = document.querySelector('.model-history:last-of-type .metrics');
-        if (metricsSection) {
-            metricsSection.innerHTML = `
-                <div class="metric-item">
-                    <label>Predicted Accuracy:</label>
-                    <span class="metric-value">0%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Data Quality:</label>
-                    <span class="metric-value">0%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Model Complexity:</label>
-                    <span class="metric-value">0%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Model Quality:</label>
-                    <span class="metric-value">0%</span>
-                </div>
-                <div class="metric-item highlight">
-                    <label>Total Training Cost:</label>
-                    <span class="metric-value primary">0 tokens <i class="fas fa-coins"></i></span>
-                </div>
-                <div class="metric-item">
-                    <label>Estimated ETA:</label>
-                    <span class="metric-value">0 min</span>
-                </div>
-            `;
-        }
+        // Initialize all metrics to 0
+        this.dataMetrics = {
+            accuracy: 0,
+            dataQuality: 0,
+            modelComplexity: 0,
+            modelQuality: 0
+        };
+        
+        // Update the Cost Summary section with zeros
+        this.updateCostSummary();
         
         // Initialize model history cost display
         const historyCostElement = document.querySelector('.model-history .cost');
@@ -791,78 +771,66 @@ class ModelEditorPage {
         const dynamicCost = this.calculateDynamicTokenCost(); // Calculate dynamic training cost
         this.calculateDynamicVersionCost(); // Calculate dynamic version cost
         
-        const metricsSection = document.querySelector('.model-history:last-of-type .metrics');
-        console.log('Looking for metrics section:', {
-            found: !!metricsSection,
-            selector: '.model-history:last-of-type .metrics'
-        });
+        // Update the new Cost Summary section
+        this.updateCostSummary();
+    }
+    
+    updateCostSummary() {
+        // Calculate all metrics
+        const versionCost = this.modelHistoryVersions * this.tokenCosts.versionCost;
+        const totalCost = this.calculateDynamicTokenCost() + versionCost;
         
-        if (metricsSection) {
-            // Calculate total cost including both training and version costs
-            const versionCost = this.modelHistoryVersions * this.tokenCosts.versionCost;
-            const totalCost = dynamicCost + versionCost;
-            
-            console.log('Token Cost Calculation:', {
-                dynamicCost: dynamicCost,
-                modelHistoryVersions: this.modelHistoryVersions,
-                versionCostPer: this.tokenCosts.versionCost,
-                versionCostTotal: versionCost,
-                totalCost: totalCost,
-                metricsSection: metricsSection
-            });
-            
-            // Calculate ETA based on actual data and complexity
-            let estimatedTime = 0; // Start at 0
-            if (this.uploadedData && this.uploadedData.rowCount > 0) {
-                estimatedTime += Math.round(this.uploadedData.rowCount / 100) + 5; // Add time based on data size
-            }
-            if (this.dataMetrics.modelComplexity > 0) {
-                estimatedTime += Math.round(this.dataMetrics.modelComplexity * 1.2); // Add time based on complexity
-            }
-            
-            metricsSection.innerHTML = `
-                <div class="metric-item">
-                    <label>Predicted Accuracy:</label>
-                    <span class="metric-value">${this.dataMetrics.accuracy}%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Data Quality:</label>
-                    <span class="metric-value">${this.dataMetrics.dataQuality}%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Model Complexity:</label>
-                    <span class="metric-value">${this.dataMetrics.modelComplexity}%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Model Quality:</label>
-                    <span class="metric-value">${this.dataMetrics.modelQuality}%</span>
-                </div>
-                <div class="metric-item highlight">
-                    <label>Total Training Cost:</label>
-                    <span class="metric-value primary">${totalCost.toLocaleString()} tokens <i class="fas fa-coins"></i></span>
-                </div>
-                <div class="metric-item">
-                    <label>Estimated ETA:</label>
-                    <span class="metric-value">${estimatedTime} min</span>
-                </div>
-            `;
-        } else {
-            // If metrics section not found, log error and try alternative selector
-            console.error('Metrics section not found! Trying alternative selectors...');
-            const altMetricsSection = document.querySelector('.card .metrics');
-            if (altMetricsSection) {
-                console.log('Found metrics section with alternative selector');
-                // Update with alternative section
-                const versionCost = this.modelHistoryVersions * this.tokenCosts.versionCost;
-                const totalCost = this.calculateDynamicTokenCost() + versionCost;
-                
-                const costElement = altMetricsSection.querySelector('.metric-item.highlight .metric-value.primary');
-                if (costElement) {
-                    costElement.innerHTML = `${totalCost.toLocaleString()} tokens <i class="fas fa-coins"></i>`;
-                    console.log('Updated Total Training Cost directly:', totalCost);
-                }
-            }
+        // Calculate data size
+        let dataSize = '0 MB';
+        if (this.uploadedData && this.uploadedData.rowCount > 0) {
+            const estimatedBytes = this.uploadedData.rowCount * this.columnNames.length * 50; // Estimate 50 bytes per cell
+            dataSize = this.formatFileSize(estimatedBytes);
         }
+        
+        // Calculate training time
+        let estimatedTime = 0; // Start at 0
+        if (this.uploadedData && this.uploadedData.rowCount > 0) {
+            estimatedTime += Math.round(this.uploadedData.rowCount / 100) + 5; // Add time based on data size
+        }
+        if (this.dataMetrics.modelComplexity > 0) {
+            estimatedTime += Math.round(this.dataMetrics.modelComplexity * 1.2); // Add time based on complexity
+        }
+        
+        // Update all metric elements
+        const updateElement = (id, value) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        };
+        
+        updateElement('total-data-size', dataSize);
+        updateElement('total-token-cost', `${totalCost.toLocaleString()} tokens`);
+        updateElement('predicted-accuracy', `${this.dataMetrics.accuracy}%`);
+        updateElement('data-quality', `${this.dataMetrics.dataQuality}%`);
+        updateElement('model-complexity', `${this.dataMetrics.modelComplexity}%`);
+        updateElement('model-quality', `${this.dataMetrics.modelQuality}%`);
+        updateElement('training-time', `${estimatedTime} min`);
+        updateElement('model-versions', `${this.modelHistoryVersions} versions`);
+        
+        console.log('Cost Summary updated:', {
+            dataSize,
+            totalCost,
+            accuracy: this.dataMetrics.accuracy,
+            dataQuality: this.dataMetrics.dataQuality,
+            modelComplexity: this.dataMetrics.modelComplexity,
+            modelQuality: this.dataMetrics.modelQuality,
+            trainingTime: estimatedTime,
+            versions: this.modelHistoryVersions
+        });
+    }
+    
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 MB';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     handleFileUpload(file) {

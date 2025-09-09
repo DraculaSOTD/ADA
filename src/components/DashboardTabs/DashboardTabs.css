@@ -8,23 +8,25 @@
 
 .tab-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;  /* Change to horizontal layout */
     align-items: center;
+    gap: 8px;  /* Space between icon and text */
     padding: var(--spacing-small) var(--spacing-medium);
     cursor: pointer;
     color: var(--text-color);
-    font-weight: bold;
+    font-weight: normal;  /* Remove bold */
     transition: color 0.2s ease, border-bottom 0.2s ease;
     position: relative;
 }
 
-.tab-item {
-    font-size: 2em; /* Adjust emoji size */
-    margin-bottom: 5px;
+.tab-item i {
+    font-size: 1.2rem;  /* Smaller icon size */
+    margin: 0;  /* Remove margin */
 }
 
 .tab-item span {
-    font-size: 0.9em;
+    font-size: 0.85rem;  /* Smaller text */
+    font-weight: normal;  /* Ensure not bold */
 }
 
 .tab-item.active {

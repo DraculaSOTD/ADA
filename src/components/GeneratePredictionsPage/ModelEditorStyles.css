@@ -7,6 +7,76 @@
     box-shadow: var(--shadow-sm);
 }
 
+/* Cost Summary Section - Matching Data Generator Style */
+.cost-calculator {
+    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    border: 1px solid var(--border-color);
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-large);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.cost-calculator h2 {
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+    font-size: 1.5rem;
+}
+
+.cost-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.metric-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-large);
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    padding: var(--spacing-medium);
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.metric-item i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.metric-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.metric-value {
+    font-size: 1.25rem;
+    color: var(--primary-color-dark);
+    font-weight: bold;
+}
+
+#total-token-cost {
+    color: var(--primary-color);
+}
+
+#predicted-accuracy, #data-quality, #model-complexity, #model-quality {
+    color: var(--success-color);
+}
+
 /* Dropdown containers */
 .dropdown-container {
     width: 100%;
@@ -422,7 +492,7 @@
 
 .progress-container {
     flex: 1;
-    height: 8px;
+    height: 10px;
     background: var(--bg-secondary);
     border-radius: 4px;
     overflow: hidden;
@@ -456,5 +526,10 @@
     
     .page-actions .btn {
         width: 100%;
+    }
+    
+    /* Cost Summary responsive layout */
+    .metric-row {
+        grid-template-columns: 1fr;
     }
 }

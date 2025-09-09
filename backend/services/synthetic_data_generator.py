@@ -15,6 +15,7 @@ import json
 import io
 from scipy import stats
 import hashlib
+from .industry_generators import IndustryGenerators
 
 
 class SyntheticDataGenerator:
@@ -25,6 +26,7 @@ class SyntheticDataGenerator:
         self.seed = None
         self.privacy_enabled = False
         self.epsilon = 1.0  # Differential privacy parameter
+        self.industry_generators = IndustryGenerators()
         
     def set_seed(self, seed: int):
         """Set random seed for reproducibility"""
@@ -109,6 +111,194 @@ class SyntheticDataGenerator:
                 data[col_name] = self._generate_generic_column(col_type, num_rows)
         
         return pd.DataFrame(data)
+    
+    def generate_from_template(
+        self,
+        template_config: Dict[str, Any],
+        num_rows: int,
+        industry: str
+    ) -> pd.DataFrame:
+        """
+        Generate synthetic data from industry template
+        
+        Args:
+            template_config: Template configuration with columns and settings
+            num_rows: Number of rows to generate
+            industry: Industry type (healthcare, finance, retail, etc.)
+            
+        Returns:
+            Generated DataFrame with template-specific data
+        """
+        data = {}
+        columns = template_config.get('columns', [])
+        
+        # Get the industry-specific generator
+        generator_func = self.industry_generators.get_industry_generator(industry)
+        
+        # Generate each column using industry-specific patterns
+        for col_config in columns:
+            col_name = col_config['name']
+            
+            # Use industry-specific generation if available
+            if industry in ['healthcare', 'finance', 'retail', 'manufacturing', 'insurance']:
+                data[col_name] = generator_func(col_name, col_config, num_rows)
+            else:
+                # Fallback to template type mapping for custom templates
+                data[col_name] = self._generate_template_column(col_config, num_rows)
+        
+        df = pd.DataFrame(data)
+        
+        # Apply template-specific relationships if defined
+        if 'relationships' in template_config:
+            df = self._apply_template_relationships(df, template_config['relationships'])
+        
+        # Apply industry-specific privacy settings
+        if industry == 'healthcare':
+            # HIPAA compliance - always apply privacy
+            df = self.apply_privacy_techniques(df, {
+                'k_anonymity': True,
+                'l_diversity': True,
+                'data_masking': True
+            })
+        elif industry == 'finance':
+            # PCI compliance for sensitive fields
+            df = self._mask_sensitive_finance_fields(df)
+        
+        return df
+    
+    def _generate_template_column(self, col_config: Dict[str, Any], num_rows: int) -> List[Any]:
+        """Generate column data based on template configuration"""
+        col_type = col_config.get('type', 'string')
+        col_name = col_config.get('name', '')
+        
+        # Map template types to generation logic
+        if col_type == 'account':
+            pattern = col_config.get('pattern', 'sequential')
+            length = col_config.get('length', 10)
+            unique = col_config.get('unique', True)
+            
+            if pattern == 'uuid':
+                return [str(uuid.uuid4())[:length] for _ in range(num_rows)]
+            elif pattern == 'sequential':
+                return [f"ID{str(i).zfill(length)}" for i in range(num_rows)]
+            else:
+                return [f"ACC{''.join(random.choices(string.digits, k=length))}" for _ in range(num_rows)]
+        
+        elif col_type == 'currency':
+            min_val = col_config.get('min', 0)
+            max_val = col_config.get('max', 1000)
+            return [round(random.uniform(min_val, max_val), 2) for _ in range(num_rows)]
+        
+        elif col_type == 'category':
+            categories = col_config.get('categories', ['Category1', 'Category2'])
+            if isinstance(categories, list):
+                return [random.choice(categories) for _ in range(num_rows)]
+            return categories
+        
+        elif col_type == 'email':
+            unique = col_config.get('unique', False)
+            if unique:
+                emails = set()
+                while len(emails) < num_rows:
+                    emails.add(self.fake.email())
+                return list(emails)
+            return [self.fake.email() for _ in range(num_rows)]
+        
+        elif col_type == 'phone':
+            format_type = col_config.get('format', 'us')
+            return [self.fake.phone_number() for _ in range(num_rows)]
+        
+        elif col_type == 'name':
+            name_type = col_config.get('nameType', 'full')
+            if name_type == 'first':
+                return [self.fake.first_name() for _ in range(num_rows)]
+            elif name_type == 'last':
+                return [self.fake.last_name() for _ in range(num_rows)]
+            else:
+                return [self.fake.name() for _ in range(num_rows)]
+        
+        elif col_type == 'address':
+            address_type = col_config.get('addressType', 'full')
+            if address_type == 'city':
+                return [self.fake.city() for _ in range(num_rows)]
+            elif address_type == 'state':
+                return [self.fake.state() for _ in range(num_rows)]
+            elif address_type == 'city-state':
+                return [f"{self.fake.city()}, {self.fake.state_abbr()}" for _ in range(num_rows)]
+            else:
+                return [self.fake.address().replace('\n', ', ') for _ in range(num_rows)]
+        
+        elif col_type == 'date' or col_type == 'datetime':
+            min_date = col_config.get('minDate', '-1y')
+            max_date = col_config.get('maxDate', 'today')
+            
+            if col_type == 'datetime':
+                dates = []
+                for _ in range(num_rows):
+                    date = self.fake.date_between(start_date=min_date, end_date=max_date)
+                    time = self.fake.time()
+                    dates.append(f"{date} {time}")
+                return dates
+            else:
+                return [self.fake.date_between(start_date=min_date, end_date=max_date) for _ in range(num_rows)]
+        
+        elif col_type == 'integer':
+            min_val = col_config.get('min', 0)
+            max_val = col_config.get('max', 100)
+            return [random.randint(min_val, max_val) for _ in range(num_rows)]
+        
+        elif col_type == 'float':
+            min_val = col_config.get('min', 0)
+            max_val = col_config.get('max', 100)
+            return [round(random.uniform(min_val, max_val), 2) for _ in range(num_rows)]
+        
+        elif col_type == 'boolean':
+            return [random.choice([True, False]) for _ in range(num_rows)]
+        
+        elif col_type == 'string':
+            pattern = col_config.get('pattern', '')
+            if pattern == 'icd10':
+                # Generate ICD-10 like codes
+                return [f"{random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ')}{random.randint(10, 99)}.{random.randint(0, 9)}" 
+                       for _ in range(num_rows)]
+            elif pattern == 'sku':
+                return [f"SKU-{random.randint(1000, 9999)}" for _ in range(num_rows)]
+            elif pattern == 'zipcode':
+                return [str(random.randint(10000, 99999)) for _ in range(num_rows)]
+            elif pattern == 'company':
+                return [self.fake.company() for _ in range(num_rows)]
+            elif pattern == 'product':
+                products = ['Widget', 'Gadget', 'Device', 'Tool', 'Item']
+                return [f"{random.choice(products)} {random.randint(100, 999)}" for _ in range(num_rows)]
+            else:
+                return [self.fake.word() for _ in range(num_rows)]
+        
+        else:
+            # Default generation
+            return self._generate_generic_column(col_type, num_rows)
+    
+    def _apply_template_relationships(self, df: pd.DataFrame, relationships: List[Dict]) -> pd.DataFrame:
+        """Apply defined relationships between columns in template"""
+        for rel in relationships:
+            if rel.get('type') == 'dependent':
+                # Make one column dependent on another
+                source = rel.get('source')
+                target = rel.get('target')
+                if source in df.columns and target in df.columns:
+                    # Example: discharge_date should be after admission_date
+                    if 'date' in source.lower() and 'date' in target.lower():
+                        for i in range(len(df)):
+                            if pd.notna(df.loc[i, source]):
+                                df.loc[i, target] = df.loc[i, source] + timedelta(days=random.randint(1, 14))
+        return df
+    
+    def _mask_sensitive_finance_fields(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Mask sensitive financial fields for PCI compliance"""
+        for col in df.columns:
+            if 'account' in col.lower() or 'card' in col.lower():
+                # Mask middle digits of account/card numbers
+                df[col] = df[col].apply(lambda x: x[:4] + '*' * (len(x) - 8) + x[-4:] if isinstance(x, str) and len(x) > 8 else x)
+        return df
     
     def _generate_column(self, pattern: Dict[str, Any], num_rows: int, options: Dict[str, Any]) -> List[Any]:
         """Generate data for a single column based on its pattern"""

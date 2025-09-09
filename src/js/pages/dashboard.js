@@ -316,33 +316,124 @@ async function loadAllModelsData() {
 }
 
 async function loadInProgressData() {
+    const modelList = document.querySelector('.in-progress-tab-content .model-list');
+    if (!modelList) return;
+    
+    modelList.innerHTML = '';
+    
+    // Check for active generation jobs from localStorage
+    const activeGeneration = localStorage.getItem('activeGeneration');
+    if (activeGeneration) {
+        const generation = JSON.parse(activeGeneration);
+        const elapsed = Math.floor((Date.now() - generation.startTime) / 1000);
+        
+        const generationCard = document.createElement('div');
+        generationCard.classList.add('model-card', 'card');
+        generationCard.innerHTML = `
+            <div class="model-header">
+                <h3><i class="fas fa-database"></i> Data Generation</h3>
+                <span class="job-type-badge generation">Generation</span>
+            </div>
+            <div class="model-details">
+                <p>Job ID: <span class="detail-value">#${generation.id}</span></p>
+                <p>Status: <span class="detail-value status-active">${generation.currentStage || generation.status}</span></p>
+                <p>Rows Generated: <span class="detail-value">${generation.rows || 0} / ${generation.settings?.rows || 1000}</span></p>
+                <p>Time Elapsed: <span class="detail-value">${formatTime(elapsed)}</span></p>
+            </div>
+            <div class="progress-section">
+                <span class="progress-label">Progress:</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${generation.progress || 0}%;">${Math.round(generation.progress || 0)}%</div>
+                </div>
+            </div>
+            <div class="model-actions">
+                <button class="view-button" onclick="window.location.href='/data-generator'">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
+                <button class="cancel-button" onclick="cancelGeneration('${generation.id}')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        `;
+        modelList.appendChild(generationCard);
+    }
+    
+    // Load model training jobs from API
     const data = await fetchAuthenticatedData('/api/models/in-progress');
-    if (data) {
-        const modelList = document.querySelector('.in-progress-tab-content .model-list');
-        modelList.innerHTML = '';
+    if (data && data.length > 0) {
         data.forEach(model => {
             const modelCard = document.createElement('div');
             modelCard.classList.add('model-card', 'card');
             modelCard.innerHTML = `
+                <div class="model-header">
+                    <h3><i class="fas fa-brain"></i> ${model.name}</h3>
+                    <span class="job-type-badge training">Training</span>
+                </div>
                 <div class="model-details">
-                    <p>Model Name: <span class="detail-value">${model.name}</span></p>
-                    <p>Model State: <span class="detail-value">${model.status}</span></p>
-                    <p>Time Elapsed: <span class="detail-value">N/A</span></p>
-                    <p>Elapsed Token Cost: <span class="detail-value">N/A</span></p>
+                    <p>Model Type: <span class="detail-value">${model.type || 'Neural Network'}</span></p>
+                    <p>Status: <span class="detail-value">${model.status}</span></p>
+                    <p>Time Elapsed: <span class="detail-value">${model.elapsed || 'N/A'}</span></p>
+                    <p>Token Cost: <span class="detail-value">${model.tokenCost || 'N/A'}</span></p>
                 </div>
                 <div class="progress-section">
-                    <span class="progress-label">State Progress:</span>
+                    <span class="progress-label">Training Progress:</span>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 50%;">50%</div>
+                        <div class="progress-bar" style="width: ${model.progress || 50}%;">${model.progress || 50}%</div>
                     </div>
                 </div>
                 <div class="model-actions">
-                    <button class="pause-button">Pause</button>
-                    <button class="cancel-button">Cancel</button>
+                    <button class="pause-button">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="cancel-button">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
                 </div>
             `;
             modelList.appendChild(modelCard);
         });
+    }
+    
+    // Show empty state if no jobs
+    if (modelList.children.length === 0) {
+        modelList.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-tasks fa-3x"></i>
+                <h3>No Active Jobs</h3>
+                <p>Your data generation and model training jobs will appear here when in progress.</p>
+                <div class="empty-actions">
+                    <button class="auth-button" onclick="window.location.href='/data-generator'">
+                        <i class="fas fa-database"></i> Generate Data
+                    </button>
+                    <button class="auth-button" onclick="window.location.href='/model-editor'">
+                        <i class="fas fa-brain"></i> Train Model
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Helper function to format time
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    } else if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+    } else {
+        return `${secs}s`;
+    }
+}
+
+// Cancel generation job
+window.cancelGeneration = function(generationId) {
+    if (confirm('Are you sure you want to cancel this generation job?')) {
+        localStorage.removeItem('activeGeneration');
+        loadInProgressData(); // Refresh the list
     }
 }
 

@@ -89,6 +89,49 @@ const tokenService = {
     },
 
     /**
+     * Calculate token cost for generation with method and features
+     * @param {number} rows - Number of rows to generate
+     * @param {string} method - Generation method (ctgan, timegan, vae)
+     * @param {object} features - Additional features object
+     * @returns {number} Total token cost
+     */
+    calculateGenerationCost(rows, method = 'ctgan', features = {}) {
+        // Base costs per method (per 1000 rows)
+        const methodCosts = {
+            'ctgan': 50,      // CTGAN for tabular data
+            'timegan': 100,   // TimeGAN for time series (more complex)
+            'vae': 30,        // VAE (simpler, faster)
+            'basic': 10       // Basic random generation
+        };
+
+        // Feature multipliers
+        let multiplier = 1.0;
+        
+        if (features.differentialPrivacy) {
+            multiplier *= 1.5;  // Privacy adds 50% overhead
+        }
+        
+        if (features.hierarchicalRelations) {
+            multiplier *= 1.3;  // Relationships add 30% overhead
+        }
+        
+        if (features.industryTemplate) {
+            multiplier *= 1.2;  // Templates add 20% overhead
+        }
+        
+        if (features.advancedAnonymization) {
+            multiplier *= 1.4;  // Advanced anonymization adds 40% overhead
+        }
+
+        // Calculate base cost
+        const baseCost = methodCosts[method] || methodCosts['basic'];
+        const rowFactor = Math.ceil(rows / 1000);
+        
+        // Apply multipliers and return
+        return Math.round(baseCost * rowFactor * multiplier);
+    },
+
+    /**
      * Format token display with appropriate units
      * @param {number} tokens - Number of tokens
      * @returns {string} Formatted token string

@@ -10,488 +10,551 @@
         </div>
     </div>
 
-    <!-- Tab Navigation -->
-    <div class="tab-navigation">
-        <button class="tab-button active" data-tab="upload">
-            <i class="fas fa-upload"></i> Upload & Analyze
-        </button>
-        <button class="tab-button" data-tab="manual">
-            <i class="fas fa-edit"></i> Manual Configuration
-        </button>
-        <button class="tab-button" data-tab="multi-table">
-            <i class="fas fa-project-diagram"></i> Multi-Table
-        </button>
-        <button class="tab-button" data-tab="history">
-            <i class="fas fa-history"></i> Generation History
-        </button>
+    <!-- File Upload Section (Model Editor Style) -->
+    <div class="uploaded-data card">
+        <h3>Upload Data:</h3>
+        <div class="data-row">
+            <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls,.json" style="display: none;" multiple>
+            <label for="csv-upload" class="upload-label">Choose File</label>
+            <span id="file-name">No file chosen</span>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <span id="upload-status"></span>
+            <span id="eta"></span>
+            <button id="upload-button" class="upload-button">Upload</button>
+        </div>
     </div>
 
-    <!-- Upload Tab -->
-    <div id="upload-tab" class="tab-content active">
-        <div class="form-section card">
-            <h2>Upload Sample Data</h2>
+    <!-- Pattern Analysis Results (Separate Section) -->
+    <div class="card" id="analysis-results" style="display: none;">
+        <h3>Pattern Analysis Results</h3>
+        <div class="analysis-loading">
+            <i class="fas fa-spinner fa-spin"></i> Analyzing patterns...
+        </div>
+        <div class="analysis-content" style="display: none;">
+            <div class="data-preview">
+                <h4>Data Preview</h4>
+                <div class="table-container">
+                    <table id="preview-table"></table>
+                </div>
+            </div>
             
-            <!-- File Upload Area -->
-            <div class="upload-area" id="upload-area">
-                <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                <h3>Drag & Drop your file here</h3>
-                <p>or</p>
-                <button class="browse-button">Browse Files</button>
-                <input type="file" id="file-input" accept=".csv,.json,.xlsx,.xls" style="display: none;">
-                <p class="file-types">Supported formats: CSV, JSON, Excel</p>
-            </div>
-
-            <!-- File Preview -->
-            <div id="file-preview" class="file-preview" style="display: none;">
-                <div class="file-info">
-                    <i class="fas fa-file-csv file-icon"></i>
-                    <div>
-                        <p class="file-name"></p>
-                        <p class="file-size"></p>
-                    </div>
-                    <button class="remove-file"><i class="fas fa-times"></i></button>
-                </div>
-            </div>
-
-            <!-- Pattern Analysis Results -->
-            <div id="analysis-results" class="analysis-results" style="display: none;">
-                <h3>Pattern Analysis Results</h3>
-                <div class="analysis-loading">
-                    <i class="fas fa-spinner fa-spin"></i> Analyzing patterns...
-                </div>
-                <div class="analysis-content" style="display: none;">
-                    <div class="data-preview">
-                        <h4>Data Preview</h4>
-                        <div class="table-container">
-                            <table id="preview-table"></table>
-                        </div>
-                    </div>
-                    
-                    <div class="column-patterns">
-                        <h4>Detected Patterns</h4>
-                        <div id="patterns-container"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Generation Configuration -->
-            <div id="generation-config" class="generation-config" style="display: none;">
-                <h3>Generation Configuration</h3>
-                
-                <!-- Generation Method Selection -->
-                <div class="generation-method-section">
-                    <h4>Select Generation Method</h4>
-                    <div class="generation-methods">
-                        <div class="method-card" data-method="ctgan">
-                            <div class="method-header">
-                                <i class="fas fa-table"></i>
-                                <h5>CTGAN</h5>
-                                <span class="method-badge">Recommended</span>
-                            </div>
-                            <p>Best for tabular data with mixed types. Handles non-Gaussian distributions and categorical columns.</p>
-                            <div class="method-features">
-                                <span><i class="fas fa-check"></i> High fidelity</span>
-                                <span><i class="fas fa-check"></i> Mode-specific normalization</span>
-                            </div>
-                        </div>
-                        
-                        <div class="method-card" data-method="timegan">
-                            <div class="method-header">
-                                <i class="fas fa-chart-line"></i>
-                                <h5>TimeGAN</h5>
-                            </div>
-                            <p>Specialized for time series data. Preserves temporal dynamics and long-term dependencies.</p>
-                            <div class="method-features">
-                                <span><i class="fas fa-check"></i> Temporal embeddings</span>
-                                <span><i class="fas fa-check"></i> Sequence preservation</span>
-                            </div>
-                        </div>
-                        
-                        <div class="method-card" data-method="vae">
-                            <div class="method-header">
-                                <i class="fas fa-project-diagram"></i>
-                                <h5>VAE</h5>
-                            </div>
-                            <p>Variational Autoencoder for mixed data types. Faster training with good performance.</p>
-                            <div class="method-features">
-                                <span><i class="fas fa-check"></i> Fast generation</span>
-                                <span><i class="fas fa-check"></i> Stable training</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Industry Templates -->
-                <div class="generation-options-section">
-                    <h4>Industry Templates</h4>
-                    <div id="generatorIndustryTemplateContainer">
-                        <!-- IndustryTemplateSelector component will be loaded here -->
-                    </div>
-                </div>
-                
-                <!-- Privacy Settings -->
-                <div class="privacy-section">
-                    <h4>Privacy & Compliance Settings</h4>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="differential-privacy"> Enable Differential Privacy
-                        <span class="help-icon" title="Adds mathematical guarantees to prevent data leakage">
-                            <i class="fas fa-question-circle"></i>
-                        </span>
-                    </label>
-                    <div class="privacy-options" style="display: none;">
-                        <div class="form-group">
-                            <label for="epsilon">Privacy Budget (ε):</label>
-                            <input type="range" id="epsilon" min="0.1" max="10" step="0.1" value="1">
-                            <span id="epsilon-value">1.0</span>
-                            <div class="privacy-level-indicator">
-                                <span class="level-label">Privacy Level:</span>
-                                <span id="privacy-level" class="level-high">High</span>
-                            </div>
-                        </div>
-                        
-                        <div class="privacy-metrics">
-                            <h5>Privacy Metrics</h5>
-                            <div class="metric-item">
-                                <span class="metric-label">Re-identification Risk:</span>
-                                <span id="reidentification-risk" class="metric-value low">Low (&lt; 0.1%)</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">Attribute Disclosure Risk:</span>
-                                <span id="attribute-risk" class="metric-value low">Low</span>
-                            </div>
-                            <div class="metric-item">
-                                <span class="metric-label">Utility Preservation:</span>
-                                <span id="utility-score" class="metric-value high">95%</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Compliance Options -->
-                    <div class="compliance-section">
-                        <h5>Compliance Standards</h5>
-                        <div class="compliance-options">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="gdpr-compliant"> GDPR Compliant
-                                <span class="help-icon" title="Ensures generated data meets GDPR requirements">
-                                    <i class="fas fa-info-circle"></i>
-                                </span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="hipaa-compliant"> HIPAA Compliant
-                                <span class="help-icon" title="Applies healthcare data privacy standards">
-                                    <i class="fas fa-info-circle"></i>
-                                </span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="pci-compliant"> PCI-DSS Compliant
-                                <span class="help-icon" title="Follows payment card data security standards">
-                                    <i class="fas fa-info-circle"></i>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <!-- Anonymization Techniques -->
-                    <div class="anonymization-section">
-                        <h5>Anonymization Techniques</h5>
-                        <div class="technique-options">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="k-anonymity" checked> k-Anonymity (k=5)
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="l-diversity"> l-Diversity
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="t-closeness"> t-Closeness
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="data-masking"> Data Masking for PII
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="gen-rows">Number of Rows to Generate:</label>
-                        <input type="number" id="gen-rows" value="1000" min="1" max="1000000">
-                        <div class="input-hint" id="row-limit-hint">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Developer plan limit: 1,000 rows per generation</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="gen-format">Output Format:</label>
-                        <select id="gen-format">
-                            <option value="csv">CSV</option>
-                            <option value="json">JSON</option>
-                            <option value="excel">Excel</option>
-                            <option value="parquet">Parquet</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="advanced-options">
-                    <h4>Advanced Options</h4>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="preserve-relationships" checked> Preserve column relationships
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="include-outliers"> Include outliers (5%)
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="add-missing"> Add missing values (3%)
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="hierarchical"> Maintain hierarchical relationships
-                    </label>
-                </div>
-                
-                <div class="generation-summary">
-                    <div class="summary-item">
-                        <span>Estimated File Size:</span>
-                        <span id="gen-file-size">0 KB</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Estimated Generation Time:</span>
-                        <span id="gen-time">&lt; 1 second</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Token Cost:</span>
-                        <span id="gen-token-cost" class="token-cost">0 tokens</span>
-                    </div>
-                </div>
-                
-                <button id="generate-from-pattern" class="auth-button">
-                    <i class="fas fa-magic"></i> Generate Data
-                </button>
+            <div class="column-patterns">
+                <h4>Detected Patterns</h4>
+                <div id="patterns-container"></div>
             </div>
         </div>
     </div>
 
-    <!-- Manual Tab -->
-    <div id="manual-tab" class="tab-content">
-        <div class="form-section card">
-            <h2>Manual Data Configuration</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="instance-name">Dataset Name:</label>
-                    <input type="text" id="instance-name" placeholder="TextField">
+    <!-- OR Divider -->
+    <div class="or-divider">
+        <span class="or-line"></span>
+        <span class="or-text">OR</span>
+        <span class="or-line"></span>
+    </div>
+
+    <!-- Industry Templates -->
+    <div class="generation-options-section card">
+        <div class="section-header">
+            <h2>Choose Industry Template</h2>
+            <button class="clear-template-btn" id="clear-template-btn" style="display: none;" onclick="clearTemplateSelection()">
+                <i class="fas fa-times"></i> Clear Selection
+            </button>
+        </div>
+        <div id="generatorIndustryTemplateContainer">
+            <!-- IndustryTemplateSelector component will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Multi-Table Generation (Dynamic - Only shows for database files) -->
+    <div class="multi-table-section card" id="multi-table-section" style="display: none;">
+        <h2>Multi-Table Generation</h2>
+        <div id="tables-container">
+            <div class="table-definition primary-table" data-table-id="table1">
+                <div class="table-header">
+                    <input type="text" class="table-name" placeholder="Table Name" value="customers">
+                    <span class="table-type-badge primary">Primary</span>
                 </div>
-                <div class="form-group large-input">
-                    <label for="instance-description">Description:</label>
-                    <textarea id="instance-description" placeholder="TextField"></textarea>
+                <div class="table-columns">
+                    <div class="column-item">
+                        <input type="text" class="column-name" placeholder="Column name" value="customer_id">
+                        <select class="column-type">
+                            <option value="id" selected>ID (Primary Key)</option>
+                            <option value="string">String</option>
+                            <option value="integer">Integer</option>
+                            <option value="float">Float</option>
+                            <option value="date">Date</option>
+                        </select>
+                        <button class="remove-column">×</button>
+                    </div>
+                </div>
+                <button class="add-column-btn"><i class="fas fa-plus"></i> Add Column</button>
+                <div class="table-row-config">
+                    <label>Rows to Generate:</label>
+                    <input type="number" class="table-rows" value="1000" min="1" max="1000000">
                 </div>
             </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="data-type">Data Type:</label>
-                    <select id="data-type">
-                        <option value="people">People Data (names, demographics)</option>
-                        <option value="numeric">Numeric Data (measurements, values)</option>
-                        <option value="timeseries">Time Series Data</option>
-                        <option value="categorical">Categorical Data</option>
-                        <option value="mixed">Mixed Types</option>
-                    </select>
-                </div>
+        </div>
+        
+        <button class="btn btn-secondary" id="add-table">
+            <i class="fas fa-plus"></i> Add Related Table
+        </button>
+        
+        <div id="relationships-container" style="display: none;">
+            <h3>Table Relationships</h3>
+            <div id="relationships-list"></div>
+        </div>
+        
+        <button class="auth-button" id="generate-multi-table">
+            <i class="fas fa-database"></i> Generate Multi-Table Dataset
+        </button>
+    </div>
+
+    <!-- Generation Configuration (Dynamic - Shows after file upload) -->
+    <div id="generation-config" class="generation-config card" style="display: none;">
+        <h2>Generation Configuration</h2>
+        
+        <!-- Auto-detected Columns (Shows for uploaded files) -->
+        <div id="detected-columns-section" class="config-section" style="display: none;">
+            <h3>Detected Columns & Configuration</h3>
+            <div id="detected-columns-container">
+                <!-- Dynamically populated with detected columns -->
             </div>
-            
-            <!-- Column Configuration -->
-            <div class="column-config">
-                <h3>Column Configuration</h3>
+        </div>
+        
+
+        <!-- Manual Configuration (Shows when no file uploaded) -->
+        <div id="manual-config-section" class="config-section">
+            <h3>Manual Column Definition</h3>
+            <div class="columns-config">
                 <div id="columns-container">
                     <div class="column-item">
                         <input type="text" placeholder="Column name" class="column-name">
                         <select class="column-type">
-                            <option value="string">Text</option>
+                            <option value="string">String</option>
                             <option value="integer">Integer</option>
-                            <option value="float">Decimal</option>
+                            <option value="float">Float</option>
                             <option value="date">Date</option>
                             <option value="boolean">Boolean</option>
-                            <option value="category">Category</option>
                         </select>
-                        <button class="remove-column"><i class="fas fa-times"></i></button>
+                        <button class="remove-column">×</button>
                     </div>
                 </div>
-                <button id="add-column" class="secondary-button">
+                <button class="btn btn-secondary" id="add-column">
                     <i class="fas fa-plus"></i> Add Column
                 </button>
             </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="manual-rows">Number of Rows:</label>
-                    <input type="number" id="manual-rows" value="1000" min="1" max="1000000">
-                </div>
-                <div class="form-group">
-                    <label for="manual-format">Output Format:</label>
-                    <select id="manual-format">
-                        <option value="csv">CSV</option>
-                        <option value="json">JSON</option>
-                        <option value="excel">Excel</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Estimated File Size:</label>
-                    <span id="manual-file-size">0 KB</span>
-                </div>
-                <div class="form-group">
-                    <label>Estimated Generation Time:</label>
-                    <span id="manual-gen-time">&lt; 1 second</span>
-                </div>
-            </div>
-            
-            <button id="generate-manual" class="auth-button">
-                <i class="fas fa-cogs"></i> Generate Data
-            </button>
         </div>
     </div>
 
-    <!-- Multi-Table Tab -->
-    <div id="multi-table-tab" class="tab-content">
-        <div class="form-section card">
-            <h2>Multi-Table Generation</h2>
-            <p class="section-description">Generate multiple related tables with hierarchical relationships and foreign key constraints</p>
-            
-            <!-- Schema Builder -->
-            <div class="schema-builder">
-                <h3>Database Schema</h3>
-                
-                <!-- Tables Container -->
-                <div id="tables-container" class="tables-container">
-                    <!-- Primary Table -->
-                    <div class="table-definition primary-table" data-table-id="table1">
-                        <div class="table-header">
-                            <input type="text" class="table-name" placeholder="Table Name" value="customers">
-                            <span class="table-type-badge primary">Primary</span>
-                            <button class="remove-table" style="display: none;"><i class="fas fa-trash"></i></button>
-                        </div>
-                        <div class="table-columns">
-                            <div class="column-item">
-                                <input type="text" class="column-name" placeholder="Column name" value="customer_id">
-                                <select class="column-type">
-                                    <option value="id" selected>ID (Primary Key)</option>
-                                    <option value="string">String</option>
-                                    <option value="integer">Integer</option>
-                                    <option value="float">Float</option>
-                                    <option value="date">Date</option>
-                                </select>
-                                <button class="remove-column" disabled><i class="fas fa-times"></i></button>
-                            </div>
-                            <div class="column-item">
-                                <input type="text" class="column-name" placeholder="Column name" value="name">
-                                <select class="column-type">
-                                    <option value="string" selected>String</option>
-                                    <option value="integer">Integer</option>
-                                    <option value="float">Float</option>
-                                    <option value="date">Date</option>
-                                    <option value="boolean">Boolean</option>
-                                </select>
-                                <button class="remove-column"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                        <button class="add-column-btn"><i class="fas fa-plus"></i> Add Column</button>
-                        <div class="table-row-config">
-                            <label>Rows to Generate:</label>
-                            <input type="number" class="table-rows" value="1000" min="1" max="1000000">
-                        </div>
-                    </div>
+    <!-- Generation Method Selection (Moved to Near End) -->
+    <div class="generation-method-section card" style="display: none;">
+        <h2>Select Generation Method</h2>
+        <div class="generation-methods">
+            <div class="method-card" data-method="ctgan">
+                <div class="method-header">
+                    <i class="fas fa-table"></i>
+                    <h5>CTGAN</h5>
+                    <span class="method-badge">Recommended</span>
+                    <button class="method-expand-btn" onclick="toggleMethodDetails('ctgan')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
-                
-                <!-- Add Table Button -->
-                <button id="add-table" class="secondary-button">
-                    <i class="fas fa-plus"></i> Add Related Table
-                </button>
-                
-                <!-- Relationship Builder -->
-                <div id="relationships-container" class="relationships-container" style="display: none;">
-                    <h3>Table Relationships</h3>
-                    <div id="relationships-list" class="relationships-list">
-                        <!-- Relationships will be added here -->
+                <p>Best for tabular data with mixed types. Handles non-Gaussian distributions and categorical columns.</p>
+                <div class="method-features">
+                    <span><i class="fas fa-check"></i> High fidelity</span>
+                    <span><i class="fas fa-check"></i> Mode-specific normalization</span>
+                </div>
+                <div class="method-details" id="ctgan-details" style="display: none;">
+                    <div class="method-explanation">
+                        <h6>How it works:</h6>
+                        <p>CTGAN uses conditional GANs with mode-specific normalization to handle non-Gaussian and multimodal distributions. It learns the distribution of your data and generates new samples that maintain statistical properties.</p>
+                    </div>
+                    <div class="method-use-cases">
+                        <h6>Best for:</h6>
+                        <ul>
+                            <li>Mixed data types (numeric, categorical, dates)</li>
+                            <li>Financial transaction data</li>
+                            <li>Customer demographic data</li>
+                            <li>Healthcare records (anonymized)</li>
+                        </ul>
+                    </div>
+                    <div class="method-settings">
+                        <h6>Advanced Settings:</h6>
+                        <div class="form-group">
+                            <label>Training Epochs: <input type="number" id="ctgan-epochs" value="300" min="100" max="1000"></label>
+                        </div>
+                        <div class="form-group">
+                            <label>Batch Size: <input type="number" id="ctgan-batch" value="500" min="100" max="5000"></label>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Generation Options -->
+            <div class="method-card" data-method="timegan">
+                <div class="method-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h5>TimeGAN</h5>
+                    <button class="method-expand-btn" onclick="toggleMethodDetails('timegan')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <p>Specialized for time series data. Preserves temporal dynamics and long-term dependencies.</p>
+                <div class="method-features">
+                    <span><i class="fas fa-check"></i> Temporal embeddings</span>
+                    <span><i class="fas fa-check"></i> Sequence preservation</span>
+                </div>
+                <div class="method-details" id="timegan-details" style="display: none;">
+                    <div class="method-explanation">
+                        <h6>How it works:</h6>
+                        <p>TimeGAN combines unsupervised GAN training with supervised learning to capture temporal dynamics. It preserves the stepwise conditional distributions and temporal correlations in time series data.</p>
+                    </div>
+                    <div class="method-use-cases">
+                        <h6>Best for:</h6>
+                        <ul>
+                            <li>Stock market data</li>
+                            <li>Sensor readings over time</li>
+                            <li>Website traffic patterns</li>
+                            <li>Energy consumption data</li>
+                        </ul>
+                    </div>
+                    <div class="method-settings">
+                        <h6>Advanced Settings:</h6>
+                        <div class="form-group">
+                            <label>Sequence Length: <input type="number" id="timegan-seq" value="24" min="10" max="100"></label>
+                        </div>
+                        <div class="form-group">
+                            <label>Hidden Dim: <input type="number" id="timegan-hidden" value="24" min="8" max="128"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-card" data-method="vae">
+                <div class="method-header">
+                    <i class="fas fa-project-diagram"></i>
+                    <h5>VAE</h5>
+                    <button class="method-expand-btn" onclick="toggleMethodDetails('vae')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <p>Variational Autoencoder for mixed data types. Faster training with good performance.</p>
+                <div class="method-features">
+                    <span><i class="fas fa-check"></i> Fast generation</span>
+                    <span><i class="fas fa-check"></i> Stable training</span>
+                </div>
+                <div class="method-details" id="vae-details" style="display: none;">
+                    <div class="method-explanation">
+                        <h6>How it works:</h6>
+                        <p>VAE learns a compressed representation of your data in a latent space, then generates new samples by decoding random points from this space. It provides stable training and fast generation.</p>
+                    </div>
+                    <div class="method-use-cases">
+                        <h6>Best for:</h6>
+                        <ul>
+                            <li>Quick prototyping</li>
+                            <li>Smaller datasets</li>
+                            <li>Simple tabular data</li>
+                            <li>When generation speed is critical</li>
+                        </ul>
+                    </div>
+                    <div class="method-settings">
+                        <h6>Advanced Settings:</h6>
+                        <div class="form-group">
+                            <label>Latent Dim: <input type="number" id="vae-latent" value="128" min="32" max="512"></label>
+                        </div>
+                        <div class="form-group">
+                            <label>Learning Rate: <input type="number" id="vae-lr" value="0.001" step="0.0001" min="0.0001" max="0.01"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Privacy Settings -->
+    <div class="privacy-section card">
+        <h2>Privacy & Compliance Settings</h2>
+        <label class="checkbox-label">
+            <input type="checkbox" id="differential-privacy"> Add Statistical Noise for Privacy Protection
+            <span class="help-icon" data-tooltip="privacy-noise">
+                <i class="fas fa-question-circle"></i>
+            </span>
+        </label>
+        <div class="privacy-options" style="display: none;">
+            <div class="form-group">
+                <label for="epsilon">Privacy Strength Control:</label>
+                <input type="range" id="epsilon" min="0.1" max="10" step="0.1" value="1">
+                <span id="epsilon-value">1.0</span>
+                <div class="privacy-level-indicator">
+                    <span class="level-label">Privacy Level:</span>
+                    <span id="privacy-level" class="level-high">Stronger</span>
+                </div>
+            </div>
+            
+            <div class="privacy-metrics">
+                <h5>Privacy Metrics</h5>
+                <div class="metric-item">
+                    <span class="metric-label">Re-identification Risk:</span>
+                    <span id="reidentification-risk" class="metric-value low">Low (&lt; 0.1%)</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Attribute Disclosure Risk:</span>
+                    <span id="attribute-risk" class="metric-value low">Low</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Utility Preservation:</span>
+                    <span id="utility-score" class="metric-value high">95%</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Compliance Options -->
+        <div class="compliance-section">
+            <h3>Compliance Standards</h3>
+            <div class="compliance-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="gdpr-compliant"> EU Data Protection (GDPR)
+                    <span class="help-icon" data-tooltip="gdpr-compliance">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="hipaa-compliant"> Healthcare Privacy (HIPAA)
+                    <span class="help-icon" data-tooltip="hipaa-compliance">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="pci-compliant"> Payment Card Security (PCI-DSS)
+                    <span class="help-icon" data-tooltip="pci-compliance">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Anonymization Techniques -->
+        <div class="anonymization-section">
+            <h3>Anonymization Techniques</h3>
+            <div class="technique-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="k-anonymity" checked> Group Similar Records (k-Anonymity)
+                    <span class="help-icon" data-tooltip="k-anonymity">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="l-diversity"> Diverse Sensitive Values (l-Diversity)
+                    <span class="help-icon" data-tooltip="l-diversity">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="t-closeness"> Statistical Distribution Protection (t-Closeness)
+                    <span class="help-icon" data-tooltip="t-closeness">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="data-masking"> Hide Sensitive Fields (Data Masking)
+                    <span class="help-icon" data-tooltip="data-masking">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generation Settings (Always Visible) -->
+    <div class="generation-settings-section card">
+        <h2>Generation Settings</h2>
+        <div class="settings-content">
+            <div class="form-group">
+                <label for="gen-rows">Number of Rows to Generate:</label>
+                <input type="number" id="gen-rows" value="1000" min="1" max="10000000">
+                <div id="row-limit-hint" class="hint">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Developer plan limit: 1,000 rows per generation</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="gen-format">Output Format:</label>
+                <select id="gen-format">
+                    <option value="csv">CSV</option>
+                    <option value="json">JSON</option>
+                    <option value="excel">Excel</option>
+                    <option value="parquet">Parquet</option>
+                </select>
+            </div>
+            
             <div class="generation-options">
-                <h3>Generation Options</h3>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="maintain-referential-integrity" checked>
-                        <span>Maintain Referential Integrity</span>
-                    </label>
-                    <label>
-                        <input type="checkbox" id="generate-realistic-distributions" checked>
-                        <span>Generate Realistic Data Distributions</span>
-                    </label>
-                    <label>
-                        <input type="checkbox" id="hierarchical-generation" checked>
-                        <span>Hierarchical Data Generation</span>
-                    </label>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Output Format:</label>
-                        <select id="multi-table-format">
-                            <option value="sql">SQL Script</option>
-                            <option value="csv-zip">CSV Files (ZIP)</option>
-                            <option value="json">JSON</option>
-                            <option value="sqlite">SQLite Database</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Estimated Total Size:</label>
-                        <span id="multi-table-size">0 KB</span>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="preserve-relationships" checked>
+                    <span>Preserve column relationships</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="include-outliers">
+                    <span>Include outliers</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="add-missing">
+                    <span>Add missing values</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Cost Calculator Section -->
+    <div class="card cost-calculator">
+        <h2>Cost Summary</h2>
+        <div class="cost-metrics">
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-database"></i>
+                    <div>
+                        <span class="metric-label">Total Data Size:</span>
+                        <span class="metric-value" id="total-data-size">0 MB</span>
                     </div>
                 </div>
-                
-                <!-- Token Cost Estimate -->
-                <div class="cost-estimate">
-                    <label>Estimated Token Cost:</label>
-                    <span id="multi-table-token-cost">0 tokens</span>
+                <div class="metric-item">
+                    <i class="fas fa-coins"></i>
+                    <div>
+                        <span class="metric-label">Total Token Cost:</span>
+                        <span class="metric-value" id="total-token-cost">0 tokens</span>
+                    </div>
                 </div>
             </div>
-            
-            <button id="generate-multi-table" class="auth-button">
-                <i class="fas fa-database"></i> Generate Multi-Table Dataset
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <span class="metric-label">Generation Time:</span>
+                        <span class="metric-value" id="generation-time">&lt; 1 minute</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <div>
+                        <span class="metric-label">Rows to Generate:</span>
+                        <span class="metric-value" id="total-rows">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Generate Button -->
+        <div class="cost-summary-actions">
+            <button class="auth-button generate-main" id="generate-from-pattern" onclick="if (window.handlePatternBasedGeneration) window.handlePatternBasedGeneration(); else console.error('Handler not loaded yet');">
+                <i class="fas fa-magic"></i> Generate Data
             </button>
         </div>
     </div>
 
-    <!-- History Tab -->
-    <div id="history-tab" class="tab-content">
-        <div class="history-section card">
-            <h2>Generation History</h2>
-            <div id="history-container" class="history-container">
-                <div class="empty-state">
-                    <i class="fas fa-history"></i>
-                    <p>No data generated yet</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Generation Progress Modal -->
+    <!-- Enhanced Progress Modal -->
     <div id="progress-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h3>Generating Data...</h3>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
+        <div class="modal-content generation-progress">
+            <div class="progress-header">
+                <h3>Generating Data</h3>
+                <button class="continue-background-btn" id="continue-background">
+                    <i class="fas fa-external-link-alt"></i> Continue in Background
+                </button>
             </div>
-            <p class="progress-text">Initializing...</p>
-            <div class="progress-stats">
-                <div class="stat-item">
-                    <span>Rows Generated:</span>
-                    <span id="rows-generated">0</span>
+            
+            <!-- Progress Stages -->
+            <div class="progress-stages">
+                <div class="stage-item" data-stage="validating">
+                    <div class="stage-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <span class="stage-label">Validating</span>
                 </div>
-                <div class="stat-item">
-                    <span>Time Elapsed:</span>
-                    <span id="time-elapsed">0s</span>
+                <div class="stage-item" data-stage="initializing">
+                    <div class="stage-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <span class="stage-label">Initializing</span>
+                </div>
+                <div class="stage-item" data-stage="generating">
+                    <div class="stage-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <span class="stage-label">Generating</span>
+                </div>
+                <div class="stage-item" data-stage="privacy">
+                    <div class="stage-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span class="stage-label">Privacy</span>
+                </div>
+                <div class="stage-item" data-stage="finalizing">
+                    <div class="stage-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <span class="stage-label">Finalizing</span>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="generation-progress-fill"></div>
+                    <span class="progress-percentage">0%</span>
+                </div>
+            </div>
+            
+            <!-- Progress Details -->
+            <div class="progress-details">
+                <div class="progress-stat">
+                    <span class="stat-label">Rows Generated:</span>
+                    <span class="stat-value" id="rows-generated">0</span> / <span id="total-rows-target">1000</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="stat-label">Time Elapsed:</span>
+                    <span class="stat-value" id="time-elapsed">0:00</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="stat-label">ETA:</span>
+                    <span class="stat-value" id="eta-remaining">Calculating...</span>
+                </div>
+            </div>
+            
+            <!-- Current Status -->
+            <div class="current-status">
+                <p id="status-message">Preparing to generate data...</p>
+            </div>
+            
+            <!-- Completion Section (Initially Hidden) -->
+            <div class="completion-section" id="completion-section" style="display: none;">
+                <div class="completion-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h4>Generation Complete!</h4>
+                <p class="completion-message" id="completion-message">
+                    Successfully generated <span id="final-rows">1000</span> rows of data
+                </p>
+                <div class="completion-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Total Time: <span id="total-time">0:00</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-database"></i>
+                        <span>File Size: <span id="file-size">0 MB</span></span>
+                    </div>
+                </div>
+                <div class="completion-actions">
+                    <button class="auth-button download-btn" id="download-generated-data">
+                        <i class="fas fa-download"></i> Download Data
+                    </button>
+                    <button class="secondary-button preview-btn" id="preview-generated-data">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                    <button class="secondary-button close-modal">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -499,19 +562,26 @@
 
     <!-- Success Modal -->
     <div id="success-modal" class="modal" style="display: none;">
-        <div class="modal-content success">
-            <i class="fas fa-check-circle success-icon"></i>
+        <div class="modal-content">
             <h3>Data Generated Successfully!</h3>
             <p class="success-message"></p>
             <div class="modal-actions">
-                <button id="download-data" class="auth-button">
+                <button class="auth-button" id="download-data">
                     <i class="fas fa-download"></i> Download
                 </button>
-                <button id="preview-data" class="secondary-button">
+                <button class="secondary-button" id="preview-data">
                     <i class="fas fa-eye"></i> Preview
                 </button>
-                <button class="close-modal">Close</button>
+                <button class="secondary-button close-modal">Close</button>
             </div>
+        </div>
+    </div>
+    
+    <!-- Tooltip Container -->
+    <div id="tooltip-container" class="tooltip-container" style="display: none;">
+        <div class="tooltip-content">
+            <span class="tooltip-text"></span>
+            <div class="tooltip-arrow"></div>
         </div>
     </div>
 </div>

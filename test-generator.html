@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Generator Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        
+        h2 {
+            color: #6366f1;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background: #5558dd;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            color: #6366f1;
+            font-style: italic;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #6366f1;
+            color: white;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Data Generator Test Suite</h1>
+        
+        <!-- Test File Analysis -->
+        <div class="test-section">
+            <h2>1. Test File Analysis</h2>
+            <input type="file" id="testFile" accept=".csv,.json,.xlsx">
+            <br>
+            <button onclick="testFileAnalysis()">Analyze File</button>
+            <div id="analysisResult" class="result"></div>
+        </div>
+        
+        <!-- Test Manual Generation -->
+        <div class="test-section">
+            <h2>2. Test Manual Data Generation</h2>
+            <button onclick="testManualGeneration()">Generate Sample Data (100 rows)</button>
+            <div id="manualResult" class="result"></div>
+        </div>
+        
+        <!-- Test Pattern-Based Generation -->
+        <div class="test-section">
+            <h2>3. Test Pattern-Based Generation</h2>
+            <button onclick="testPatternGeneration()">Generate from Pattern</button>
+            <div id="patternResult" class="result"></div>
+        </div>
+        
+        <!-- Test Multi-Table Generation -->
+        <div class="test-section">
+            <h2>4. Test Multi-Table Generation</h2>
+            <button onclick="testMultiTableGeneration()">Generate Related Tables</button>
+            <div id="multiTableResult" class="result"></div>
+        </div>
+        
+        <!-- Test Privacy Features -->
+        <div class="test-section">
+            <h2>5. Test Privacy Features</h2>
+            <button onclick="testPrivacyGeneration()">Generate with Differential Privacy</button>
+            <div id="privacyResult" class="result"></div>
+        </div>
+        
+        <!-- Test Download -->
+        <div class="test-section">
+            <h2>6. Test Download & Preview</h2>
+            <input type="number" id="dataId" placeholder="Enter generated data ID" min="1">
+            <br>
+            <button onclick="testPreview()">Preview Data</button>
+            <button onclick="testDownload()">Download Data</button>
+            <div id="downloadResult" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        
+        // Mock token for testing
+        const TEST_TOKEN = localStorage.getItem('token') || 'test-token';
+        
+        function showResult(elementId, content, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.className = `result ${isSuccess ? 'success' : 'error'}`;
+            element.textContent = typeof content === 'object' ? JSON.stringify(content, null, 2) : content;
+        }
+        
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.className = 'result loading';
+            element.textContent = 'Loading...';
+        }
+        
+        async function testFileAnalysis() {
+            const fileInput = document.getElementById('testFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showResult('analysisResult', 'Please select a file first', false);
+                return;
+            }
+            
+            showLoading('analysisResult');
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generator/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TEST_TOKEN}`
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('analysisResult', `Analysis successful!\n\nColumns: ${data.columns?.join(', ')}\nRows: ${data.row_count}\n\nPatterns detected - see console for details`);
+                    console.log('Full analysis:', data);
+                } else {
+                    showResult('analysisResult', `Error: ${data.detail || 'Analysis failed'}`, false);
+                }
+            } catch (error) {
+                showResult('analysisResult', `Error: ${error.message}`, false);
+            }
+        }
+        
+        async function testManualGeneration() {
+            showLoading('manualResult');
+            
+            const config = {
+                mode: 'manual',
+                rows: 100,
+                format: 'csv',
+                columns: [
+                    { name: 'id', type: 'integer' },
+                    { name: 'name', type: 'string' },
+                    { name: 'email', type: 'email' },
+                    { name: 'age', type: 'integer' },
+                    { name: 'salary', type: 'float' },
+                    { name: 'is_active', type: 'boolean' }
+                ],
+                data_type: 'people'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generator/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TEST_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('manualResult', `Generation successful!\n\nID: ${data.id}\nRows: ${data.rows}\nColumns: ${data.columns}\nFile: ${data.file_path}`);
+                } else {
+                    showResult('manualResult', `Error: ${data.detail || 'Generation failed'}`, false);
+                }
+            } catch (error) {
+                showResult('manualResult', `Error: ${error.message}`, false);
+            }
+        }
+        
+        async function testPatternGeneration() {
+            showLoading('patternResult');
+            
+            const config = {
+                mode: 'pattern',
+                rows: 50,
+                format: 'json',
+                patterns: {
+                    'customer_id': {
+                        type: 'integer',
+                        min: 1000,
+                        max: 9999,
+                        is_sequence: true
+                    },
+                    'purchase_amount': {
+                        type: 'float',
+                        min: 10.0,
+                        max: 500.0,
+                        mean: 75.0,
+                        std: 25.0,
+                        distribution: 'normal'
+                    },
+                    'category': {
+                        type: 'categorical',
+                        categories: {
+                            'Electronics': 40,
+                            'Clothing': 30,
+                            'Food': 20,
+                            'Other': 10
+                        }
+                    }
+                },
+                preserve_relationships: true,
+                include_outliers: true
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generator/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TEST_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('patternResult', `Pattern generation successful!\n\nID: ${data.id}\nRows: ${data.rows}\nColumns: ${data.columns}`);
+                } else {
+                    showResult('patternResult', `Error: ${data.detail || 'Generation failed'}`, false);
+                }
+            } catch (error) {
+                showResult('patternResult', `Error: ${error.message}`, false);
+            }
+        }
+        
+        async function testMultiTableGeneration() {
+            showLoading('multiTableResult');
+            
+            const config = {
+                mode: 'multi-table',
+                format: 'sql',
+                tables: [
+                    {
+                        id: 'customers',
+                        name: 'customers',
+                        rows: 100,
+                        columns: [
+                            { name: 'customer_id', type: 'id' },
+                            { name: 'name', type: 'string' },
+                            { name: 'email', type: 'string' }
+                        ],
+                        isPrimary: true
+                    },
+                    {
+                        id: 'orders',
+                        name: 'orders',
+                        rows: 500,
+                        columns: [
+                            { name: 'order_id', type: 'id' },
+                            { name: 'customer_id', type: 'foreign_key' },
+                            { name: 'amount', type: 'float' },
+                            { name: 'order_date', type: 'date' }
+                        ],
+                        isPrimary: false
+                    }
+                ],
+                relationships: [
+                    {
+                        from: 'orders',
+                        to: 'customers',
+                        type: 'many-to-one'
+                    }
+                ],
+                options: {
+                    maintainReferentialIntegrity: true
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generator/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TEST_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('multiTableResult', `Multi-table generation successful!\n\nTables: ${data.tables}\nFormat: ${data.format}`);
+                } else {
+                    showResult('multiTableResult', `Error: ${data.detail || 'Generation failed'}`, false);
+                }
+            } catch (error) {
+                showResult('multiTableResult', `Error: ${error.message}`, false);
+            }
+        }
+        
+        async function testPrivacyGeneration() {
+            showLoading('privacyResult');
+            
+            const config = {
+                mode: 'manual',
+                rows: 200,
+                format: 'csv',
+                columns: [
+                    { name: 'ssn', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'salary', type: 'float' },
+                    { name: 'medical_condition', type: 'string' }
+                ],
+                differential_privacy: true,
+                epsilon: 1.0,
+                anonymization: {
+                    k_anonymity: true,
+                    l_diversity: true,
+                    data_masking: true
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generator/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TEST_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('privacyResult', `Privacy-enabled generation successful!\n\nID: ${data.id}\nDifferential Privacy: Enabled\nAnonymization: Applied`);
+                } else {
+                    showResult('privacyResult', `Error: ${data.detail || 'Generation failed'}`, false);
+                }
+            } catch (error) {
+                showResult('privacyResult', `Error: ${error.message}`, false);
+            }
+        }
+        
+        async function testPreview() {
+            const dataId = document.getElementById('dataId').value;
+            
+            if (!dataId) {
+                showResult('downloadResult', 'Please enter a data ID', false);
+                return;
+            }
+            
+            showLoading('downloadResult');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generator/preview/${dataId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${TEST_TOKEN}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let html = `Preview (showing ${data.showing} of ${data.total_rows} rows):\n\n`;
+                    html += '<table>';
+                    html += '<tr>' + data.columns.map(col => `<th>${col}</th>`).join('') + '</tr>';
+                    data.rows.forEach(row => {
+                        html += '<tr>' + data.columns.map(col => `<td>${row[col] || ''}</td>`).join('') + '</tr>';
+                    });
+                    html += '</table>';
+                    
+                    document.getElementById('downloadResult').innerHTML = html;
+                    document.getElementById('downloadResult').className = 'result success';
+                } else {
+                    showResult('downloadResult', `Error: ${data.detail || 'Preview failed'}`, false);
+                }
+            } catch (error) {
+                showResult('downloadResult', `Error: ${error.message}`, false);
+            }
+        }
+        
+        async function testDownload() {
+            const dataId = document.getElementById('dataId').value;
+            
+            if (!dataId) {
+                showResult('downloadResult', 'Please enter a data ID', false);
+                return;
+            }
+            
+            showLoading('downloadResult');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generator/download/${dataId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${TEST_TOKEN}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `generated_data_${dataId}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    showResult('downloadResult', 'Download started successfully!');
+                } else {
+                    const error = await response.json();
+                    showResult('downloadResult', `Error: ${error.detail || 'Download failed'}`, false);
+                }
+            } catch (error) {
+                showResult('downloadResult', `Error: ${error.message}`, false);
+            }
+        }
+        
+        // Create a sample CSV for testing
+        function createSampleCSV() {
+            const csv = `id,name,age,city,salary
+1,John Doe,28,New York,75000
+2,Jane Smith,34,Los Angeles,82000
+3,Bob Johnson,45,Chicago,95000
+4,Alice Brown,31,Houston,68000
+5,Charlie Wilson,29,Phoenix,71000`;
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const file = new File([blob], 'sample.csv', { type: 'text/csv' });
+            
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            document.getElementById('testFile').files = dataTransfer.files;
+            
+            showResult('analysisResult', 'Sample CSV loaded - click "Analyze File" to test', true);
+        }
+        
+        // Load sample file on page load
+        window.onload = () => {
+            createSampleCSV();
+        };
+    </script>
+</body>
+</html>

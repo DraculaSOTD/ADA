@@ -4,139 +4,277 @@
         <p class="page-subtitle">AI-powered data cleaning with industry-specific models and billion-row scalability</p>
     </div>
 
-    <!-- Tab Navigation Container -->
-    <div id="dataCleaningTabContainer"></div>
-    
-    <!-- Main Content Tabs -->
-    <div class="cleaning-tabs-container">
+    <!-- File Upload Section (Model Editor Style) -->
+    <div class="uploaded-data card">
+        <h3>Upload Data:</h3>
+        <div class="data-row">
+            <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls,.json,.parquet" style="display: none;">
+            <label for="csv-upload" class="upload-label">Choose File</label>
+            <span id="file-name">No file chosen</span>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <span id="upload-status"></span>
+            <span id="eta"></span>
+            <button id="upload-button" class="upload-button">Upload</button>
+        </div>
+    </div>
 
-        <!-- Upload & Profile Tab -->
-        <div class="tab-content active" id="uploadTab">
-            <div class="card">
-                <h2>Upload Your Data</h2>
-                <div class="upload-area" id="uploadArea">
-                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                    <p>Drag and drop your files here or click to browse</p>
-                    <p class="upload-info">Supports CSV, Excel, JSON, Parquet • Up to 100GB with resumable upload</p>
-                    <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.xls,.json,.parquet" style="display: none;">
-                </div>
-                <div class="upload-progress" id="uploadProgress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                    <p class="progress-text"><span id="progressPercent">0</span>% uploaded</p>
+    <!-- Data Profiling Results -->
+    <div class="card" id="profilingResults" style="display: none;">
+        <h2>Data Quality Profile</h2>
+        <div class="profile-summary">
+            <div class="profile-stat">
+                <i class="fas fa-database"></i>
+                <div>
+                    <span class="stat-value" id="totalRows">0</span>
+                    <span class="stat-label">Total Rows</span>
                 </div>
             </div>
-
-            <!-- Data Profiling Results -->
-            <div class="card" id="profilingResults" style="display: none;">
-                <h2>Data Quality Profile</h2>
-                <div class="profile-summary">
-                    <div class="profile-stat">
-                        <i class="fas fa-database"></i>
-                        <div>
-                            <span class="stat-value" id="totalRows">0</span>
-                            <span class="stat-label">Total Rows</span>
-                        </div>
-                    </div>
-                    <div class="profile-stat">
-                        <i class="fas fa-columns"></i>
-                        <div>
-                            <span class="stat-value" id="totalColumns">0</span>
-                            <span class="stat-label">Columns</span>
-                        </div>
-                    </div>
-                    <div class="profile-stat quality-score">
-                        <i class="fas fa-chart-line"></i>
-                        <div>
-                            <span class="stat-value" id="qualityScore">0%</span>
-                            <span class="stat-label">Quality Score</span>
-                        </div>
-                    </div>
+            <div class="profile-stat">
+                <i class="fas fa-columns"></i>
+                <div>
+                    <span class="stat-value" id="totalColumns">0</span>
+                    <span class="stat-label">Columns</span>
                 </div>
-                <div id="columnProfiles" class="column-profiles"></div>
+            </div>
+            <div class="profile-stat quality-score">
+                <i class="fas fa-chart-line"></i>
+                <div>
+                    <span class="stat-value" id="qualityScore">0%</span>
+                    <span class="stat-label">Quality Score</span>
+                </div>
             </div>
         </div>
+        <div id="columnProfiles" class="column-profiles"></div>
+    </div>
 
-        <!-- Configure Cleaning Tab -->
-        <div class="tab-content" id="configureTab">
-            <!-- Industry Templates -->
-            <div class="card">
-                <div id="industryTemplateSelectorContainer">
-                    <!-- IndustryTemplateSelector component will be loaded here -->
+    <!-- Cleaning Tiers -->
+    <div class="card">
+        <h2>Select Cleaning Level</h2>
+        <div class="cleaning-tiers">
+            <div class="tier-card basic" data-tier="basic">
+                <div class="tier-header">
+                    <h3>Basic Cleaning</h3>
+                    <span class="tier-cost">1 token/million rows</span>
                 </div>
+                <ul class="tier-features">
+                    <li><i class="fas fa-check"></i> Standard deduplication</li>
+                    <li><i class="fas fa-check"></i> Data type validation</li>
+                    <li><i class="fas fa-check"></i> Missing value handling</li>
+                    <li><i class="fas fa-check"></i> Format standardization</li>
+                </ul>
+                <button class="auth-button" onclick="dataCleaningPage.selectTier('basic')">Select Basic</button>
             </div>
 
-            <!-- Cleaning Tiers -->
-            <div class="card">
-                <h2>Select Cleaning Level</h2>
-                <div class="cleaning-tiers">
-                    <div class="tier-card basic" data-tier="basic">
-                        <div class="tier-header">
-                            <h3>Basic Cleaning</h3>
-                            <span class="tier-cost">1 token/million rows</span>
-                        </div>
-                        <ul class="tier-features">
-                            <li><i class="fas fa-check"></i> Standard deduplication</li>
-                            <li><i class="fas fa-check"></i> Data type validation</li>
-                            <li><i class="fas fa-check"></i> Missing value handling</li>
-                            <li><i class="fas fa-check"></i> Format standardization</li>
-                        </ul>
-                        <button class="auth-button" onclick="dataCleaningPage.selectTier('basic')">Select Basic</button>
-                    </div>
-
-                    <div class="tier-card advanced" data-tier="advanced">
-                        <div class="tier-header">
-                            <h3>Advanced Cleaning</h3>
-                            <span class="tier-cost">3 tokens/million rows</span>
-                        </div>
-                        <ul class="tier-features">
-                            <li><i class="fas fa-check"></i> AI anomaly detection</li>
-                            <li><i class="fas fa-check"></i> Fuzzy matching (Jaro-Winkler)</li>
-                            <li><i class="fas fa-check"></i> Statistical outlier detection</li>
-                            <li><i class="fas fa-check"></i> Smart column mapping</li>
-                        </ul>
-                        <button class="auth-button" onclick="dataCleaningPage.selectTier('advanced')">Select Advanced</button>
-                    </div>
-
-                    <div class="tier-card ai-powered" data-tier="ai-powered">
-                        <div class="tier-header">
-                            <h3>AI-Powered Cleaning</h3>
-                            <span class="tier-cost">5 tokens/million rows</span>
-                        </div>
-                        <ul class="tier-features">
-                            <li><i class="fas fa-check"></i> GPT-4 data correction</li>
-                            <li><i class="fas fa-check"></i> Industry ML models</li>
-                            <li><i class="fas fa-check"></i> Predictive quality assessment</li>
-                            <li><i class="fas fa-check"></i> Synthetic data generation</li>
-                        </ul>
-                        <button class="auth-button" onclick="dataCleaningPage.selectTier('ai-powered')">Select AI-Powered</button>
-                    </div>
+            <div class="tier-card advanced" data-tier="advanced">
+                <div class="tier-header">
+                    <h3>Advanced Cleaning</h3>
+                    <span class="tier-cost">3 tokens/million rows</span>
                 </div>
+                <ul class="tier-features">
+                    <li><i class="fas fa-check"></i> AI anomaly detection</li>
+                    <li><i class="fas fa-check"></i> Fuzzy matching (Jaro-Winkler)</li>
+                    <li><i class="fas fa-check"></i> Statistical outlier detection</li>
+                    <li><i class="fas fa-check"></i> Smart column mapping</li>
+                </ul>
+                <button class="auth-button" onclick="dataCleaningPage.selectTier('advanced')">Select Advanced</button>
             </div>
 
-            <!-- Cleaning Options -->
-            <div class="card" id="cleaningOptions" style="display: none;">
-                <h2>Cleaning Configuration</h2>
-                <div id="cleaningOptionsContent"></div>
-                <button class="auth-button" onclick="dataCleaningPage.startCleaning()">
-                    <i class="fas fa-magic"></i> Start Cleaning Process
-                </button>
+            <div class="tier-card ai-powered" data-tier="ai-powered">
+                <div class="tier-header">
+                    <h3>AI-Powered Cleaning</h3>
+                    <span class="tier-cost">5 tokens/million rows</span>
+                </div>
+                <ul class="tier-features">
+                    <li><i class="fas fa-check"></i> GPT-4 data correction</li>
+                    <li><i class="fas fa-check"></i> Industry ML models</li>
+                    <li><i class="fas fa-check"></i> Predictive quality assessment</li>
+                    <li><i class="fas fa-check"></i> Synthetic data generation</li>
+                </ul>
+                <button class="auth-button" onclick="dataCleaningPage.selectTier('ai-powered')">Select AI-Powered</button>
             </div>
         </div>
+    </div>
 
-        <!-- Cleaning History Tab -->
-        <div class="tab-content" id="historyTab">
-            <div class="card">
-                <h2>Cleaning History</h2>
-                <div id="cleaningHistory" class="cleaning-history">
-                    <div class="empty-state">
-                        <i class="fas fa-history"></i>
-                        <p>No cleaning jobs yet</p>
-                        <p class="empty-state-subtitle">Your cleaning history will appear here</p>
+    <!-- Detected Columns Section (Tagged Data Style) -->
+    <div class="tagged-data card" id="detectedColumns" style="display: none;">
+        <h3>Detected Columns & Data Types:</h3>
+        <div id="detected-columns-content" class="tagged-data-content">
+            <div class="placeholder-message">
+                <i class="fas fa-database"></i>
+                <p>Upload a data file to see detected columns and data types</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cleaning Options -->
+    <div class="card" id="cleaningOptions" style="display: none;">
+        <h2>Cleaning Configuration</h2>
+        <div id="cleaningOptionsContent"></div>
+        
+        <!-- Privacy Settings -->
+        <div class="privacy-settings">
+            <h3>Privacy & Compliance</h3>
+            <div class="privacy-controls">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="differential-privacy">
+                    <span>Enable Differential Privacy</span>
+                </label>
+                <div class="privacy-options" style="display: none;">
+                    <div class="form-group">
+                        <label for="epsilon">Privacy Budget (ε):</label>
+                        <div class="slider-container">
+                            <input type="range" id="epsilon" min="0.1" max="10" step="0.1" value="1">
+                            <span id="epsilon-value">1.0</span>
+                        </div>
+                        <div class="privacy-level-indicator">
+                            <span>Privacy Level: </span>
+                            <span id="privacy-level" class="level-high">High</span>
+                        </div>
+                    </div>
+                    
+                    <div class="privacy-metrics">
+                        <div class="metric-row">
+                            <span>Re-identification Risk:</span>
+                            <span id="reidentification-risk">Low (&lt; 0.01%)</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Attribute Disclosure Risk:</span>
+                            <span id="attribute-risk">Low</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Data Utility Score:</span>
+                            <span id="utility-score">95%</span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <button class="auth-button" onclick="dataCleaningPage.startCleaning()">
+            <i class="fas fa-magic"></i> Start Cleaning Process
+        </button>
+    </div>
+
+    <!-- Initial Analysis Section -->
+    <div class="card initial-analysis" id="initialAnalysis" style="display: none;">
+        <h2>Initial Analysis Before Cleaning</h2>
+        <div class="analysis-metrics">
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <span class="metric-label">Format Issues:</span>
+                        <span class="metric-value error-value" id="format-issues">0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-random"></i>
+                    <div>
+                        <span class="metric-label">Inconsistencies:</span>
+                        <span class="metric-value warning-value" id="inconsistencies">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-question-circle"></i>
+                    <div>
+                        <span class="metric-label">Missing Values:</span>
+                        <span class="metric-value warning-value" id="missing-values">0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-copy"></i>
+                    <div>
+                        <span class="metric-label">Duplicates:</span>
+                        <span class="metric-value info-value" id="duplicates">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="issue-details" id="issueDetails" style="display: none;">
+            <h4>Detailed Issues Breakdown:</h4>
+            <div class="issues-list">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cost Summary Section -->
+    <div class="card cost-calculator">
+        <h2>Cost Summary</h2>
+        <div class="cost-metrics">
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-database"></i>
+                    <div>
+                        <span class="metric-label">Total Data Size:</span>
+                        <span class="metric-value" id="total-data-size">0 MB</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-coins"></i>
+                    <div>
+                        <span class="metric-label">Estimated Token Cost:</span>
+                        <span class="metric-value" id="total-token-cost">0 tokens</span>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <span class="metric-label">Processing Time:</span>
+                        <span class="metric-value" id="estimated-time">&lt; 1 minute</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <div>
+                        <span class="metric-label">Data Quality Score:</span>
+                        <span class="metric-value" id="data-quality-score">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <span class="metric-label">Cleaned Rows:</span>
+                        <span class="metric-value success-value" id="cleaned-rows">0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-trash-alt"></i>
+                    <div>
+                        <span class="metric-label">Removed Rows:</span>
+                        <span class="metric-value warning-value" id="removed-rows">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-item">
+                    <i class="fas fa-edit"></i>
+                    <div>
+                        <span class="metric-label">Changed Values:</span>
+                        <span class="metric-value info-value" id="changed-values">0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <span class="metric-label">Quality Improvement:</span>
+                        <span class="metric-value" id="quality-improvement">+0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cost-summary-actions">
+            <button class="auth-button generate-main" onclick="dataCleaningPage.startCleaning()">
+                <i class="fas fa-magic"></i> Start Cleaning
+            </button>
         </div>
     </div>
 
@@ -148,5 +286,4 @@
             </div>
         </div>
     </div>
-
 </div>

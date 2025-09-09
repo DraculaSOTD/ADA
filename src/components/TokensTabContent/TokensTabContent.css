@@ -9,7 +9,11 @@
     padding: var(--spacing-xl);
     margin-bottom: var(--spacing-xl);
     color: white;
-    box-shadow: var(--shadow);
+    /* Enhanced 3D shadow effect */
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3),
+                0 1px 2px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.1),
+                0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .balance-header {
@@ -22,6 +26,7 @@
 .balance-header h2 {
     margin: 0;
     font-size: 1.5rem;
+    color: white !important;
 }
 
 .refresh-btn {
@@ -104,7 +109,10 @@
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: var(--spacing-large);
-    box-shadow: var(--shadow);
+    /* Grey 3D shadow by default */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
+                0 1px 2px rgba(0, 0, 0, 0.05),
+                0 2px 4px rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     gap: var(--spacing-medium);
@@ -113,7 +121,10 @@
 
 .stat-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    /* Purple 3D shadow on hover */
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.25),
+                0 4px 8px rgba(99, 102, 241, 0.15),
+                0 2px 4px rgba(99, 102, 241, 0.1);
 }
 
 .stat-icon {
@@ -184,12 +195,14 @@
 }
 
 .upgrade-btn {
-    background: var(--primary-color);
-    color: white;
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
 
 .upgrade-btn:hover {
-    background: var(--primary-dark);
+    background: var(--primary-color);
+    color: white;
     transform: translateY(-2px);
 }
 
@@ -206,13 +219,14 @@
 
 .view-pricing-btn {
     background: white;
-    color: var(--text-primary);
-    border: 2px solid var(--border-color);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
 
 .view-pricing-btn:hover {
-    background: var(--secondary-color);
-    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
 }
 
 /* Transaction History Section */
@@ -270,13 +284,17 @@
     border-radius: var(--border-radius);
     margin-bottom: var(--spacing-medium);
     background-color: var(--background-color);
-    box-shadow: var(--shadow);
+    /* 3D shadow effect */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
+                0 1px 2px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
 }
 
 .balance-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Enhanced purple shadow on hover */
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.15),
+                0 2px 4px rgba(99, 102, 241, 0.1);
 }
 
 .balance-item .item-details {

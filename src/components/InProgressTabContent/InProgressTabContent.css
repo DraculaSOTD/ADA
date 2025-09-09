@@ -135,3 +135,101 @@
 .in-progress-tab-content .cancel-button:hover {
     background-color: #c82333;
 }
+
+/* Enhanced Job Card Styling */
+.job-type-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.job-type-badge.generation {
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--primary-color);
+}
+
+.job-type-badge.training {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success-color);
+}
+
+.model-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    color: var(--text-primary);
+    font-size: 1.125rem;
+}
+
+.status-active {
+    color: var(--primary-color);
+}
+
+.view-button {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
+}
+
+.view-button:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-large);
+    color: var(--text-secondary);
+}
+
+.empty-state i {
+    color: var(--border-color);
+    margin-bottom: var(--spacing-large);
+}
+
+.empty-state h3 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-small);
+}
+
+.empty-state p {
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+.empty-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-medium);
+}
+
+.empty-actions .auth-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    padding: var(--spacing-medium) var(--spacing-large);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.empty-actions .auth-button:hover {
+    background: var(--primary-hover);
+}

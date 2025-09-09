@@ -94,32 +94,69 @@
         </div>
 
 
-        <div class="model-history card">
-            <h3>Cost: <span class="info-icon"><i class="fas fa-info-circle"></i></span></h3>
-            <div class="metrics">
-                <div class="metric-item">
-                    <label>Predicted Accuracy:</label>
-                    <span class="metric-value">0%</span>
+        <!-- Cost Summary Section -->
+        <div class="card cost-calculator">
+            <h2>Cost Summary</h2>
+            <div class="cost-metrics">
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <i class="fas fa-database"></i>
+                        <div>
+                            <span class="metric-label">Total Data Size:</span>
+                            <span class="metric-value" id="total-data-size">0 MB</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <i class="fas fa-coins"></i>
+                        <div>
+                            <span class="metric-label">Total Token Cost:</span>
+                            <span class="metric-value" id="total-token-cost">0 tokens</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <span class="metric-label">Predicted Accuracy:</span>
+                            <span class="metric-value" id="predicted-accuracy">0%</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <span class="metric-label">Data Quality:</span>
+                            <span class="metric-value" id="data-quality">0%</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="metric-item">
-                    <label>Data Quality:</label>
-                    <span class="metric-value">0%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Model Complexity:</label>
-                    <span class="metric-value">0%</span>
-                </div>
-                <div class="metric-item">
-                    <label>Model Quality:</label>
-                    <span class="metric-value">0%</span>
-                </div>
-                <div class="metric-item highlight">
-                    <label>Total Training Cost:</label>
-                    <span class="metric-value primary">0 tokens <i class="fas fa-coins"></i></span>
-                </div>
-                <div class="metric-item">
-                    <label>Estimated ETA:</label>
-                    <span class="metric-value">0 min</span>
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <i class="fas fa-cogs"></i>
+                        <div>
+                            <span class="metric-label">Model Complexity:</span>
+                            <span class="metric-value" id="model-complexity">0%</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <i class="fas fa-trophy"></i>
+                        <div>
+                            <span class="metric-label">Model Quality:</span>
+                            <span class="metric-value" id="model-quality">0%</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <span class="metric-label">Training Time:</span>
+                            <span class="metric-value" id="training-time">0 min</span>
+                        </div>
+                    </div>
+                    <div class="metric-item">
+                        <i class="fas fa-history"></i>
+                        <div>
+                            <span class="metric-label">Model Versions:</span>
+                            <span class="metric-value" id="model-versions">0 versions</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

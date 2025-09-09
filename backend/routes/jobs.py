@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 from models import schemas
 from services import job_service, security
@@ -48,8 +48,40 @@ def get_job(
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     
+    # Verify job belongs to current user
     if job.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Access denied")
+    
+    return job
+
+@router.put("/{job_id}")
+def update_job(
+    job_id: int,
+    update_data: Dict[str, Any],
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(security.get_current_user)
+):
+    """Update a job status."""
+    job = job_service.get_job(db=db, job_id=job_id)
+    
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    
+    if job.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Update job fields
+    if 'status' in update_data:
+        job.status = update_data['status']
+    if 'progress' in update_data:
+        job.progress = update_data['progress']
+    if 'error_message' in update_data:
+        job.error_message = update_data['error_message']
+    if 'completed_at' in update_data:
+        job.completed_at = datetime.fromisoformat(update_data['completed_at'].replace('Z', '+00:00')) if update_data['completed_at'] else None
+    
+    db.commit()
+    db.refresh(job)
     
     return job
 

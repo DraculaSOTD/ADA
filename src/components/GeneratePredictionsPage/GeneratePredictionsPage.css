@@ -125,6 +125,79 @@
     cursor: help;
 }
 
+/* Cost Summary Section - Matching Data Generator Style */
+.cost-calculator {
+    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    border: 1px solid var(--border-color);
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-large);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.cost-calculator h2 {
+    color: var(--primary-color-dark);
+    margin-bottom: var(--spacing-large);
+    font-size: 1.5rem;
+}
+
+.cost-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.metric-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-large);
+}
+
+.cost-calculator .metric-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+    padding: var(--spacing-medium);
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.cost-calculator .metric-item i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.cost-calculator .metric-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cost-calculator .metric-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.cost-calculator .metric-value {
+    font-size: 1.25rem;
+    color: var(--primary-color-dark);
+    font-weight: bold;
+}
+
+.cost-calculator #total-token-cost {
+    color: var(--primary-color);
+}
+
+.cost-calculator #predicted-accuracy, 
+.cost-calculator #data-quality, 
+.cost-calculator #model-complexity, 
+.cost-calculator #model-quality {
+    color: var(--success-color);
+}
+
 .history-controls {
     display: flex;
     align-items: center;
@@ -417,4 +490,11 @@
 
 .model-options div:hover {
     background-color: var(--primary-color-light);
+}
+
+/* Responsive styles for Cost Summary */
+@media (max-width: 768px) {
+    .metric-row {
+        grid-template-columns: 1fr;
+    }
 }

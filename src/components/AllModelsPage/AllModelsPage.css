@@ -45,6 +45,7 @@
     box-shadow: var(--box-shadow);
     padding: var(--spacing-medium);
     width: 100%;
+    margin-top: var(--spacing-xl);
 }
 
 .tab-panel {
