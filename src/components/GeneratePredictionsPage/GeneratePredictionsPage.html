@@ -11,6 +11,13 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Disclaimer at the top -->
+        <div class="disclaimer card">
+            <h3>Disclaimer:</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies ligula eget eros tristique accumsan. Duis diam velit, sagittis quis ipsum ut, tempor pharetra erat. Fusce a pretium tortor.</p>
+        </div>
+        
         <div class="form-section">
             <div class="form-row">
                 <div class="form-group">
@@ -26,23 +33,65 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="model-function">Model Function:</label>
-                    <input type="text" id="model-function" placeholder="TextField">
+                    <label for="model-algorithm">ML Algorithm:</label>
+                    <select id="model-algorithm" class="algorithm-dropdown">
+                        <option value="">Select an algorithm...</option>
+                        <optgroup label="Classification">
+                            <option value="random_forest_clf">Random Forest</option>
+                            <option value="svm_clf">Support Vector Machine (SVM)</option>
+                            <option value="logistic_regression">Logistic Regression</option>
+                            <option value="neural_network_clf">Neural Network</option>
+                            <option value="xgboost_clf">XGBoost</option>
+                            <option value="decision_tree_clf">Decision Tree</option>
+                            <option value="naive_bayes">Naive Bayes</option>
+                            <option value="knn_clf">K-Nearest Neighbors</option>
+                        </optgroup>
+                        <optgroup label="Regression">
+                            <option value="linear_regression">Linear Regression</option>
+                            <option value="polynomial_regression">Polynomial Regression</option>
+                            <option value="ridge_regression">Ridge Regression</option>
+                            <option value="lasso_regression">Lasso Regression</option>
+                            <option value="random_forest_reg">Random Forest Regressor</option>
+                            <option value="neural_network_reg">Neural Network Regressor</option>
+                            <option value="svm_reg">Support Vector Regressor</option>
+                            <option value="xgboost_reg">XGBoost Regressor</option>
+                        </optgroup>
+                        <optgroup label="Clustering">
+                            <option value="kmeans">K-Means</option>
+                            <option value="dbscan">DBSCAN</option>
+                            <option value="hierarchical">Hierarchical Clustering</option>
+                            <option value="gaussian_mixture">Gaussian Mixture Model</option>
+                            <option value="mean_shift">Mean Shift</option>
+                        </optgroup>
+                        <optgroup label="Time Series">
+                            <option value="arima">ARIMA</option>
+                            <option value="lstm">LSTM</option>
+                            <option value="prophet">Prophet</option>
+                            <option value="seasonal_decompose">Seasonal Decomposition</option>
+                        </optgroup>
+                        <optgroup label="NLP">
+                            <option value="bert">BERT</option>
+                            <option value="gpt">GPT</option>
+                            <option value="sentiment_analysis">Sentiment Analysis</option>
+                            <option value="text_classification">Text Classification</option>
+                            <option value="named_entity_recognition">Named Entity Recognition</option>
+                        </optgroup>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="epoch">Epoch:</label>
-                    <input type="text" id="epoch" placeholder="TextField">
+                    <label for="epoch">Epochs:</label>
+                    <input type="number" id="epoch" placeholder="10" min="1" max="1000">
                 </div>
             </div>
 
-            <div class="form-row">
+            <div class="form-row" id="algorithm-params-row">
                 <div class="form-group">
                     <label for="hidden-layers">Hidden Layers:</label>
-                    <input type="text" id="hidden-layers" placeholder="TextField">
+                    <input type="number" id="hidden-layers" placeholder="2" min="1" max="10">
                 </div>
                 <div class="form-group">
-                    <label for="batch-size">Batch size:</label>
-                    <input type="text" id="batch-size" placeholder="TextField">
+                    <label for="batch-size">Batch Size:</label>
+                    <input type="number" id="batch-size" placeholder="32" min="1" max="512">
                 </div>
             </div>
         </div>
@@ -73,12 +122,18 @@
         </div>
         <div class="tagged-data card">
             <h3>Test Data Configuration:</h3>
-            <div class="data-row new-fields-row">
-                <span class="detail-label">Testing Data Size:</span>
-                <input type="number" class="detail-value" id="testing-data-size" placeholder="e.g., 20">
-                <div class="dropdown-container inline-dropdown" id="testing-data-unit-container"></div>
-                <span class="detail-label">Testing Data From:</span>
-                <div class="dropdown-container inline-dropdown" id="testing-data-from-container"></div>
+            <div class="form-row test-config-row">
+                <div class="form-group test-size-group">
+                    <label for="testing-data-size">Testing Data Size:</label>
+                    <div class="test-input-group">
+                        <input type="number" id="testing-data-size" placeholder="20" min="1" max="100">
+                        <div id="testing-data-unit-container"></div>
+                    </div>
+                </div>
+                <div class="form-group test-from-group">
+                    <label for="testing-data-from">Testing Data From:</label>
+                    <div id="testing-data-from-container"></div>
+                </div>
             </div>
         </div>
 
@@ -93,6 +148,16 @@
             </div>
         </div>
 
+        <div class="processing-units card">
+            <h3>Processing Units: <span class="info-icon"><i class="fas fa-microchip"></i></span></h3>
+            <div class="history-controls">
+                <button class="minus-button">-</button>
+                <span>1</span>
+                <button class="plus-button">+</button>
+                <span>Units</span>
+                <span class="gpu-info">GPU: 8GB Memory, 4 Cores</span>
+            </div>
+        </div>
 
         <!-- Cost Summary Section -->
         <div class="card cost-calculator">
@@ -159,16 +224,13 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="disclaimer card">
-            <h3>Disclaimer:</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies ligula eget eros tristique accumsan. Duis diam velit, sagittis quis ipsum ut, tempor pharetra erat. Fusce a pretium tortor.</p>
-        </div>
-
-        <div class="page-actions">
-            <button class="back-button">Back</button>
-            <button class="finish-button">Finish</button>
+            
+            <!-- Create Model Button -->
+            <div class="cost-summary-actions">
+                <button class="auth-button generate-main" id="create-model-btn" onclick="if (window.modelEditorPage) window.modelEditorPage.createModel(); else console.error('Model Editor not loaded yet');">
+                    <i class="fas fa-rocket"></i> Create Model
+                </button>
+            </div>
         </div>
     </div>
 </div>

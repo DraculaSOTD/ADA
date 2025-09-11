@@ -6,11 +6,14 @@ class ModelEditorPage {
     constructor() {
         this.dropdowns = {};
         this.modelHistoryVersions = 0;
+        this.processingUnits = 1; // Default to 1 processing unit
         this.tokenCosts = {
             versionCost: 0,  // Start at 0, calculate dynamically based on model complexity
-            trainingBaseCost: 0  // Start at 0, calculate dynamically
+            trainingBaseCost: 0,  // Start at 0, calculate dynamically
+            processingUnitCost: 500  // Cost per processing unit per hour
         };
         this.uploadedData = null;
+        this.selectedFile = null; // Store selected file before upload
         this.columnNames = [];
         this.dataMetrics = {
             accuracy: 0,
@@ -23,6 +26,8 @@ class ModelEditorPage {
         this.requiredColumns = []; // For template models
         this.trainingColumns = []; // Selected training columns
         this.predictionColumns = []; // Selected prediction columns
+        this.selectedAlgorithm = null; // Selected ML algorithm
+        this.algorithmConfigs = this.getAlgorithmConfigs(); // Algorithm configurations
     }
 
     async initialize() {
@@ -64,13 +69,12 @@ class ModelEditorPage {
         if (testingDataUnitContainer) {
             this.dropdowns.testingUnit = new StyledDropdown(testingDataUnitContainer, {
                 id: 'testing-unit',
-                placeholder: '%',
+                placeholder: 'Percentage',
                 options: [
-                    { value: 'percentage', title: '%', icon: 'fas fa-percentage' },
+                    { value: 'percentage', title: 'Percentage', icon: 'fas fa-percentage' },
                     { value: 'rows', title: 'Rows', icon: 'fas fa-table' }
                 ],
-                value: 'percentage',
-                size: 'small'
+                value: 'percentage'
             });
         }
 
@@ -78,14 +82,13 @@ class ModelEditorPage {
         if (testingDataFromContainer) {
             this.dropdowns.testingFrom = new StyledDropdown(testingDataFromContainer, {
                 id: 'testing-from',
-                placeholder: 'Random',
+                placeholder: 'Random Selection',
                 options: [
-                    { value: 'random', title: 'Random', icon: 'fas fa-random' },
-                    { value: 'first', title: 'First', icon: 'fas fa-arrow-up' },
-                    { value: 'last', title: 'Last', icon: 'fas fa-arrow-down' }
+                    { value: 'random', title: 'Random Selection', icon: 'fas fa-random' },
+                    { value: 'first', title: 'First Rows', icon: 'fas fa-arrow-up' },
+                    { value: 'last', title: 'Last Rows', icon: 'fas fa-arrow-down' }
                 ],
-                value: 'random',
-                size: 'small'
+                value: 'random'
             });
         }
     }
@@ -113,8 +116,35 @@ class ModelEditorPage {
             });
         }
 
+        // Processing Units controls
+        const processingControls = document.querySelector('.processing-units .history-controls');
+        if (processingControls) {
+            const minusBtn = processingControls.querySelector('.minus-button');
+            const plusBtn = processingControls.querySelector('.plus-button');
+            const unitsSpan = processingControls.querySelector('span:nth-child(2)');
+            const gpuInfoSpan = processingControls.querySelector('.gpu-info');
+            
+            minusBtn.addEventListener('click', () => {
+                if (this.processingUnits > 1) {
+                    this.processingUnits--;
+                    unitsSpan.textContent = this.processingUnits;
+                    this.updateProcessingUnitsDisplay(gpuInfoSpan);
+                    this.updateCostCalculations();
+                }
+            });
+            
+            plusBtn.addEventListener('click', () => {
+                if (this.processingUnits < 10) { // Max 10 units
+                    this.processingUnits++;
+                    unitsSpan.textContent = this.processingUnits;
+                    this.updateProcessingUnitsDisplay(gpuInfoSpan);
+                    this.updateCostCalculations();
+                }
+            });
+        }
+
         // Add listeners for model parameters to update metrics in real-time
-        const paramInputs = ['epoch', 'hidden-layers', 'batch-size', 'model-name', 'model-description', 'model-function'];
+        const paramInputs = ['epoch', 'hidden-layers', 'batch-size', 'model-name', 'model-description'];
         paramInputs.forEach(id => {
             const input = document.getElementById(id);
             if (input) {
@@ -128,7 +158,17 @@ class ModelEditorPage {
             }
         });
 
-        // Add file upload listener to parse CSV immediately on selection
+        // Add listener for algorithm selection
+        const algorithmSelect = document.getElementById('model-algorithm');
+        if (algorithmSelect) {
+            algorithmSelect.addEventListener('change', (e) => {
+                this.selectedAlgorithm = e.target.value;
+                this.updateParameterFields(e.target.value);
+                this.updateMetricsDisplay();
+            });
+        }
+
+        // Add file upload listener to store file (no auto-upload)
         const csvUpload = document.getElementById('csv-upload');
         if (csvUpload) {
             csvUpload.addEventListener('change', (event) => {
@@ -137,10 +177,39 @@ class ModelEditorPage {
                     // Handle CSV and other text files
                     if (file.type === 'text/csv' || file.name.endsWith('.csv') || 
                         file.type === 'text/plain' || file.type === '') {
-                        this.handleFileUpload(file);
-                        console.log('CSV file selected, parsing columns...');
+                        // Just store the file and update display
+                        this.selectedFile = file;
+                        const fileName = document.getElementById('file-name');
+                        if (fileName) {
+                            fileName.textContent = file.name;
+                        }
+                        // Show upload button
+                        const uploadButton = document.getElementById('upload-button');
+                        if (uploadButton) {
+                            uploadButton.style.display = 'inline-block';
+                        }
+                        console.log('CSV file selected:', file.name);
                     }
                 }
+            });
+        }
+
+        // Add upload button listener with model validation
+        const uploadButton = document.getElementById('upload-button');
+        if (uploadButton) {
+            uploadButton.addEventListener('click', () => {
+                // Check if model is selected
+                if (!this.selectedModelId) {
+                    alert('Please select a model from the dropdown in the top right before uploading data.');
+                    return;
+                }
+                // Check if file is selected
+                if (!this.selectedFile) {
+                    alert('Please select a file first.');
+                    return;
+                }
+                // Process the upload
+                this.handleFileUpload(this.selectedFile);
             });
         }
 
@@ -197,6 +266,18 @@ class ModelEditorPage {
         }
     }
 
+    updateProcessingUnitsDisplay(gpuInfoSpan) {
+        // Calculate GPU resources based on processing units
+        const memoryPerUnit = 8; // GB
+        const coresPerUnit = 4;
+        const totalMemory = this.processingUnits * memoryPerUnit;
+        const totalCores = this.processingUnits * coresPerUnit;
+        
+        if (gpuInfoSpan) {
+            gpuInfoSpan.textContent = `GPU: ${totalMemory}GB Memory, ${totalCores} Cores`;
+        }
+    }
+
     updateCostCalculations() {
         // Calculate dynamic version cost based on model complexity
         this.calculateDynamicVersionCost();
@@ -207,6 +288,9 @@ class ModelEditorPage {
         if (historyCostElement) {
             historyCostElement.innerHTML = `Cost: <strong>${historyTotalCost.toLocaleString()}</strong> tokens per version`;
         }
+
+        // Processing units cost is calculated but not displayed separately
+        // It's included in the total cost calculation
 
         // Use updateMetricsDisplay to show actual metrics
         this.updateMetricsDisplay();
@@ -777,8 +861,10 @@ class ModelEditorPage {
     
     updateCostSummary() {
         // Calculate all metrics
+        const baseCost = this.calculateDynamicTokenCost();
         const versionCost = this.modelHistoryVersions * this.tokenCosts.versionCost;
-        const totalCost = this.calculateDynamicTokenCost() + versionCost;
+        // Multiply only base cost by processing units (not version cost which is storage)
+        const totalCost = (baseCost * this.processingUnits) + versionCost;
         
         // Calculate data size
         let dataSize = '0 MB';
@@ -787,14 +873,18 @@ class ModelEditorPage {
             dataSize = this.formatFileSize(estimatedBytes);
         }
         
-        // Calculate training time
-        let estimatedTime = 0; // Start at 0
+        // Calculate base training time
+        let baseTime = 0; // Start at 0
         if (this.uploadedData && this.uploadedData.rowCount > 0) {
-            estimatedTime += Math.round(this.uploadedData.rowCount / 100) + 5; // Add time based on data size
+            baseTime += Math.round(this.uploadedData.rowCount / 100) + 5; // Add time based on data size
         }
         if (this.dataMetrics.modelComplexity > 0) {
-            estimatedTime += Math.round(this.dataMetrics.modelComplexity * 1.2); // Add time based on complexity
+            baseTime += Math.round(this.dataMetrics.modelComplexity * 1.2); // Add time based on complexity
         }
+        
+        // Divide training time by processing units (more units = faster training)
+        // Ensure minimum time of 1 minute
+        let estimatedTime = baseTime > 0 ? Math.max(1, Math.round(baseTime / this.processingUnits)) : 0;
         
         // Update all metric elements
         const updateElement = (id, value) => {
@@ -836,6 +926,61 @@ class ModelEditorPage {
     handleFileUpload(file) {
         if (!file) return;
 
+        // Show upload progress
+        const progressBar = document.getElementById('progress-bar');
+        const uploadStatus = document.getElementById('upload-status');
+        const eta = document.getElementById('eta');
+
+        // Reset progress bar
+        if (progressBar) {
+            progressBar.style.width = '0%';
+            progressBar.style.backgroundColor = 'var(--primary-color)';
+        }
+
+        // Always process the file immediately when this method is called
+        // (It's now only called from the upload button click with validation)
+        this.processFileUpload(file);
+    }
+
+    processFileUpload(file) {
+        const progressBar = document.getElementById('progress-bar');
+        const uploadStatus = document.getElementById('upload-status');
+        const eta = document.getElementById('eta');
+
+        // Simulate upload progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+            }
+            if (uploadStatus) {
+                uploadStatus.textContent = `Processing... ${progress}%`;
+            }
+            if (eta && progress < 100) {
+                const remaining = Math.ceil((100 - progress) / 10 * 0.2);
+                eta.textContent = `ETA: ${remaining}s`;
+            }
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                if (uploadStatus) {
+                    uploadStatus.textContent = 'Complete';
+                }
+                if (eta) {
+                    eta.textContent = '';
+                }
+                if (progressBar) {
+                    progressBar.style.backgroundColor = 'var(--success-color, #4caf50)';
+                }
+                
+                // Process the file
+                this.readAndParseFile(file);
+            }
+        }, 200);
+    }
+
+    readAndParseFile(file) {
         const reader = new FileReader();
         reader.onload = (e) => {
             const csvText = e.target.result;
@@ -850,7 +995,268 @@ class ModelEditorPage {
                 console.log('Data metrics:', this.dataMetrics);
             }
         };
+        reader.onerror = () => {
+            const uploadStatus = document.getElementById('upload-status');
+            if (uploadStatus) {
+                uploadStatus.textContent = 'Error reading file';
+            }
+            const progressBar = document.getElementById('progress-bar');
+            if (progressBar) {
+                progressBar.style.backgroundColor = 'var(--error-color, #f44336)';
+            }
+        };
         reader.readAsText(file);
+    }
+
+    // Get algorithm configurations
+    getAlgorithmConfigs() {
+        return {
+            // Classification algorithms
+            'random_forest_clf': {
+                name: 'Random Forest Classifier',
+                params: {
+                    'n_estimators': { label: 'Number of Trees', type: 'number', default: 100, min: 10, max: 1000 },
+                    'max_depth': { label: 'Max Depth', type: 'number', default: 10, min: 1, max: 50 },
+                    'min_samples_split': { label: 'Min Samples Split', type: 'number', default: 2, min: 2, max: 20 }
+                }
+            },
+            'svm_clf': {
+                name: 'Support Vector Machine',
+                params: {
+                    'kernel': { label: 'Kernel', type: 'select', options: ['linear', 'rbf', 'poly', 'sigmoid'], default: 'rbf' },
+                    'C': { label: 'C Parameter', type: 'number', default: 1.0, min: 0.01, max: 100, step: 0.01 },
+                    'gamma': { label: 'Gamma', type: 'select', options: ['scale', 'auto'], default: 'scale' }
+                }
+            },
+            'logistic_regression': {
+                name: 'Logistic Regression',
+                params: {
+                    'penalty': { label: 'Penalty', type: 'select', options: ['l1', 'l2', 'elasticnet', 'none'], default: 'l2' },
+                    'C': { label: 'Inverse Regularization', type: 'number', default: 1.0, min: 0.01, max: 100, step: 0.01 },
+                    'max_iter': { label: 'Max Iterations', type: 'number', default: 100, min: 50, max: 1000 }
+                }
+            },
+            'neural_network_clf': {
+                name: 'Neural Network Classifier',
+                params: {
+                    'hidden_layers': { label: 'Hidden Layers', type: 'number', default: 2, min: 1, max: 10 },
+                    'neurons_per_layer': { label: 'Neurons per Layer', type: 'number', default: 128, min: 16, max: 512 },
+                    'learning_rate': { label: 'Learning Rate', type: 'number', default: 0.001, min: 0.0001, max: 0.1, step: 0.0001 },
+                    'activation': { label: 'Activation', type: 'select', options: ['relu', 'sigmoid', 'tanh'], default: 'relu' }
+                }
+            },
+            'xgboost_clf': {
+                name: 'XGBoost Classifier',
+                params: {
+                    'n_estimators': { label: 'Number of Boosting Rounds', type: 'number', default: 100, min: 10, max: 1000 },
+                    'max_depth': { label: 'Max Depth', type: 'number', default: 6, min: 1, max: 20 },
+                    'learning_rate': { label: 'Learning Rate', type: 'number', default: 0.3, min: 0.01, max: 1, step: 0.01 }
+                }
+            },
+            // Regression algorithms
+            'linear_regression': {
+                name: 'Linear Regression',
+                params: {
+                    'fit_intercept': { label: 'Fit Intercept', type: 'checkbox', default: true },
+                    'normalize': { label: 'Normalize', type: 'checkbox', default: false }
+                }
+            },
+            'random_forest_reg': {
+                name: 'Random Forest Regressor',
+                params: {
+                    'n_estimators': { label: 'Number of Trees', type: 'number', default: 100, min: 10, max: 1000 },
+                    'max_depth': { label: 'Max Depth', type: 'number', default: 10, min: 1, max: 50 }
+                }
+            },
+            // Clustering algorithms
+            'kmeans': {
+                name: 'K-Means Clustering',
+                params: {
+                    'n_clusters': { label: 'Number of Clusters', type: 'number', default: 3, min: 2, max: 20 },
+                    'max_iter': { label: 'Max Iterations', type: 'number', default: 300, min: 100, max: 1000 }
+                }
+            },
+            // Time Series
+            'lstm': {
+                name: 'LSTM Network',
+                params: {
+                    'lstm_units': { label: 'LSTM Units', type: 'number', default: 50, min: 10, max: 200 },
+                    'dropout': { label: 'Dropout Rate', type: 'number', default: 0.2, min: 0, max: 0.5, step: 0.1 },
+                    'lookback': { label: 'Lookback Period', type: 'number', default: 10, min: 1, max: 100 }
+                }
+            }
+        };
+    }
+
+    // Update parameter fields based on selected algorithm
+    updateParameterFields(algorithmId) {
+        const paramsRow = document.getElementById('algorithm-params-row');
+        if (!paramsRow || !algorithmId) return;
+
+        const config = this.algorithmConfigs[algorithmId];
+        if (!config) {
+            // Keep default fields for algorithms without specific configs
+            return;
+        }
+
+        // Clear existing fields
+        paramsRow.innerHTML = '';
+
+        // Add algorithm-specific parameter fields
+        let fieldCount = 0;
+        for (const [paramKey, paramConfig] of Object.entries(config.params)) {
+            if (fieldCount >= 2) break; // Only show 2 fields per row
+
+            const formGroup = document.createElement('div');
+            formGroup.className = 'form-group';
+
+            const label = document.createElement('label');
+            label.setAttribute('for', `param-${paramKey}`);
+            label.textContent = paramConfig.label + ':';
+            formGroup.appendChild(label);
+
+            let input;
+            if (paramConfig.type === 'select') {
+                input = document.createElement('select');
+                paramConfig.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    if (opt === paramConfig.default) option.selected = true;
+                    input.appendChild(option);
+                });
+            } else if (paramConfig.type === 'checkbox') {
+                input = document.createElement('input');
+                input.type = 'checkbox';
+                input.checked = paramConfig.default;
+            } else {
+                input = document.createElement('input');
+                input.type = 'number';
+                input.placeholder = paramConfig.default;
+                input.value = paramConfig.default;
+                input.min = paramConfig.min;
+                input.max = paramConfig.max;
+                if (paramConfig.step) input.step = paramConfig.step;
+            }
+
+            input.id = `param-${paramKey}`;
+            input.className = 'algorithm-param';
+            
+            // Add event listener for real-time updates
+            input.addEventListener('change', () => this.updateMetricsDisplay());
+            input.addEventListener('input', () => this.updateMetricsDisplay());
+
+            formGroup.appendChild(input);
+            paramsRow.appendChild(formGroup);
+            fieldCount++;
+        }
+
+        // If neural network, keep epochs and batch size visible
+        if (algorithmId.includes('neural_network') || algorithmId === 'lstm') {
+            const epochGroup = document.createElement('div');
+            epochGroup.className = 'form-group';
+            epochGroup.innerHTML = `
+                <label for="epoch">Epochs:</label>
+                <input type="number" id="epoch" placeholder="10" min="1" max="1000" value="10">
+            `;
+            
+            const batchGroup = document.createElement('div');
+            batchGroup.className = 'form-group';
+            batchGroup.innerHTML = `
+                <label for="batch-size">Batch Size:</label>
+                <input type="number" id="batch-size" placeholder="32" min="1" max="512" value="32">
+            `;
+
+            if (fieldCount < 2) {
+                paramsRow.appendChild(epochGroup);
+                fieldCount++;
+            }
+            if (fieldCount < 2) {
+                paramsRow.appendChild(batchGroup);
+            }
+
+            // Re-add event listeners
+            const epochInput = epochGroup.querySelector('#epoch');
+            const batchInput = batchGroup.querySelector('#batch-size');
+            if (epochInput) {
+                epochInput.addEventListener('change', () => this.updateMetricsDisplay());
+                epochInput.addEventListener('input', () => this.updateMetricsDisplay());
+            }
+            if (batchInput) {
+                batchInput.addEventListener('change', () => this.updateMetricsDisplay());
+                batchInput.addEventListener('input', () => this.updateMetricsDisplay());
+            }
+        }
+    }
+
+    // Create Model method - triggered by the Create Model button
+    createModel() {
+        // Validate required fields
+        const modelName = document.getElementById('model-name')?.value;
+        const modelAlgorithm = document.getElementById('model-algorithm')?.value;
+        
+        if (!modelName || modelName.trim() === '') {
+            alert('Please enter a model name');
+            return;
+        }
+        
+        if (!modelAlgorithm || modelAlgorithm === '') {
+            alert('Please select an ML algorithm');
+            return;
+        }
+        
+        if (!this.uploadedData || this.columnNames.length === 0) {
+            alert('Please upload training data');
+            return;
+        }
+        
+        // Check if columns are properly mapped (for template models or custom models)
+        if (this.modelType === 'new' && this.trainingColumns.length === 0) {
+            alert('Please select at least one training column');
+            return;
+        }
+        
+        // Collect all model configuration
+        const modelConfig = {
+            name: modelName,
+            description: document.getElementById('model-description')?.value || '',
+            algorithm: modelAlgorithm,
+            epochs: parseInt(document.getElementById('epoch')?.value) || 10,
+            hiddenLayers: parseInt(document.getElementById('hidden-layers')?.value) || 2,
+            batchSize: parseInt(document.getElementById('batch-size')?.value) || 32,
+            trainingColumns: this.trainingColumns,
+            predictionColumns: this.predictionColumns,
+            dataSize: this.uploadedData?.rowCount || 0,
+            modelVersions: this.modelHistoryVersions,
+            totalTokenCost: this.calculateDynamicTokenCost(),
+            estimatedAccuracy: this.dataMetrics.accuracy,
+            modelComplexity: this.dataMetrics.modelComplexity,
+            dataQuality: this.dataMetrics.dataQuality
+        };
+        
+        // Show loading/processing state
+        const createButton = document.getElementById('create-model-btn');
+        if (createButton) {
+            createButton.disabled = true;
+            createButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Model...';
+        }
+        
+        // Simulate model creation process
+        console.log('Creating model with configuration:', modelConfig);
+        
+        setTimeout(() => {
+            // Reset button state
+            if (createButton) {
+                createButton.disabled = false;
+                createButton.innerHTML = '<i class="fas fa-rocket"></i> Create Model';
+            }
+            
+            // Show success message
+            alert(`Model "${modelName}" has been created successfully!\n\nAlgorithm: ${this.algorithmConfigs[modelAlgorithm]?.name || modelAlgorithm}\nEstimated Accuracy: ${this.dataMetrics.accuracy}%\nToken Cost: ${modelConfig.totalTokenCost} tokens`);
+            
+            // Optionally redirect to models list or dashboard
+            // window.location.hash = '#AllModelsPage';
+        }, 3000);
     }
 }
 

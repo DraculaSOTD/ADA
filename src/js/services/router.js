@@ -3,7 +3,7 @@ import { setupAuthPage } from '../pages/auth.js';
 import { setupDashboardPage } from '../pages/dashboard.js';
 import { setupAllModelsPage } from '../pages/all-models.js';
 import { setupCustomModelCreationPage } from '../pages/custom-model-creation.js';
-import { setupGeneratePredictionsPage } from '../pages/generate-predictions.js';
+import { modelEditorPage } from '../pages/model-editor.js';
 import { setupDataGenerator } from '../pages/data-generator.js';
 import { setupAdvancedRulesEngine } from '../pages/rules-engine-advanced.js';
 import { setupRulesList } from '../pages/rules-list.js';
@@ -46,8 +46,13 @@ const routes = {
     },
     'GeneratePredictionsPage': {
         component: 'GeneratePredictionsPage',
-        css: 'src/components/GeneratePredictionsPage/GeneratePredictionsPage.css',
-        setup: setupGeneratePredictionsPage
+        css: 'src/components/GeneratePredictionsPage/ModelEditorStyles.css',
+        setup: async () => {
+            // Initialize the model editor page
+            if (modelEditorPage) {
+                await modelEditorPage.initialize();
+            }
+        }
     },
     'DataGeneratorPage': {
         component: 'DataGeneratorPage',

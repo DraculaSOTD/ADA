@@ -85,6 +85,11 @@
     transition: all 0.3s ease;
 }
 
+/* Make button fill width when inside cost-summary-actions */
+.cost-summary-actions .generate-main {
+    width: 100%;
+}
+
 .generate-main:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
