@@ -88,6 +88,14 @@ async function setupDataGenerator() {
         clearTemplateBtn.onclick = clearTemplateSelection;
     }
     
+    // Add clear file button listener
+    const clearFileBtn = document.getElementById('clear-file-btn');
+    if (clearFileBtn) {
+        clearFileBtn.addEventListener('click', clearFile);
+        // Also add as onclick for redundancy
+        clearFileBtn.onclick = clearFile;
+    }
+    
     // Update estimates on input change
     setupEstimateUpdates();
     
@@ -624,16 +632,29 @@ function clearFile() {
     const analysisResults = document.getElementById('analysis-results');
     const multiTableSection = document.getElementById('multi-table-section');
     const industryTemplates = document.querySelector('.generation-options-section');
+    const orDivider = document.querySelector('.or-divider');
+    const clearFileBtn = document.getElementById('clear-file-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const uploadStatus = document.getElementById('upload-status');
+    const eta = document.getElementById('eta');
     
+    // Clear file input and display
     if (csvUpload) csvUpload.value = '';
     if (fileName) fileName.textContent = 'No file chosen';
+    
+    // Clear progress indicators
+    if (progressBar) progressBar.style.width = '0%';
+    if (uploadStatus) uploadStatus.textContent = '';
+    if (eta) eta.textContent = '';
+    
+    // Hide analysis sections
     if (analysisResults) analysisResults.style.display = 'none';
     if (multiTableSection) multiTableSection.style.display = 'none';
     
-    // Show industry templates when no file
-    if (industryTemplates) {
-        industryTemplates.style.display = 'block';
-    }
+    // Show Industry Template section and OR divider when file is cleared
+    if (industryTemplates) industryTemplates.style.display = 'block';
+    if (orDivider) orDivider.style.display = 'flex';
+    if (clearFileBtn) clearFileBtn.style.display = 'none';
     
     // Reset to initial state
     updateSectionVisibility('none');
@@ -641,6 +662,9 @@ function clearFile() {
     // Reset cost calculator
     resetDynamicCostCalculator();
 }
+
+// Make clearFile globally accessible
+window.clearFile = clearFile;
 
 // File validation before upload
 function validateFileBeforeUpload(file) {
@@ -675,10 +699,23 @@ async function analyzeFile(file) {
     const uploadStatus = document.getElementById('upload-status');
     const uploadProgressRow = document.getElementById('upload-progress-row');
     
+    // Hide Industry Template section and OR divider when file is uploaded
+    const industryTemplates = document.querySelector('.generation-options-section');
+    const orDivider = document.querySelector('.or-divider');
+    const clearFileBtn = document.getElementById('clear-file-btn');
+    
+    if (industryTemplates) industryTemplates.style.display = 'none';
+    if (orDivider) orDivider.style.display = 'none';
+    if (clearFileBtn) clearFileBtn.style.display = 'inline-block';
+    
     // Validate file first
     const validation = validateFileBeforeUpload(file);
     if (!validation.valid) {
         alert(validation.error);
+        // Show templates again if validation fails
+        if (industryTemplates) industryTemplates.style.display = 'block';
+        if (orDivider) orDivider.style.display = 'flex';
+        if (clearFileBtn) clearFileBtn.style.display = 'none';
         return;
     }
     
@@ -1936,6 +1973,7 @@ async function startGenerationDirect(settings, tokenCost) {
         continueBtn.onclick = () => {
             const generationState = {
                 id: Date.now(),
+                type: 'data_generation',
                 settings: settings,
                 startTime: progressTracker.startTime,
                 status: 'in_progress',
@@ -1946,7 +1984,9 @@ async function startGenerationDirect(settings, tokenCost) {
             
             localStorage.setItem('activeGeneration', JSON.stringify(generationState));
             progressModal.style.display = 'none';
-            alert('Generation continues in background. Check the In Progress tab in your dashboard.');
+            
+            // Navigate directly to dashboard in-progress tab
+            window.location.hash = '#dashboard?tab=in-progress';
         };
     }
     
@@ -4037,6 +4077,22 @@ window.toggleMethodDetails = function(method) {
     } else {
         details.style.display = 'none';
         button.className = 'fas fa-chevron-down';
+    }
+};
+
+// Toggle privacy settings expansion
+window.togglePrivacySettings = function() {
+    const content = document.getElementById('privacy-content');
+    const button = document.querySelector('.privacy-section .method-expand-btn i');
+    
+    if (content && button) {
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            button.className = 'fas fa-chevron-up';
+        } else {
+            content.style.display = 'none';
+            button.className = 'fas fa-chevron-down';
+        }
     }
 };
 

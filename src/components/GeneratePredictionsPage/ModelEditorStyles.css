@@ -9,23 +9,34 @@
     align-self: center;
 }
 
+/* Override global page-header for Model Editor to accommodate selector */
 .finalization-page .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-large);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-large);
 }
 
 .finalization-page .page-title {
-    font-size: var(--font-size-large);
-    color: var(--primary-color-dark);
+    /* Inherits from global styles */
+    margin-bottom: var(--spacing-medium);
+}
+
+.finalization-page .page-subtitle {
+    /* Inherits from global styles */
     margin-bottom: var(--spacing-large);
 }
 
 .model-selector-container {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: var(--spacing-medium);
+    margin-top: var(--spacing-medium);
+}
+
+.model-selector-container #model-selector-dropdown {
+    min-width: 350px;
+    max-width: 500px;
 }
 
 .generate-predictions-container .card {

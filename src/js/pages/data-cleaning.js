@@ -808,29 +808,196 @@ class DataCleaningPage {
     }
 
     showProcessingModal() {
-        const modal = document.getElementById('processingModal');
-        modal.classList.add('active');
+        const progressModal = document.getElementById('progress-modal');
+        if (!progressModal) return;
         
-        // Initialize progress monitor
-        if (window.ProgressMonitor) {
-            this.progressMonitor = new ProgressMonitor();
-            this.progressMonitor.initialize('progressMonitorContainer', {
-                title: 'Data Cleaning in Progress',
-                showLogs: true,
-                allowPause: true,
-                allowCancel: true,
-                onComplete: (summary) => {
-                    this.completeProcessing(summary.tokenCost);
-                },
-                onCancel: () => {
-                    modal.classList.remove('active');
-                    this.showNotification('Data cleaning cancelled', 'warning');
-                }
-            });
+        progressModal.style.display = 'flex';
+        
+        // Update total rows if we have file data
+        const totalRows = this.uploadedFile?.size ? Math.floor(this.uploadedFile.size / 100) : 1000;
+        const totalRowsTarget = document.getElementById('total-rows-target');
+        if (totalRowsTarget) totalRowsTarget.textContent = totalRows;
+        
+        // Setup continue in background button - navigate to dashboard
+        const continueBtn = document.getElementById('continue-background');
+        if (continueBtn) {
+            continueBtn.onclick = () => {
+                const cleaningState = {
+                    id: Date.now(),
+                    type: 'data_cleaning',
+                    fileName: this.uploadedFile?.name || 'data.csv',
+                    tier: this.selectedTier,
+                    startTime: Date.now(),
+                    status: 'in_progress',
+                    progress: this.currentProgress || 0,
+                    currentStage: this.currentStage || 'analyzing'
+                };
+                
+                localStorage.setItem('activeCleaning', JSON.stringify(cleaningState));
+                progressModal.style.display = 'none';
+                
+                // Navigate directly to dashboard in-progress tab
+                window.location.hash = '#dashboard?tab=in-progress';
+            };
         }
+        
+        // Setup close button
+        const closeButtons = progressModal.querySelectorAll('.close-modal');
+        closeButtons.forEach(btn => {
+            btn.onclick = () => {
+                progressModal.style.display = 'none';
+            };
+        });
     }
 
     simulateProcessing(tokenCost, cleaningConfig) {
+        const totalRows = this.uploadedFile?.size ? Math.floor(this.uploadedFile.size / 100) : 1000;
+        
+        // Start progress simulation
+        this.simulateCleaningProgress(totalRows, cleaningConfig);
+    }
+    
+    simulateCleaningProgress(totalRows, cleaningConfig) {
+        const stages = ['analyzing', 'deduplicating', 'validating', 'cleaning', 'finalizing'];
+        let currentStageIndex = 0;
+        let progress = 0;
+        let rowsProcessed = 0;
+        const startTime = Date.now();
+        let issuesFixed = 0;
+        
+        const updateProgress = () => {
+            // Update stage
+            if (progress < 20) {
+                currentStageIndex = 0; // analyzing
+            } else if (progress < 35) {
+                currentStageIndex = 1; // deduplicating
+                issuesFixed = Math.floor(Math.random() * 50) + 10;
+            } else if (progress < 50) {
+                currentStageIndex = 2; // validating
+                issuesFixed = Math.floor(Math.random() * 100) + 50;
+            } else if (progress < 85) {
+                currentStageIndex = 3; // cleaning
+                issuesFixed = Math.floor(Math.random() * 200) + 100;
+            } else {
+                currentStageIndex = 4; // finalizing
+            }
+            
+            // Update stage indicators
+            const stageItems = document.querySelectorAll('.stage-item');
+            stageItems.forEach((item, index) => {
+                if (index < currentStageIndex) {
+                    item.classList.add('completed');
+                    item.classList.remove('active');
+                } else if (index === currentStageIndex) {
+                    item.classList.add('active');
+                    item.classList.remove('completed');
+                } else {
+                    item.classList.remove('active', 'completed');
+                }
+            });
+            
+            // Update progress bar
+            const progressFill = document.getElementById('generation-progress-fill');
+            const progressPercentage = document.querySelector('.progress-percentage');
+            if (progressFill) progressFill.style.width = `${progress}%`;
+            if (progressPercentage) progressPercentage.textContent = `${progress}%`;
+            
+            // Update rows processed
+            rowsProcessed = Math.floor((progress / 100) * totalRows);
+            const rowsProcessedEl = document.getElementById('rows-processed');
+            if (rowsProcessedEl) rowsProcessedEl.textContent = rowsProcessed;
+            
+            // Update time elapsed
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            const timeElapsed = document.getElementById('time-elapsed');
+            if (timeElapsed) timeElapsed.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update ETA
+            if (progress > 0) {
+                const estimatedTotal = elapsed / (progress / 100);
+                const remaining = estimatedTotal - elapsed;
+                const etaMinutes = Math.floor(remaining / 60000);
+                const etaSeconds = Math.floor((remaining % 60000) / 1000);
+                const etaRemaining = document.getElementById('eta-remaining');
+                if (etaRemaining) etaRemaining.textContent = `${etaMinutes}:${etaSeconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Update status message
+            const statusMessage = document.getElementById('status-message');
+            if (statusMessage) {
+                const messages = {
+                    'analyzing': 'Analyzing data patterns and issues...',
+                    'deduplicating': 'Removing duplicate records...',
+                    'validating': 'Validating data types and formats...',
+                    'cleaning': `Applying ${this.selectedTier} cleaning rules...`,
+                    'finalizing': 'Finalizing and preparing cleaned data...'
+                };
+                statusMessage.textContent = messages[stages[currentStageIndex]];
+            }
+            
+            // Store current progress for background continuation
+            this.currentProgress = progress;
+            this.currentStage = stages[currentStageIndex];
+            
+            // Continue or complete
+            if (progress < 100) {
+                progress += Math.random() * 3 + 1; // Random increment
+                progress = Math.min(progress, 100);
+                setTimeout(updateProgress, 500);
+            } else {
+                this.completeCleaning(totalRows, issuesFixed, startTime, tokenCost);
+            }
+        };
+        
+        updateProgress();
+    }
+    
+    completeCleaning(totalRows, issuesFixed, startTime, tokenCost) {
+        const completionSection = document.getElementById('completion-section');
+        const currentStatus = document.querySelector('.current-status');
+        
+        if (completionSection) completionSection.style.display = 'block';
+        if (currentStatus) currentStatus.style.display = 'none';
+        
+        // Update completion stats
+        const finalRows = document.getElementById('final-rows');
+        if (finalRows) finalRows.textContent = totalRows;
+        
+        const issuesFixedEl = document.getElementById('issues-fixed');
+        if (issuesFixedEl) issuesFixedEl.textContent = issuesFixed;
+        
+        const elapsed = Date.now() - startTime;
+        const minutes = Math.floor(elapsed / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        const totalTime = document.getElementById('total-time');
+        if (totalTime) totalTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        const fileSize = document.getElementById('file-size');
+        if (fileSize) fileSize.textContent = `${(totalRows * 0.0001).toFixed(1)} MB`;
+        
+        // Setup download button
+        const downloadBtn = document.getElementById('download-cleaned-data');
+        if (downloadBtn) {
+            downloadBtn.onclick = () => {
+                alert(`Downloading cleaned data: ${this.uploadedFile?.name?.replace(/\.[^/.]+$/, '') || 'data'}_cleaned.csv`);
+            };
+        }
+        
+        // Setup preview button
+        const previewBtn = document.getElementById('preview-cleaned-data');
+        if (previewBtn) {
+            previewBtn.onclick = () => {
+                alert(`Cleaning Summary:\n\nTotal Rows: ${totalRows}\nDuplicates Removed: ${Math.floor(issuesFixed * 0.3)}\nMissing Values Handled: ${Math.floor(issuesFixed * 0.4)}\nFormat Issues Fixed: ${Math.floor(issuesFixed * 0.3)}\nData Quality Score: ${(85 + Math.random() * 10).toFixed(1)}%`);
+            };
+        }
+        
+        // Complete the token transaction
+        this.completeProcessing(tokenCost);
+    }
+    
+    simulateProcessingOld(tokenCost, cleaningConfig) {
         const totalRows = 1245678;
         
         // Generate stages based on selected options

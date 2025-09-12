@@ -213,6 +213,39 @@ textarea {
     width: 100%;
 }
 
+/* Global Page Header Styles */
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-large);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-medium);
+    font-weight: bold;
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-large);
+}
+
+/* Responsive page header */
+@media (max-width: 768px) {
+    .page-title { 
+        font-size: 1.75rem; 
+    }
+    .page-subtitle { 
+        font-size: 0.9rem; 
+    }
+}
+
 /* Utility classes */
 .flex-center {
     display: flex;

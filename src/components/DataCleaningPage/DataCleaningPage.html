@@ -278,11 +278,113 @@
         </div>
     </div>
 
-    <!-- Processing Monitor Modal -->
-    <div class="modal" id="processingModal">
-        <div class="modal-content">
-            <div id="progressMonitorContainer">
-                <!-- ProgressMonitor component will be loaded here -->
+    <!-- Enhanced Progress Modal -->
+    <div id="progress-modal" class="modal" style="display: none;">
+        <div class="modal-content generation-progress">
+            <div class="progress-header">
+                <h3>Cleaning Data</h3>
+                <button class="continue-background-btn" id="continue-background">
+                    <i class="fas fa-external-link-alt"></i> Continue in Background
+                </button>
+            </div>
+            
+            <!-- Progress Stages -->
+            <div class="progress-stages">
+                <div class="stage-item" data-stage="analyzing">
+                    <div class="stage-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <span class="stage-label">Analyzing</span>
+                </div>
+                <div class="stage-item" data-stage="deduplicating">
+                    <div class="stage-icon">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <span class="stage-label">Deduplicating</span>
+                </div>
+                <div class="stage-item" data-stage="validating">
+                    <div class="stage-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <span class="stage-label">Validating</span>
+                </div>
+                <div class="stage-item" data-stage="cleaning">
+                    <div class="stage-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <span class="stage-label">Cleaning</span>
+                </div>
+                <div class="stage-item" data-stage="finalizing">
+                    <div class="stage-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <span class="stage-label">Finalizing</span>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="generation-progress-fill"></div>
+                    <span class="progress-percentage">0%</span>
+                </div>
+            </div>
+            
+            <!-- Progress Details -->
+            <div class="progress-details">
+                <div class="progress-stat">
+                    <span class="stat-label">Rows Processed:</span>
+                    <span class="stat-value" id="rows-processed">0</span> / <span id="total-rows-target">1000</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="stat-label">Time Elapsed:</span>
+                    <span class="stat-value" id="time-elapsed">0:00</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="stat-label">ETA:</span>
+                    <span class="stat-value" id="eta-remaining">Calculating...</span>
+                </div>
+            </div>
+            
+            <!-- Current Status -->
+            <div class="current-status">
+                <p id="status-message">Preparing to clean data...</p>
+            </div>
+            
+            <!-- Completion Section (Initially Hidden) -->
+            <div class="completion-section" id="completion-section" style="display: none;">
+                <div class="completion-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h4>Data Cleaning Complete!</h4>
+                <p class="completion-message" id="completion-message">
+                    Successfully cleaned <span id="final-rows">1000</span> rows of data
+                </p>
+                <div class="completion-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Total Time: <span id="total-time">0:00</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-database"></i>
+                        <span>File Size: <span id="file-size">0 MB</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Issues Fixed: <span id="issues-fixed">0</span></span>
+                    </div>
+                </div>
+                <div class="completion-actions">
+                    <button class="auth-button download-btn" id="download-cleaned-data">
+                        <i class="fas fa-download"></i> Download Cleaned Data
+                    </button>
+                    <button class="secondary-button preview-btn" id="preview-cleaned-data">
+                        <i class="fas fa-eye"></i> Preview Results
+                    </button>
+                    <button class="secondary-button close-modal">
+                        Close
+                    </button>
+                </div>
             </div>
         </div>
     </div>

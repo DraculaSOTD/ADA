@@ -176,22 +176,34 @@ class ModelEditorPage {
                 if (file) {
                     // Handle CSV and other text files
                     if (file.type === 'text/csv' || file.name.endsWith('.csv') || 
-                        file.type === 'text/plain' || file.type === '') {
+                        file.type === 'text/plain' || file.type === '' ||
+                        file.name.endsWith('.xlsx') || file.name.endsWith('.xls') ||
+                        file.name.endsWith('.json')) {
                         // Just store the file and update display
                         this.selectedFile = file;
                         const fileName = document.getElementById('file-name');
                         if (fileName) {
                             fileName.textContent = file.name;
                         }
-                        // Show upload button
+                        // Show upload button and clear button
                         const uploadButton = document.getElementById('upload-button');
                         if (uploadButton) {
                             uploadButton.style.display = 'inline-block';
                         }
-                        console.log('CSV file selected:', file.name);
+                        const clearFileBtn = document.getElementById('clear-file-btn');
+                        if (clearFileBtn) {
+                            clearFileBtn.style.display = 'inline-block';
+                        }
+                        console.log('File selected:', file.name);
                     }
                 }
             });
+        }
+        
+        // Add clear file button listener
+        const clearFileBtn = document.getElementById('clear-file-btn');
+        if (clearFileBtn) {
+            clearFileBtn.addEventListener('click', () => this.clearFile());
         }
 
         // Add upload button listener with model validation
@@ -1234,35 +1246,231 @@ class ModelEditorPage {
             dataQuality: this.dataMetrics.dataQuality
         };
         
-        // Show loading/processing state
-        const createButton = document.getElementById('create-model-btn');
-        if (createButton) {
-            createButton.disabled = true;
-            createButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Model...';
+        // Show progress modal instead of simple alert
+        this.showProgressModal(modelConfig);
+    }
+    
+    showProgressModal(modelConfig) {
+        const progressModal = document.getElementById('progress-modal');
+        if (!progressModal) return;
+        
+        progressModal.style.display = 'flex';
+        
+        // Update total epochs display
+        const totalEpochs = document.getElementById('total-epochs');
+        if (totalEpochs) totalEpochs.textContent = modelConfig.epochs;
+        
+        // Setup continue in background button - navigate to dashboard
+        const continueBtn = document.getElementById('continue-background');
+        if (continueBtn) {
+            continueBtn.onclick = () => {
+                const trainingState = {
+                    id: Date.now(),
+                    type: 'model_training',
+                    modelName: modelConfig.name,
+                    algorithm: modelConfig.algorithm,
+                    startTime: Date.now(),
+                    status: 'in_progress',
+                    progress: this.currentProgress || 0,
+                    currentStage: this.currentStage || 'validating'
+                };
+                
+                localStorage.setItem('activeTraining', JSON.stringify(trainingState));
+                progressModal.style.display = 'none';
+                
+                // Navigate directly to dashboard in-progress tab
+                window.location.hash = '#dashboard?tab=in-progress';
+            };
         }
         
-        // Simulate model creation process
-        console.log('Creating model with configuration:', modelConfig);
+        // Setup close button
+        const closeButtons = progressModal.querySelectorAll('.close-modal');
+        closeButtons.forEach(btn => {
+            btn.onclick = () => {
+                progressModal.style.display = 'none';
+            };
+        });
         
-        setTimeout(() => {
-            // Reset button state
-            if (createButton) {
-                createButton.disabled = false;
-                createButton.innerHTML = '<i class="fas fa-rocket"></i> Create Model';
+        // Start progress simulation
+        this.simulateTrainingProgress(modelConfig);
+    }
+    
+    simulateTrainingProgress(modelConfig) {
+        const stages = ['validating', 'initializing', 'training', 'evaluating', 'finalizing'];
+        let currentStageIndex = 0;
+        let progress = 0;
+        let currentEpoch = 0;
+        const startTime = Date.now();
+        
+        const updateProgress = () => {
+            // Update stage
+            if (progress < 20) {
+                currentStageIndex = 0; // validating
+            } else if (progress < 30) {
+                currentStageIndex = 1; // initializing
+            } else if (progress < 70) {
+                currentStageIndex = 2; // training
+                currentEpoch = Math.floor((progress - 30) / 40 * modelConfig.epochs);
+            } else if (progress < 90) {
+                currentStageIndex = 3; // evaluating
+            } else {
+                currentStageIndex = 4; // finalizing
             }
             
-            // Show success message
-            alert(`Model "${modelName}" has been created successfully!\n\nAlgorithm: ${this.algorithmConfigs[modelAlgorithm]?.name || modelAlgorithm}\nEstimated Accuracy: ${this.dataMetrics.accuracy}%\nToken Cost: ${modelConfig.totalTokenCost} tokens`);
+            // Update stage indicators
+            const stageItems = document.querySelectorAll('.stage-item');
+            stageItems.forEach((item, index) => {
+                if (index < currentStageIndex) {
+                    item.classList.add('completed');
+                    item.classList.remove('active');
+                } else if (index === currentStageIndex) {
+                    item.classList.add('active');
+                    item.classList.remove('completed');
+                } else {
+                    item.classList.remove('active', 'completed');
+                }
+            });
             
-            // Optionally redirect to models list or dashboard
-            // window.location.hash = '#AllModelsPage';
-        }, 3000);
+            // Update progress bar
+            const progressFill = document.getElementById('generation-progress-fill');
+            const progressPercentage = document.querySelector('.progress-percentage');
+            if (progressFill) progressFill.style.width = `${progress}%`;
+            if (progressPercentage) progressPercentage.textContent = `${progress}%`;
+            
+            // Update training progress
+            const trainingProgress = document.getElementById('training-progress');
+            if (trainingProgress) trainingProgress.textContent = currentEpoch;
+            
+            // Update time elapsed
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            const timeElapsed = document.getElementById('time-elapsed');
+            if (timeElapsed) timeElapsed.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update ETA
+            if (progress > 0) {
+                const estimatedTotal = elapsed / (progress / 100);
+                const remaining = estimatedTotal - elapsed;
+                const etaMinutes = Math.floor(remaining / 60000);
+                const etaSeconds = Math.floor((remaining % 60000) / 1000);
+                const etaRemaining = document.getElementById('eta-remaining');
+                if (etaRemaining) etaRemaining.textContent = `${etaMinutes}:${etaSeconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Update status message
+            const statusMessage = document.getElementById('status-message');
+            if (statusMessage) {
+                const messages = {
+                    'validating': 'Validating training data and configuration...',
+                    'initializing': 'Initializing neural network architecture...',
+                    'training': `Training model (Epoch ${currentEpoch}/${modelConfig.epochs})...`,
+                    'evaluating': 'Evaluating model performance on test data...',
+                    'finalizing': 'Finalizing model and preparing for download...'
+                };
+                statusMessage.textContent = messages[stages[currentStageIndex]];
+            }
+            
+            // Continue or complete
+            if (progress < 100) {
+                progress += Math.random() * 3 + 1; // Random increment
+                progress = Math.min(progress, 100);
+                setTimeout(updateProgress, 500);
+            } else {
+                this.completeTraining(modelConfig, startTime);
+            }
+        };
+        
+        updateProgress();
+    }
+    
+    completeTraining(modelConfig, startTime) {
+        const completionSection = document.getElementById('completion-section');
+        const currentStatus = document.querySelector('.current-status');
+        
+        if (completionSection) completionSection.style.display = 'block';
+        if (currentStatus) currentStatus.style.display = 'none';
+        
+        // Update completion stats
+        const finalAccuracy = document.getElementById('final-accuracy');
+        if (finalAccuracy) finalAccuracy.textContent = modelConfig.estimatedAccuracy;
+        
+        const elapsed = Date.now() - startTime;
+        const minutes = Math.floor(elapsed / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        const totalTime = document.getElementById('total-time');
+        if (totalTime) totalTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        const modelSize = document.getElementById('model-size');
+        if (modelSize) modelSize.textContent = `${(Math.random() * 50 + 10).toFixed(1)} MB`;
+        
+        // Setup download button
+        const downloadBtn = document.getElementById('download-model');
+        if (downloadBtn) {
+            downloadBtn.onclick = () => {
+                alert(`Downloading model: ${modelConfig.name}.pkl`);
+            };
+        }
+        
+        // Setup view metrics button
+        const viewMetricsBtn = document.getElementById('view-metrics');
+        if (viewMetricsBtn) {
+            viewMetricsBtn.onclick = () => {
+                alert(`Model Metrics:\n\nAccuracy: ${modelConfig.estimatedAccuracy}%\nPrecision: ${(modelConfig.estimatedAccuracy * 0.95).toFixed(1)}%\nRecall: ${(modelConfig.estimatedAccuracy * 0.93).toFixed(1)}%\nF1 Score: ${(modelConfig.estimatedAccuracy * 0.94).toFixed(1)}%`);
+            };
+        }
+    }
+    
+    clearFile() {
+        // Clear the selected file
+        this.selectedFile = null;
+        this.uploadedData = null;
+        
+        const csvUpload = document.getElementById('csv-upload');
+        const fileName = document.getElementById('file-name');
+        const progressBar = document.getElementById('progress-bar');
+        const uploadStatus = document.getElementById('upload-status');
+        const eta = document.getElementById('eta');
+        const uploadButton = document.getElementById('upload-button');
+        const clearFileBtn = document.getElementById('clear-file-btn');
+        
+        // Clear file input and display
+        if (csvUpload) csvUpload.value = '';
+        if (fileName) fileName.textContent = 'No file chosen';
+        
+        // Clear progress indicators
+        if (progressBar) progressBar.style.width = '0%';
+        if (uploadStatus) uploadStatus.textContent = '';
+        if (eta) eta.textContent = '';
+        
+        // Hide clear button and show upload button
+        if (clearFileBtn) clearFileBtn.style.display = 'none';
+        if (uploadButton) uploadButton.style.display = 'inline-block';
+        
+        // Clear tagged data display
+        const taggedDataContent = document.getElementById('tagged-data-content');
+        if (taggedDataContent) {
+            taggedDataContent.innerHTML = '<div class="placeholder-message"><i class="fas fa-cloud-upload-alt"></i><p>Upload data to see tagged fields</p></div>';
+        }
+        
+        // Reset metrics
+        this.dataMetrics = {
+            accuracy: 0,
+            dataQuality: 0,
+            modelComplexity: 0,
+            modelQuality: 0
+        };
+        this.columnNames = [];
+        this.updateMetricsDisplay();
     }
 }
 
 // Initialize the page
 const modelEditorPage = new ModelEditorPage();
 window.modelEditorPage = modelEditorPage;
+
+// Make clearFile globally accessible
+window.clearFile = () => modelEditorPage.clearFile();
 
 // Export for router
 export { modelEditorPage };

@@ -23,6 +23,9 @@
             <span id="upload-status"></span>
             <span id="eta"></span>
             <button id="upload-button" class="upload-button">Upload</button>
+            <button id="clear-file-btn" class="clear-file-btn" style="display: none;" onclick="if (window.clearFile) window.clearFile(); else console.error('clearFile not loaded yet');">
+                <i class="fas fa-times"></i> Clear File
+            </button>
         </div>
     </div>
 
@@ -275,7 +278,13 @@
 
     <!-- Privacy Settings -->
     <div class="privacy-section card">
-        <h2>Privacy & Compliance Settings</h2>
+        <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="if (window.togglePrivacySettings) window.togglePrivacySettings(); else console.error('togglePrivacySettings not loaded yet');">
+            <h2 style="margin: 0;">Privacy & Compliance Settings</h2>
+            <button class="method-expand-btn" style="background: none; border: none; cursor: pointer; padding: 0.5rem; color: var(--text-secondary);">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div id="privacy-content" style="display: none; margin-top: 1rem;">
         <label class="checkbox-label">
             <input type="checkbox" id="differential-privacy"> Add Statistical Noise for Privacy Protection
             <span class="help-icon" data-tooltip="privacy-noise">
@@ -340,7 +349,7 @@
             <h3>Anonymization Techniques</h3>
             <div class="technique-options">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="k-anonymity" checked> Group Similar Records (k-Anonymity)
+                    <input type="checkbox" id="k-anonymity"> Group Similar Records (k-Anonymity)
                     <span class="help-icon" data-tooltip="k-anonymity">
                         <i class="fas fa-question-circle"></i>
                     </span>
@@ -364,6 +373,7 @@
                     </span>
                 </label>
             </div>
+        </div>
         </div>
     </div>
 

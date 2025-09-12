@@ -1,7 +1,8 @@
 <div class="generate-predictions-container">
     <div class="finalization-page">
         <div class="page-header">
-            <h1 class="page-title">Model Editor:</h1>
+            <h1 class="page-title">Model Editor</h1>
+            <p class="page-subtitle">Design, configure, and train custom AI models</p>
             <div class="model-selector-container">
                 <div class="custom-dropdown">
                     <input type="text" id="model-search" class="model-search" placeholder="Search or select a model...">
@@ -99,7 +100,7 @@
         <div class="uploaded-data card">
             <h3>Upload Data:</h3>
             <div class="data-row">
-                <input type="file" id="csv-upload" accept=".csv" style="display: none;">
+                <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls,.json" style="display: none;" multiple>
                 <label for="csv-upload" class="upload-label">Choose File</label>
                 <span id="file-name">No file chosen</span>
                 <div class="progress-container">
@@ -108,6 +109,9 @@
                 <span id="upload-status"></span>
                 <span id="eta"></span>
                 <button id="upload-button" class="upload-button">Upload</button>
+                <button id="clear-file-btn" class="clear-file-btn" style="display: none;" onclick="if (window.clearFile) window.clearFile(); else console.error('clearFile not loaded yet');">
+                    <i class="fas fa-times"></i> Clear File
+                </button>
             </div>
         </div>
 
@@ -230,6 +234,113 @@
                 <button class="auth-button generate-main" id="create-model-btn" onclick="if (window.modelEditorPage) window.modelEditorPage.createModel(); else console.error('Model Editor not loaded yet');">
                     <i class="fas fa-rocket"></i> Create Model
                 </button>
+            </div>
+        </div>
+        
+        <!-- Enhanced Progress Modal -->
+        <div id="progress-modal" class="modal" style="display: none;">
+            <div class="modal-content generation-progress">
+                <div class="progress-header">
+                    <h3>Training Model</h3>
+                    <button class="continue-background-btn" id="continue-background">
+                        <i class="fas fa-external-link-alt"></i> Continue in Background
+                    </button>
+                </div>
+                
+                <!-- Progress Stages -->
+                <div class="progress-stages">
+                    <div class="stage-item" data-stage="validating">
+                        <div class="stage-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <span class="stage-label">Validating</span>
+                    </div>
+                    <div class="stage-item" data-stage="initializing">
+                        <div class="stage-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <span class="stage-label">Initializing</span>
+                    </div>
+                    <div class="stage-item" data-stage="training">
+                        <div class="stage-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <span class="stage-label">Training</span>
+                    </div>
+                    <div class="stage-item" data-stage="evaluating">
+                        <div class="stage-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span class="stage-label">Evaluating</span>
+                    </div>
+                    <div class="stage-item" data-stage="finalizing">
+                        <div class="stage-icon">
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                        <span class="stage-label">Finalizing</span>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="generation-progress-fill"></div>
+                        <span class="progress-percentage">0%</span>
+                    </div>
+                </div>
+                
+                <!-- Progress Details -->
+                <div class="progress-details">
+                    <div class="progress-stat">
+                        <span class="stat-label">Training Progress:</span>
+                        <span class="stat-value" id="training-progress">0</span> / <span id="total-epochs">10</span> epochs
+                    </div>
+                    <div class="progress-stat">
+                        <span class="stat-label">Time Elapsed:</span>
+                        <span class="stat-value" id="time-elapsed">0:00</span>
+                    </div>
+                    <div class="progress-stat">
+                        <span class="stat-label">ETA:</span>
+                        <span class="stat-value" id="eta-remaining">Calculating...</span>
+                    </div>
+                </div>
+                
+                <!-- Current Status -->
+                <div class="current-status">
+                    <p id="status-message">Preparing to train model...</p>
+                </div>
+                
+                <!-- Completion Section (Initially Hidden) -->
+                <div class="completion-section" id="completion-section" style="display: none;">
+                    <div class="completion-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4>Model Training Complete!</h4>
+                    <p class="completion-message" id="completion-message">
+                        Successfully trained model with <span id="final-accuracy">0</span>% accuracy
+                    </p>
+                    <div class="completion-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Total Time: <span id="total-time">0:00</span></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-database"></i>
+                            <span>Model Size: <span id="model-size">0 MB</span></span>
+                        </div>
+                    </div>
+                    <div class="completion-actions">
+                        <button class="auth-button download-btn" id="download-model">
+                            <i class="fas fa-download"></i> Download Model
+                        </button>
+                        <button class="secondary-button preview-btn" id="view-metrics">
+                            <i class="fas fa-chart-bar"></i> View Metrics
+                        </button>
+                        <button class="secondary-button close-modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

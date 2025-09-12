@@ -279,6 +279,24 @@
     white-space: nowrap;
 }
 
+.data-generator-page .clear-file-btn {
+    background: var(--danger-color, #dc3545);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.data-generator-page .clear-file-btn:hover {
+    background: var(--danger-hover, #c82333);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 /* Form Section Styles (from Model Editor) */
 .form-section {
     background-color: var(--background-color);
