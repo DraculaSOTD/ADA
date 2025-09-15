@@ -582,9 +582,85 @@ class DataCleaningPage {
         }
     }
 
+    // Validation utility functions
+    highlightField(element, message) {
+        if (!element) return;
+        
+        // Clear any existing validation errors first
+        this.clearValidationErrors();
+        
+        // Add error class
+        element.classList.add('validation-error');
+        
+        // Add error message if provided
+        if (message) {
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'validation-message';
+            errorMsg.textContent = message;
+            
+            // Insert after the element or its container
+            const insertAfter = element.closest('.form-group') || element.closest('.card') || element;
+            insertAfter.parentNode.insertBefore(errorMsg, insertAfter.nextSibling);
+        }
+        
+        // Scroll to field with offset for better visibility
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Focus if it's an input element
+        if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
+            setTimeout(() => element.focus(), 300);
+        }
+        
+        // Auto-clear on input/change for tier cards
+        if (element.classList.contains('tier-card')) {
+            // For tier cards, clear on click
+            const clearOnClick = () => {
+                element.classList.remove('validation-error');
+                const msg = element.parentNode.querySelector('.validation-message');
+                if (msg) msg.remove();
+                element.removeEventListener('click', clearOnClick);
+            };
+            element.addEventListener('click', clearOnClick);
+        } else {
+            // For inputs, clear on input/change
+            const clearOnInput = () => {
+                element.classList.remove('validation-error');
+                const msg = element.parentNode.querySelector('.validation-message');
+                if (msg) msg.remove();
+                element.removeEventListener('input', clearOnInput);
+                element.removeEventListener('change', clearOnInput);
+            };
+            element.addEventListener('input', clearOnInput);
+            element.addEventListener('change', clearOnInput);
+        }
+    }
+    
+    clearValidationErrors() {
+        document.querySelectorAll('.validation-error').forEach(el => {
+            el.classList.remove('validation-error');
+        });
+        document.querySelectorAll('.validation-message').forEach(el => {
+            el.remove();
+        });
+    }
+    
     startCleaning() {
-        if (!this.uploadedFile || !this.selectedTier) {
-            this.showNotification('Please upload a file and select a cleaning tier', 'error');
+        if (!this.uploadedFile && !this.selectedTier) {
+            // Both missing - highlight upload first
+            const uploadSection = document.querySelector('.upload-section');
+            this.highlightField(uploadSection, 'Please upload a file and select a cleaning tier');
+            return;
+        }
+        
+        if (!this.uploadedFile) {
+            const uploadSection = document.querySelector('.upload-section');
+            this.highlightField(uploadSection, 'Please upload a file first');
+            return;
+        }
+        
+        if (!this.selectedTier) {
+            const tierSection = document.querySelector('.tier-selection');
+            this.highlightField(tierSection, 'Please select a cleaning tier');
             return;
         }
 
@@ -1268,7 +1344,8 @@ class DataCleaningPage {
         }
 
         if (!this.uploadedFile) {
-            this.showNotification('Please upload a file first', 'error');
+            const uploadSection = document.querySelector('.upload-section');
+            this.highlightField(uploadSection, 'Please upload a file first');
             this.switchTab('upload');
             return;
         }

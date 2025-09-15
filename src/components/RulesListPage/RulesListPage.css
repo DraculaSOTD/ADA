@@ -1,6 +1,6 @@
 .rules-list-page {
-    padding: 20px;
-    max-width: 1400px;
+    padding: var(--spacing-large);
+    max-width: 1200px;
     margin: 0 auto;
 }
 

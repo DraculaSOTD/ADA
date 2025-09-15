@@ -28,6 +28,17 @@ class ModelEditorPage {
         this.predictionColumns = []; // Selected prediction columns
         this.selectedAlgorithm = null; // Selected ML algorithm
         this.algorithmConfigs = this.getAlgorithmConfigs(); // Algorithm configurations
+        
+        // Data preprocessing configuration
+        this.preprocessingEnabled = false;
+        this.preprocessingConfig = {
+            numericalMethod: 'zscore',
+            columnTypes: {}, // { columnName: 'numerical' | 'categorical' | 'text' }
+            columnTransformers: {}, // { columnName: transformerType }
+            statistics: {} // Store column statistics for transformations
+        };
+        this.originalData = null; // Store original data before transformation
+        this.transformedData = null; // Store transformed data
     }
 
     async initialize() {
@@ -212,12 +223,14 @@ class ModelEditorPage {
             uploadButton.addEventListener('click', () => {
                 // Check if model is selected
                 if (!this.selectedModelId) {
-                    alert('Please select a model from the dropdown in the top right before uploading data.');
+                    const modelDropdown = document.getElementById('model-selector-dropdown');
+                    this.highlightField(modelDropdown, 'Please select a model from the dropdown in the top right before uploading data.');
                     return;
                 }
                 // Check if file is selected
                 if (!this.selectedFile) {
-                    alert('Please select a file first.');
+                    const uploadSection = document.querySelector('.uploaded-data');
+                    this.highlightField(uploadSection, 'Please select a file first.');
                     return;
                 }
                 // Process the upload
@@ -227,6 +240,114 @@ class ModelEditorPage {
 
         // Fix button styles
         this.updateButtonStyles();
+        
+        // Setup preprocessing event listeners
+        this.setupPreprocessingListeners();
+    }
+    
+    setupPreprocessingListeners() {
+        // Enable/disable preprocessing toggle
+        const preprocessingToggle = document.getElementById('enable-preprocessing');
+        if (preprocessingToggle) {
+            preprocessingToggle.addEventListener('change', (e) => {
+                this.preprocessingEnabled = e.target.checked;
+                const optionsDiv = document.getElementById('preprocessing-options');
+                
+                if (optionsDiv) {
+                    optionsDiv.style.display = this.preprocessingEnabled ? 'block' : 'none';
+                }
+                
+                if (this.preprocessingEnabled && this.uploadedData) {
+                    // Auto-detect column types when enabling
+                    this.detectColumnTypes();
+                    this.applyTransformations();
+                } else if (!this.preprocessingEnabled && this.originalData) {
+                    // Restore original data when disabling
+                    this.uploadedData = JSON.parse(JSON.stringify(this.originalData));
+                    this.analyzeDataQuality();
+                    this.updateMetricsDisplay();
+                }
+            });
+        }
+        
+        // Numerical method selector
+        const numericalMethod = document.getElementById('numerical-method');
+        if (numericalMethod) {
+            numericalMethod.addEventListener('change', (e) => {
+                this.preprocessingConfig.numericalMethod = e.target.value;
+                
+                // Update all numerical columns with new method
+                Object.keys(this.preprocessingConfig.columnTypes).forEach(colName => {
+                    if (this.preprocessingConfig.columnTypes[colName] === 'numerical') {
+                        this.preprocessingConfig.columnTransformers[colName] = e.target.value;
+                    }
+                });
+                
+                this.updatePreprocessingColumnsDisplay();
+                
+                if (this.preprocessingEnabled) {
+                    this.applyTransformations();
+                }
+            });
+        }
+        
+        // Auto-detect column types button
+        const autoDetectBtn = document.getElementById('auto-detect-types');
+        if (autoDetectBtn) {
+            autoDetectBtn.addEventListener('click', () => {
+                if (!this.uploadedData) {
+                    alert('Please upload data first');
+                    return;
+                }
+                this.detectColumnTypes();
+                const statsDiv = document.getElementById('preprocessing-stats');
+                if (statsDiv) {
+                    this.updateStatisticsDisplay();
+                    statsDiv.style.display = 'block';
+                }
+            });
+        }
+        
+        // Preview transformation button
+        const previewBtn = document.getElementById('preview-transformation');
+        if (previewBtn) {
+            previewBtn.addEventListener('click', () => {
+                this.showTransformationPreview();
+            });
+        }
+    }
+    
+    updateStatisticsDisplay() {
+        const statsGrid = document.querySelector('#preprocessing-stats .stats-grid');
+        if (!statsGrid || !this.uploadedData) return;
+        
+        let statsHTML = '';
+        
+        this.columnNames.forEach((colName, colIndex) => {
+            if (this.preprocessingConfig.columnTypes[colName] === 'numerical') {
+                const stats = this.calculateColumnStatistics(colIndex);
+                if (stats) {
+                    statsHTML += `
+                        <div class="stat-card">
+                            <h5>${colName}</h5>
+                            <div class="stat-details">
+                                <span>Count: ${stats.count}</span>
+                                <span>Mean: ${stats.mean.toFixed(2)}</span>
+                                <span>Std: ${stats.std.toFixed(2)}</span>
+                                <span>Min: ${stats.min.toFixed(2)}</span>
+                                <span>Max: ${stats.max.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        });
+        
+        if (statsHTML === '') {
+            statsHTML = '<p>No numerical columns detected</p>';
+        }
+        
+        statsGrid.innerHTML = statsHTML;
     }
 
     updateButtonStyles() {
@@ -1201,6 +1322,57 @@ class ModelEditorPage {
         }
     }
 
+    // Validation utility functions
+    highlightField(element, message) {
+        if (!element) return;
+        
+        // Clear any existing validation errors first
+        this.clearValidationErrors();
+        
+        // Add error class
+        element.classList.add('validation-error');
+        
+        // Add error message if provided
+        if (message) {
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'validation-message';
+            errorMsg.textContent = message;
+            
+            // Insert after the element or its container
+            const insertAfter = element.closest('.form-group') || element.closest('.card') || element;
+            insertAfter.parentNode.insertBefore(errorMsg, insertAfter.nextSibling);
+        }
+        
+        // Scroll to field with offset for better visibility
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Focus if it's an input element
+        if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
+            setTimeout(() => element.focus(), 300);
+        }
+        
+        // Auto-clear on input/change
+        const clearOnInput = () => {
+            element.classList.remove('validation-error');
+            const msg = element.parentNode.querySelector('.validation-message');
+            if (msg) msg.remove();
+            element.removeEventListener('input', clearOnInput);
+            element.removeEventListener('change', clearOnInput);
+        };
+        
+        element.addEventListener('input', clearOnInput);
+        element.addEventListener('change', clearOnInput);
+    }
+    
+    clearValidationErrors() {
+        document.querySelectorAll('.validation-error').forEach(el => {
+            el.classList.remove('validation-error');
+        });
+        document.querySelectorAll('.validation-message').forEach(el => {
+            el.remove();
+        });
+    }
+    
     // Create Model method - triggered by the Create Model button
     createModel() {
         // Validate required fields
@@ -1208,23 +1380,27 @@ class ModelEditorPage {
         const modelAlgorithm = document.getElementById('model-algorithm')?.value;
         
         if (!modelName || modelName.trim() === '') {
-            alert('Please enter a model name');
+            const modelNameField = document.getElementById('model-name');
+            this.highlightField(modelNameField, 'Please enter a model name');
             return;
         }
         
         if (!modelAlgorithm || modelAlgorithm === '') {
-            alert('Please select an ML algorithm');
+            const algorithmField = document.getElementById('model-algorithm');
+            this.highlightField(algorithmField, 'Please select an ML algorithm');
             return;
         }
         
         if (!this.uploadedData || this.columnNames.length === 0) {
-            alert('Please upload training data');
+            const uploadSection = document.querySelector('.uploaded-data');
+            this.highlightField(uploadSection, 'Please upload training data');
             return;
         }
         
         // Check if columns are properly mapped (for template models or custom models)
         if (this.modelType === 'new' && this.trainingColumns.length === 0) {
-            alert('Please select at least one training column');
+            const columnSection = document.querySelector('.tagged-data');
+            this.highlightField(columnSection, 'Please select at least one training column');
             return;
         }
         
@@ -1243,7 +1419,15 @@ class ModelEditorPage {
             totalTokenCost: this.calculateDynamicTokenCost(),
             estimatedAccuracy: this.dataMetrics.accuracy,
             modelComplexity: this.dataMetrics.modelComplexity,
-            dataQuality: this.dataMetrics.dataQuality
+            dataQuality: this.dataMetrics.dataQuality,
+            // Add preprocessing configuration
+            preprocessingEnabled: this.preprocessingEnabled,
+            preprocessingConfig: this.preprocessingEnabled ? {
+                numericalMethod: this.preprocessingConfig.numericalMethod,
+                columnTypes: this.preprocessingConfig.columnTypes,
+                columnTransformers: this.preprocessingConfig.columnTransformers,
+                statistics: this.preprocessingConfig.statistics
+            } : null
         };
         
         // Show progress modal instead of simple alert
@@ -1421,10 +1605,352 @@ class ModelEditorPage {
         }
     }
     
+    // Data Standardization Methods
+    detectColumnTypes() {
+        if (!this.uploadedData || !this.uploadedData.data || this.uploadedData.data.length === 0) {
+            return;
+        }
+
+        this.preprocessingConfig.columnTypes = {};
+        
+        this.columnNames.forEach((colName, colIndex) => {
+            let isNumeric = true;
+            let uniqueValues = new Set();
+            let nonNullCount = 0;
+            
+            this.uploadedData.data.forEach(row => {
+                const value = row[colIndex];
+                if (value && value !== '' && value.toLowerCase() !== 'null' && value.toLowerCase() !== 'nan') {
+                    nonNullCount++;
+                    uniqueValues.add(value);
+                    if (isNaN(parseFloat(value))) {
+                        isNumeric = false;
+                    }
+                }
+            });
+            
+            // Determine column type
+            if (isNumeric && nonNullCount > 0) {
+                this.preprocessingConfig.columnTypes[colName] = 'numerical';
+                this.preprocessingConfig.columnTransformers[colName] = this.preprocessingConfig.numericalMethod;
+            } else if (uniqueValues.size < 20 && uniqueValues.size > 1) {
+                this.preprocessingConfig.columnTypes[colName] = 'categorical';
+                this.preprocessingConfig.columnTransformers[colName] = 'label_encode';
+            } else {
+                this.preprocessingConfig.columnTypes[colName] = 'text';
+                this.preprocessingConfig.columnTransformers[colName] = 'none';
+            }
+        });
+        
+        this.updatePreprocessingColumnsDisplay();
+        return this.preprocessingConfig.columnTypes;
+    }
+
+    calculateColumnStatistics(columnIndex) {
+        if (!this.uploadedData || !this.uploadedData.data) return null;
+        
+        const values = [];
+        this.uploadedData.data.forEach(row => {
+            const value = parseFloat(row[columnIndex]);
+            if (!isNaN(value)) {
+                values.push(value);
+            }
+        });
+        
+        if (values.length === 0) return null;
+        
+        values.sort((a, b) => a - b);
+        
+        const stats = {
+            count: values.length,
+            mean: values.reduce((a, b) => a + b, 0) / values.length,
+            min: values[0],
+            max: values[values.length - 1],
+            median: values[Math.floor(values.length / 2)],
+            q1: values[Math.floor(values.length * 0.25)],
+            q3: values[Math.floor(values.length * 0.75)]
+        };
+        
+        // Calculate standard deviation
+        const squaredDiffs = values.map(v => Math.pow(v - stats.mean, 2));
+        stats.std = Math.sqrt(squaredDiffs.reduce((a, b) => a + b, 0) / values.length);
+        stats.iqr = stats.q3 - stats.q1;
+        
+        return stats;
+    }
+
+    // Z-Score Standardization
+    standardizeZScore(values, stats) {
+        if (!stats || stats.std === 0) return values;
+        return values.map(v => {
+            if (v === null || v === '' || isNaN(v)) return v;
+            return (parseFloat(v) - stats.mean) / stats.std;
+        });
+    }
+
+    // Min-Max Scaling
+    standardizeMinMax(values, stats) {
+        if (!stats || stats.max === stats.min) return values;
+        const range = stats.max - stats.min;
+        return values.map(v => {
+            if (v === null || v === '' || isNaN(v)) return v;
+            return (parseFloat(v) - stats.min) / range;
+        });
+    }
+
+    // Robust Scaling
+    standardizeRobust(values, stats) {
+        if (!stats || stats.iqr === 0) return values;
+        return values.map(v => {
+            if (v === null || v === '' || isNaN(v)) return v;
+            return (parseFloat(v) - stats.median) / stats.iqr;
+        });
+    }
+
+    // Log Transformation
+    standardizeLog(values) {
+        return values.map(v => {
+            if (v === null || v === '' || isNaN(v)) return v;
+            const num = parseFloat(v);
+            // Add 1 to handle zero values
+            return num > 0 ? Math.log(num + 1) : 0;
+        });
+    }
+
+    // Apply all transformations
+    applyTransformations() {
+        if (!this.uploadedData || !this.preprocessingEnabled) return;
+        
+        // Store original data if not already stored
+        if (!this.originalData) {
+            this.originalData = JSON.parse(JSON.stringify(this.uploadedData));
+        }
+        
+        // Create transformed data copy
+        this.transformedData = {
+            headers: [...this.uploadedData.headers],
+            data: this.uploadedData.data.map(row => [...row]),
+            rowCount: this.uploadedData.rowCount
+        };
+        
+        // Apply transformations to each column
+        this.columnNames.forEach((colName, colIndex) => {
+            const columnType = this.preprocessingConfig.columnTypes[colName];
+            const transformer = this.preprocessingConfig.columnTransformers[colName];
+            
+            if (columnType === 'numerical' && transformer !== 'none') {
+                // Calculate statistics for the column
+                const stats = this.calculateColumnStatistics(colIndex);
+                this.preprocessingConfig.statistics[colName] = stats;
+                
+                // Get column values
+                const columnValues = this.transformedData.data.map(row => row[colIndex]);
+                
+                // Apply transformation
+                let transformedValues;
+                switch(transformer) {
+                    case 'zscore':
+                        transformedValues = this.standardizeZScore(columnValues, stats);
+                        break;
+                    case 'minmax':
+                        transformedValues = this.standardizeMinMax(columnValues, stats);
+                        break;
+                    case 'robust':
+                        transformedValues = this.standardizeRobust(columnValues, stats);
+                        break;
+                    case 'log':
+                        transformedValues = this.standardizeLog(columnValues);
+                        break;
+                    default:
+                        transformedValues = columnValues;
+                }
+                
+                // Update the transformed data
+                transformedValues.forEach((value, rowIndex) => {
+                    this.transformedData.data[rowIndex][colIndex] = value;
+                });
+            }
+        });
+        
+        // Update the working data to transformed data
+        this.uploadedData = this.transformedData;
+        
+        // Recalculate data quality metrics
+        this.analyzeDataQuality();
+        this.updateMetricsDisplay();
+        
+        return this.transformedData;
+    }
+
+    // Update preprocessing columns display
+    updatePreprocessingColumnsDisplay() {
+        const container = document.getElementById('preprocessing-columns');
+        if (!container || this.columnNames.length === 0) return;
+        
+        let html = '<h4>Column Configuration</h4><div class="columns-grid">';
+        
+        this.columnNames.forEach(colName => {
+            const colType = this.preprocessingConfig.columnTypes[colName] || 'unknown';
+            const transformer = this.preprocessingConfig.columnTransformers[colName] || 'none';
+            
+            html += `
+                <div class="column-config" data-column="${colName}">
+                    <div class="column-header">
+                        <span class="column-name">${colName}</span>
+                        <span class="column-type-badge ${colType}">${colType}</span>
+                    </div>
+                    <div class="column-transformer">
+                        <select class="column-transformer-select" data-column="${colName}">
+                            ${colType === 'numerical' ? `
+                                <option value="none" ${transformer === 'none' ? 'selected' : ''}>No Transform</option>
+                                <option value="zscore" ${transformer === 'zscore' ? 'selected' : ''}>Z-Score</option>
+                                <option value="minmax" ${transformer === 'minmax' ? 'selected' : ''}>Min-Max</option>
+                                <option value="robust" ${transformer === 'robust' ? 'selected' : ''}>Robust</option>
+                                <option value="log" ${transformer === 'log' ? 'selected' : ''}>Log</option>
+                            ` : colType === 'categorical' ? `
+                                <option value="none" ${transformer === 'none' ? 'selected' : ''}>No Transform</option>
+                                <option value="label_encode" ${transformer === 'label_encode' ? 'selected' : ''}>Label Encode</option>
+                                <option value="one_hot" ${transformer === 'one_hot' ? 'selected' : ''}>One-Hot Encode</option>
+                            ` : `
+                                <option value="none">No Transform</option>
+                            `}
+                        </select>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        container.innerHTML = html;
+        
+        // Add event listeners to transformer selects
+        container.querySelectorAll('.column-transformer-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const columnName = e.target.dataset.column;
+                this.preprocessingConfig.columnTransformers[columnName] = e.target.value;
+                if (this.preprocessingEnabled) {
+                    this.applyTransformations();
+                }
+            });
+        });
+    }
+
+    // Show transformation preview
+    showTransformationPreview() {
+        if (!this.uploadedData || this.columnNames.length === 0) {
+            alert('Please upload data first');
+            return;
+        }
+        
+        // Create preview data
+        const previewRows = 5;
+        const originalSample = this.originalData || this.uploadedData;
+        
+        // Apply transformations temporarily for preview
+        const tempEnabled = this.preprocessingEnabled;
+        this.preprocessingEnabled = true;
+        this.applyTransformations();
+        const transformedSample = this.transformedData;
+        this.preprocessingEnabled = tempEnabled;
+        
+        // Create preview modal content
+        let modalContent = `
+            <div class="transformation-preview-modal">
+                <h3>Data Transformation Preview</h3>
+                <div class="preview-comparison">
+                    <div class="preview-section">
+                        <h4>Original Data (First ${previewRows} rows)</h4>
+                        <table class="preview-table">
+                            <thead>
+                                <tr>${this.columnNames.map(col => `<th>${col}</th>`).join('')}</tr>
+                            </thead>
+                            <tbody>
+        `;
+        
+        for (let i = 0; i < Math.min(previewRows, originalSample.data.length); i++) {
+            modalContent += '<tr>';
+            originalSample.data[i].forEach(cell => {
+                modalContent += `<td>${cell}</td>`;
+            });
+            modalContent += '</tr>';
+        }
+        
+        modalContent += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="preview-section">
+                        <h4>Transformed Data (First ${previewRows} rows)</h4>
+                        <table class="preview-table">
+                            <thead>
+                                <tr>${this.columnNames.map(col => `<th>${col}</th>`).join('')}</tr>
+                            </thead>
+                            <tbody>
+        `;
+        
+        for (let i = 0; i < Math.min(previewRows, transformedSample.data.length); i++) {
+            modalContent += '<tr>';
+            transformedSample.data[i].forEach((cell, j) => {
+                const colType = this.preprocessingConfig.columnTypes[this.columnNames[j]];
+                const isTransformed = colType === 'numerical' && 
+                    this.preprocessingConfig.columnTransformers[this.columnNames[j]] !== 'none';
+                const displayValue = typeof cell === 'number' ? cell.toFixed(4) : cell;
+                modalContent += `<td class="${isTransformed ? 'transformed-cell' : ''}">${displayValue}</td>`;
+            });
+            modalContent += '</tr>';
+        }
+        
+        modalContent += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="preview-stats">
+                    <h4>Column Statistics</h4>
+                    <div class="stats-table">
+        `;
+        
+        // Add statistics for numerical columns
+        this.columnNames.forEach((colName, colIndex) => {
+            if (this.preprocessingConfig.columnTypes[colName] === 'numerical') {
+                const stats = this.calculateColumnStatistics(colIndex);
+                if (stats) {
+                    modalContent += `
+                        <div class="stat-row">
+                            <strong>${colName}:</strong>
+                            Mean: ${stats.mean.toFixed(2)}, 
+                            Std: ${stats.std.toFixed(2)}, 
+                            Min: ${stats.min.toFixed(2)}, 
+                            Max: ${stats.max.toFixed(2)}
+                        </div>
+                    `;
+                }
+            }
+        });
+        
+        modalContent += `
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="btn btn-primary">Close</button>
+            </div>
+        `;
+        
+        // Create and show modal
+        const modal = document.createElement('div');
+        modal.className = 'preprocessing-preview-overlay';
+        modal.innerHTML = modalContent;
+        document.body.appendChild(modal);
+    }
+
     clearFile() {
         // Clear the selected file
         this.selectedFile = null;
         this.uploadedData = null;
+        this.originalData = null;
+        this.transformedData = null;
+        this.preprocessingConfig.columnTypes = {};
+        this.preprocessingConfig.columnTransformers = {};
+        this.preprocessingConfig.statistics = {};
         
         const csvUpload = document.getElementById('csv-upload');
         const fileName = document.getElementById('file-name');

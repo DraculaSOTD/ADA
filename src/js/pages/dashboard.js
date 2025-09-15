@@ -358,10 +358,11 @@ async function loadInProgressData() {
         modelList.appendChild(generationCard);
     }
     
-    // Load model training jobs from API
-    const data = await fetchAuthenticatedData('/api/models/in-progress');
-    if (data && data.length > 0) {
-        data.forEach(model => {
+    // Load model training jobs from API with error handling
+    try {
+        const data = await fetchAuthenticatedData('/api/models/in-progress');
+        if (data && data.length > 0) {
+            data.forEach(model => {
             const modelCard = document.createElement('div');
             modelCard.classList.add('model-card', 'card');
             modelCard.innerHTML = `
@@ -392,6 +393,10 @@ async function loadInProgressData() {
             `;
             modelList.appendChild(modelCard);
         });
+    }
+    } catch (error) {
+        console.warn('Failed to load in-progress models:', error);
+        // Continue without showing API models, just show local generation jobs
     }
     
     // Show empty state if no jobs
@@ -438,11 +443,12 @@ window.cancelGeneration = function(generationId) {
 }
 
 async function loadActiveModelsData() {
-    const data = await fetchAuthenticatedData('/api/models/active');
-    if (data) {
-        const modelList = document.querySelector('.active-models-tab-content .model-list');
-        modelList.innerHTML = '';
-        data.forEach(model => {
+    try {
+        const data = await fetchAuthenticatedData('/api/models/active');
+        if (data && data.length > 0) {
+            const modelList = document.querySelector('.active-models-tab-content .model-list');
+            modelList.innerHTML = '';
+            data.forEach(model => {
             const modelCard = document.createElement('div');
             modelCard.classList.add('model-card', 'card');
             modelCard.innerHTML = `
@@ -458,6 +464,14 @@ async function loadActiveModelsData() {
             `;
             modelList.appendChild(modelCard);
         });
+    }
+    } catch (error) {
+        console.warn('Failed to load active models:', error);
+        // Continue without showing API models
+        const modelList = document.querySelector('.active-models-tab-content .model-list');
+        if (modelList) {
+            modelList.innerHTML = '<div class="empty-state">No active models available</div>';
+        }
     }
 }
 

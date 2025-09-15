@@ -115,6 +115,55 @@
             </div>
         </div>
 
+        <div class="data-preprocessing card">
+            <h3>Data Preprocessing & Standardization:</h3>
+            <div class="preprocessing-controls">
+                <div class="preprocessing-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="enable-preprocessing">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Enable Data Standardization</span>
+                </div>
+                
+                <div id="preprocessing-options" class="preprocessing-options" style="display: none;">
+                    <div class="preprocessing-methods">
+                        <h4>Numerical Columns</h4>
+                        <div class="method-selector">
+                            <label for="numerical-method">Standardization Method:</label>
+                            <select id="numerical-method" class="preprocessing-select">
+                                <option value="none">No Standardization</option>
+                                <option value="zscore" selected>Z-Score Normalization (Standard Scaler)</option>
+                                <option value="minmax">Min-Max Scaling (0 to 1)</option>
+                                <option value="robust">Robust Scaling (Median & IQR)</option>
+                                <option value="log">Log Transformation</option>
+                            </select>
+                        </div>
+                        
+                        <div class="column-type-detection">
+                            <button id="auto-detect-types" class="btn btn-secondary">
+                                <i class="fas fa-magic"></i> Auto-Detect Column Types
+                            </button>
+                            <button id="preview-transformation" class="btn btn-secondary">
+                                <i class="fas fa-eye"></i> Preview Transformation
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="preprocessing-columns" id="preprocessing-columns">
+                        <!-- Dynamically populated with column-specific options -->
+                    </div>
+                    
+                    <div class="preprocessing-stats" id="preprocessing-stats" style="display: none;">
+                        <h4>Data Statistics</h4>
+                        <div class="stats-grid">
+                            <!-- Statistics will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="tagged-data card">
             <h3>Tagged Data:</h3>
             <div id="tagged-data-content" class="tagged-data-content">

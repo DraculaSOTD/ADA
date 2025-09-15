@@ -64,6 +64,13 @@ async function fetchData(url, options = {}) {
                 }
             }
             
+            // Handle 422 (Unprocessable Entity) gracefully
+            // This typically means the request was understood but couldn't be processed
+            if (response.status === 422) {
+                console.warn(`API returned 422 for ${url} - returning empty result`);
+                return isJson ? [] : null;
+            }
+            
             throw new Error(errorMessage);
         }
         

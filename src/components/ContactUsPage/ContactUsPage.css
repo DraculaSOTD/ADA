@@ -1,21 +1,27 @@
 .contact-us-page {
     padding: var(--spacing-large);
     font-family: var(--font-family);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .page-header {
     margin-bottom: var(--spacing-large);
 }
 
-.page-header h2 {
+.page-title {
     font-size: var(--font-size-large);
+    font-weight: bold;
     color: var(--text-color);
-    margin-bottom: var(--spacing-medium);
+    margin: 0 0 0.5rem 0;
 }
 
-.page-header p {
-    font-size: var(--font-size-medium);
+.page-subtitle {
+    font-size: 1.1rem;
     color: var(--text-color);
+    opacity: 0.9;
+    margin: 0;
 }
 
 .contact-form {
@@ -23,7 +29,7 @@
     border-radius: var(--border-radius);
     padding: var(--spacing-large);
     background-color: var(--background-color);
-    max-width: 600px;
+    max-width: 900px;
     margin: 0 auto;
     box-shadow: var(--shadow);
 }

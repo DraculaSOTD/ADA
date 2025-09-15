@@ -131,7 +131,7 @@
 
 .models-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
     padding: 0.5rem 0;
     width: 100%;
@@ -307,25 +307,11 @@
     font-size: 1rem;
 }
 
-/* Responsive - Enhanced for better grid layout */
-/* Extra large screens - 4+ columns */
-@media (min-width: 1600px) {
+/* Responsive - 2 columns for larger screens, 1 for mobile */
+/* Large screens and above - maintain 2 columns */
+@media (min-width: 768px) {
     .models-grid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    }
-}
-
-/* Large screens - 3-4 columns */
-@media (min-width: 1200px) and (max-width: 1599px) {
-    .models-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-}
-
-/* Medium screens - 2-3 columns */
-@media (min-width: 768px) and (max-width: 1199px) {
-    .models-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

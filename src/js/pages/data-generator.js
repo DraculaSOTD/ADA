@@ -433,7 +433,8 @@ function setupFileUpload() {
                 }
                 analyzeFile(currentFile);
             } else {
-                alert('Please select a file first');
+                const uploadSection = document.querySelector('.uploaded-data');
+                highlightField(uploadSection, 'Please select a file first');
             }
         });
     }
@@ -469,7 +470,8 @@ async function handleFile(file) {
                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
     
     if (!validTypes.includes(file.type) && !file.name.match(/\.(csv|json|xlsx|xls)$/i)) {
-        alert('Please upload a CSV, JSON, or Excel file.');
+        const uploadSection = document.querySelector('.uploaded-data');
+        highlightField(uploadSection, 'Please upload a CSV, JSON, or Excel file.');
         return;
     }
     
@@ -504,7 +506,8 @@ async function handleMultipleFiles(files) {
     });
     
     if (validFiles.length === 0) {
-        alert('Please upload valid CSV, JSON, or Excel files.');
+        const uploadSection = document.querySelector('.uploaded-data');
+        highlightField(uploadSection, 'Please upload valid CSV, JSON, or Excel files.');
         return;
     }
     
@@ -1526,29 +1529,90 @@ function getDropdownValue(dropdownId) {
     return select ? select.value : null;
 }
 
+// Validation utility functions
+function highlightField(element, message) {
+    if (!element) return;
+    
+    // Clear any existing validation errors first
+    clearValidationErrors();
+    
+    // Add error class
+    element.classList.add('validation-error');
+    
+    // Add error message if provided
+    if (message) {
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'validation-message';
+        errorMsg.textContent = message;
+        
+        // Insert after the element or its container
+        const insertAfter = element.closest('.form-group') || element.closest('.card') || element;
+        insertAfter.parentNode.insertBefore(errorMsg, insertAfter.nextSibling);
+    }
+    
+    // Scroll to field with offset for better visibility
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Focus if it's an input element
+    if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
+        setTimeout(() => element.focus(), 300);
+    }
+    
+    // Auto-clear on input/change
+    const clearOnInput = () => {
+        element.classList.remove('validation-error');
+        const msg = element.parentNode.querySelector('.validation-message');
+        if (msg) msg.remove();
+        element.removeEventListener('input', clearOnInput);
+        element.removeEventListener('change', clearOnInput);
+    };
+    
+    element.addEventListener('input', clearOnInput);
+    element.addEventListener('change', clearOnInput);
+}
+
+function clearValidationErrors() {
+    document.querySelectorAll('.validation-error').forEach(el => {
+        el.classList.remove('validation-error');
+    });
+    document.querySelectorAll('.validation-message').forEach(el => {
+        el.remove();
+    });
+}
+
 // Validate generation settings
 function validateGenerationSettings(settings) {
     // Check for required fields
     if (!settings.rows || settings.rows < 1) {
-        return { valid: false, message: 'Please specify the number of rows to generate (minimum 1)' };
+        const rowsInput = document.getElementById('gen-rows');
+        highlightField(rowsInput, 'Please specify the number of rows to generate (minimum 1)');
+        return { valid: false };
     }
     
     if (settings.rows > 1000000) {
-        return { valid: false, message: 'Maximum row limit is 1,000,000. Please reduce the number of rows.' };
+        const rowsInput = document.getElementById('gen-rows');
+        highlightField(rowsInput, 'Maximum row limit is 1,000,000. Please reduce the number of rows.');
+        return { valid: false };
     }
     
     // Mode-specific validation
     if (settings.mode === 'manual') {
         if (!settings.columns || settings.columns.length === 0) {
-            return { valid: false, message: 'Please define at least one column for manual generation' };
+            const columnsContainer = document.getElementById('columns-container') || document.querySelector('.columns-config');
+            highlightField(columnsContainer, 'Please define at least one column for manual generation');
+            return { valid: false };
         }
     } else if (settings.mode === 'pattern') {
         if (!settings.patterns) {
-            return { valid: false, message: 'Please upload and analyze a file first' };
+            const uploadSection = document.querySelector('.uploaded-data');
+            highlightField(uploadSection, 'Please upload and analyze a file first');
+            return { valid: false };
         }
     } else if (settings.mode === 'template') {
         if (!settings.industry && !window.currentTemplate?.industry) {
-            return { valid: false, message: 'Please select an industry template' };
+            const templateSection = document.querySelector('.generation-options-section');
+            highlightField(templateSection, 'Please select an industry template');
+            return { valid: false };
         }
         // If template_config is missing but we have currentTemplate, use it
         if (!settings.template_config && window.currentTemplate?.columns) {
@@ -1560,13 +1624,17 @@ function validateGenerationSettings(settings) {
         }
     } else if (settings.mode === 'multi-table') {
         if (!settings.multi_table || !settings.multi_table.tables || settings.multi_table.tables.length < 2) {
-            return { valid: false, message: 'Please configure at least 2 tables for multi-table generation' };
+            const multiTableSection = document.getElementById('multi-table-section');
+            highlightField(multiTableSection, 'Please configure at least 2 tables for multi-table generation');
+            return { valid: false };
         }
     }
     
     // Validate privacy settings
     if (settings.privacy.differential_privacy && (!settings.privacy.epsilon || settings.privacy.epsilon <= 0)) {
-        return { valid: false, message: 'Please specify a valid privacy budget (ε > 0) for differential privacy' };
+        const epsilonInput = document.getElementById('epsilon');
+        highlightField(epsilonInput, 'Please specify a valid privacy budget (ε > 0) for differential privacy');
+        return { valid: false };
     }
     
     return { valid: true };
@@ -1619,7 +1687,8 @@ function checkTokenAvailability(tokenCost) {
 // Handle template-based generation
 async function handleTemplateGeneration() {
     if (!window.currentTemplate.industry || window.currentTemplate.columns.length === 0) {
-        alert('Please select an industry template first.');
+        const templateSection = document.querySelector('.generation-options-section');
+        highlightField(templateSection, 'Please select an industry template first.');
         return;
     }
     
@@ -1687,8 +1756,8 @@ async function handleGenerateData() {
         console.log('Validation result:', validation);
         
         if (!validation.valid) {
-            console.error('Validation failed:', validation.message);
-            alert(validation.message);
+            console.error('Validation failed');
+            // Error is already highlighted by validateGenerationSettings
             return;
         }
         
@@ -2248,7 +2317,8 @@ async function handlePatternBasedGenerationOld() {
     }
     
     if (!analysisResult) {
-        alert('Please upload and analyze a file first or select an industry template.');
+        const uploadSection = document.querySelector('.uploaded-data');
+        highlightField(uploadSection, 'Please upload and analyze a file first or select an industry template.');
         return;
     }
     
@@ -2418,7 +2488,8 @@ async function handleManualGeneration() {
     });
     
     if (columns.length === 0) {
-        alert('Please add at least one column.');
+        const columnsContainer = document.getElementById('columns-container');
+        highlightField(columnsContainer, 'Please add at least one column.');
         return;
     }
     

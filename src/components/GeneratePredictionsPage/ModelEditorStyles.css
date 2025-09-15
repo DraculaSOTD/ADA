@@ -1,5 +1,26 @@
 /* Model Editor Page Styles */
 
+/* Generation Progress Modal Fixes */
+#progress-modal {
+    z-index: 10000 !important; /* Above sidebar which is at 1050 */
+}
+
+#progress-modal .modal-content.generation-progress {
+    position: fixed;
+    top: 50%;
+    left: calc(50% + 140px); /* Center in content area: 50% + (sidebar width 280px / 2) */
+    transform: translate(-50%, -50%);
+    max-width: 600px !important;
+    width: calc(90% - 280px); /* Account for sidebar width */
+    max-width: min(600px, calc(100vw - 320px)); /* Ensure it fits with sidebar */
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 10001;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
 /* Finalization Page Container - Match Data Cleaning Page */
 .finalization-page {
     padding: var(--spacing-large);
@@ -719,6 +740,328 @@
     background: var(--primary);
     width: 0%;
     transition: width 0.3s ease;
+}
+
+/* Data Preprocessing Styles */
+.data-preprocessing {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.data-preprocessing h3 {
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.preprocessing-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--text-secondary);
+    transition: .3s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: var(--primary);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.toggle-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.preprocessing-options {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+.preprocessing-methods h4 {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.method-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.method-selector label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.preprocessing-select {
+    flex: 1;
+    max-width: 300px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.column-type-detection {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.column-type-detection button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* Preprocessing Columns Grid */
+.preprocessing-columns {
+    margin-top: 1.25rem;
+}
+
+.preprocessing-columns h4 {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.columns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.column-config {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: 0.75rem;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.column-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.column-type-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.column-type-badge.numerical {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.column-type-badge.categorical {
+    background: rgba(156, 39, 176, 0.1);
+    color: #9c27b0;
+}
+
+.column-type-badge.text {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+}
+
+.column-transformer-select {
+    width: 100%;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: white;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+}
+
+/* Statistics Display */
+.preprocessing-stats {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.preprocessing-stats h4 {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: 0.75rem;
+}
+
+.stat-card h5 {
+    color: var(--primary);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-details span {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Preview Modal Styles */
+.preprocessing-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 1.25rem;
+}
+
+.transformation-preview-modal {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.transformation-preview-modal h3 {
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+}
+
+.preview-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.preview-section h4 {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.preview-table th {
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem;
+    text-align: left;
+    font-weight: 500;
+}
+
+.preview-table td {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    background: white;
+}
+
+.preview-table td.transformed-cell {
+    background: #fffbf0;
+    font-weight: 500;
+}
+
+.preview-stats {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.preview-stats h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.stat-row {
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
 }
 
 /* Responsive */

@@ -125,8 +125,8 @@ body {
 
 .header {
     position: fixed;
-    width: calc(100% - 80px); /* Full width minus sidebar */
-    margin-left: 80px; /* Sidebar width */
+    width: calc(100% - 280px); /* Full width minus sidebar */
+    margin-left: 280px; /* Sidebar width */
 }
 
 .page-content-area {
@@ -571,4 +571,43 @@ body.dark-mode {
     color: var(--success-color);
     font-size: 0.875rem;
     margin-bottom: var(--spacing-medium);
+}
+
+/* Validation Styles */
+.validation-error {
+    border: 2px solid rgba(255, 100, 100, 0.5) !important;
+    background-color: rgba(255, 200, 200, 0.1) !important;
+    animation: shake 0.3s ease-in-out;
+}
+
+.validation-message {
+    color: #d93025;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    background: rgba(255, 100, 100, 0.1);
+    border-radius: 4px;
+    display: inline-block;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Smooth transition for error states */
+input.validation-error,
+select.validation-error,
+textarea.validation-error,
+.card.validation-error,
+.tier-card.validation-error {
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Remove spinner from number inputs on validation error */
+input[type="number"].validation-error::-webkit-inner-spin-button,
+input[type="number"].validation-error::-webkit-outer-spin-button {
+    opacity: 0.5;
 }
