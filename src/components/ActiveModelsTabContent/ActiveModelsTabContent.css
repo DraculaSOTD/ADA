@@ -31,7 +31,8 @@
     padding-right: 1em;
 }
 
-.active-models-tab-content .model-card {
+/* Dashboard Active Models Tab - Model Card Styles */
+.dashboard-main-area .active-models-tab-content .model-card {
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);

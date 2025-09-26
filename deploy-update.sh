@@ -185,10 +185,15 @@ if [ "$SKIP_BUILD" = false ] && [ -f "$SOURCE_DIR/package.json" ]; then
     
     cd "$SOURCE_DIR"
     
-    # Clean dist folder to avoid permission issues
+    # Clean build folders to avoid permission issues
     if [ -d "$SOURCE_DIR/dist" ]; then
-        echo "Cleaning previous build files..."
+        echo "Cleaning previous dist files..."
         sudo rm -rf "$SOURCE_DIR/dist"
+        echo -e "${GREEN}✓ Old dist files cleaned${NC}"
+    fi
+    if [ -d "$SOURCE_DIR/build" ]; then
+        echo "Cleaning previous build files..."
+        rm -rf "$SOURCE_DIR/build"
         echo -e "${GREEN}✓ Old build files cleaned${NC}"
     fi
     
@@ -201,9 +206,11 @@ if [ "$SKIP_BUILD" = false ] && [ -f "$SOURCE_DIR/package.json" ]; then
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}✓ Build completed successfully${NC}"
             
-            # Fix permissions on the new dist folder
-            sudo chown -R $(whoami):$(whoami) "$SOURCE_DIR/dist"
-            echo -e "${GREEN}✓ Build permissions fixed${NC}"
+            # Fix permissions on the new build folder
+            if [ -d "$SOURCE_DIR/build" ]; then
+                chown -R $(whoami):$(whoami) "$SOURCE_DIR/build" 2>/dev/null || true
+                echo -e "${GREEN}✓ Build permissions fixed${NC}"
+            fi
         else
             echo -e "${RED}✗ Build failed!${NC}"
             echo -e "${RED}Please check the error messages above${NC}"
@@ -236,9 +243,20 @@ sudo mkdir -p "$DEPLOY_DIR"
 echo "Copying files to production..."
 
 # Copy files based on whether we have a build
-if [ -d "$SOURCE_DIR/dist" ] && [ -f "$SOURCE_DIR/dist/index.html" ]; then
+if [ -d "$SOURCE_DIR/build" ] && [ -f "$SOURCE_DIR/build/index.html" ]; then
     # Production build exists - copy built files
     echo -e "${CYAN}Deploying production build...${NC}"
+    
+    echo -n "  • Copying built index.html..."
+    sudo cp "$SOURCE_DIR/build/index.html" "$DEPLOY_DIR/" 2>/dev/null && echo -e " ${GREEN}✓${NC}" || echo -e " ${RED}✗${NC}"
+    
+    echo -n "  • Copying built assets..."
+    if [ -d "$SOURCE_DIR/build/assets" ]; then
+        sudo cp -r "$SOURCE_DIR/build/assets" "$DEPLOY_DIR/" 2>/dev/null && echo -e " ${GREEN}✓${NC}" || echo -e " ${RED}✗${NC}"
+    fi
+elif [ -d "$SOURCE_DIR/dist" ] && [ -f "$SOURCE_DIR/dist/index.html" ]; then
+    # Fallback to dist directory
+    echo -e "${CYAN}Deploying production build from dist...${NC}"
     
     echo -n "  • Copying built index.html..."
     sudo cp "$SOURCE_DIR/dist/index.html" "$DEPLOY_DIR/" 2>/dev/null && echo -e " ${GREEN}✓${NC}" || echo -e " ${RED}✗${NC}"

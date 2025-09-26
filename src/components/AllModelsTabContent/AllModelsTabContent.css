@@ -81,7 +81,8 @@
     z-index: 1;
 }
 
-.model-card {
+/* Dashboard All Models Tab - Model Card Styles */
+.dashboard-main-area .all-models-tab-content .model-card {
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -90,25 +91,25 @@
     position: relative;
 }
 
-.model-card .model-header {
+.dashboard-main-area .all-models-tab-content .model-card .model-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-medium);
 }
 
-.model-card .model-name {
+.dashboard-main-area .all-models-tab-content .model-card .model-name {
     font-weight: bold;
     font-size: 1.1em;
     color: var(--primary-color-dark);
 }
 
-.model-card .person-published {
+.dashboard-main-area .all-models-tab-content .model-card .person-published {
     font-size: var(--font-size-small);
     color: var(--text-color);
 }
 
-.model-card .add-button {
+.dashboard-main-area .all-models-tab-content .model-card .add-button {
     background-color: var(--primary-color);
     color: var(--text-color-light);
     border-radius: 50%;
@@ -122,17 +123,17 @@
     transition: background-color 0.2s ease;
 }
 
-.model-card .add-button:hover {
+.dashboard-main-area .all-models-tab-content .model-card .add-button:hover {
     background-color: var(--primary-color-dark);
 }
 
-.model-card .model-details p {
+.dashboard-main-area .all-models-tab-content .model-card .model-details p {
     margin: var(--spacing-small) 0;
     font-size: var(--font-size-small);
     color: var(--text-color);
 }
 
-.model-card .model-details .detail-value {
+.dashboard-main-area .all-models-tab-content .model-card .model-details .detail-value {
     font-weight: normal;
     color: var(--text-color);
 }

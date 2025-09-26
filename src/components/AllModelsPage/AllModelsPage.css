@@ -137,8 +137,8 @@
     width: 100%;
 }
 
-/* Model Card Styles */
-.model-card {
+/* Model Card Styles - All Models Page specific */
+.all-models-page-container .model-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -149,13 +149,13 @@
     flex-direction: column;
 }
 
-.model-card:hover {
+.all-models-page-container .model-card:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-2px);
     border-color: var(--primary);
 }
 
-.model-card-header {
+.all-models-page-container .model-card-header {
     padding: 1.25rem;
     border-bottom: 1px solid var(--border-color);
     background: var(--bg-secondary);
@@ -187,7 +187,7 @@
     gap: 0.5rem;
 }
 
-.model-card-body {
+.all-models-page-container .model-card-body {
     padding: 1.25rem;
     flex: 1;
 }
@@ -221,7 +221,7 @@
     color: var(--primary);
 }
 
-.model-card-footer {
+.all-models-page-container .model-card-footer {
     padding: 1rem 1.25rem;
     border-top: 1px solid var(--border-color);
     background: var(--bg-secondary);
@@ -336,7 +336,7 @@
         gap: 0.5rem;
     }
     
-    .model-card-footer {
+    .all-models-page-container .model-card-footer {
         flex-direction: column;
         gap: 1rem;
         align-items: stretch;
@@ -345,4 +345,84 @@
     .vote-section, .action-buttons {
         justify-content: center;
     }
+    
+    /* All Models Tab Navigation Mobile Overrides */
+    .all-models-page-container #allModelsTabContainer .tab-button {
+        padding: var(--spacing-small) var(--spacing-medium) !important;
+        font-size: 0.875rem !important;
+    }
+    
+    .all-models-page-container #allModelsTabContainer .tab-button i {
+        font-size: 1rem !important;
+    }
+}
+
+/* All Models Tab Navigation Container Styles */
+#allModelsTabContainer {
+    margin-bottom: var(--spacing-large);
+    position: relative;
+}
+
+/* Ultra-high specificity overrides to ensure proper All Models tab styling */
+.all-models-page-container #allModelsTabContainer,
+.all-models-page-container #allModelsTabContainer * {
+    box-sizing: border-box !important;
+}
+
+.all-models-page-container #allModelsTabContainer .tab-navigation {
+    display: flex !important;
+    gap: var(--spacing-small) !important;
+    margin-bottom: var(--spacing-large) !important;
+    padding: var(--spacing-small) !important;
+    background: var(--bg-secondary) !important;
+    background-color: var(--bg-secondary) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+}
+
+.all-models-page-container #allModelsTabContainer .tab-button {
+    flex: 1 !important;
+    padding: var(--spacing-medium) var(--spacing-large) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: var(--border-radius) !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--spacing-small) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    min-width: max-content !important;
+    box-shadow: none !important;
+}
+
+.all-models-page-container #allModelsTabContainer .tab-button:hover {
+    background: rgba(106, 90, 205, 0.1) !important;
+    background-color: rgba(106, 90, 205, 0.1) !important;
+    color: var(--primary-color) !important;
+    box-shadow: none !important;
+}
+
+.all-models-page-container #allModelsTabContainer .tab-button.active {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark) 100%) !important;
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3) !important;
+    border-bottom: none !important;
+}
+
+.all-models-page-container #allModelsTabContainer .tab-button i {
+    font-size: 1.125rem !important;
 }

@@ -8,6 +8,31 @@
     border-radius: var(--border-radius);
 }
 
+/* High specificity override for All Models page */
+.all-models-page-container #allModelsTabContainer .tab-navigation {
+    background: var(--bg-secondary) !important;
+    border-radius: var(--border-radius);
+    box-shadow: none !important;
+}
+
+.all-models-page-container #allModelsTabContainer .tab-button {
+    background: transparent !important;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.all-models-page-container #allModelsTabContainer .tab-button:hover {
+    background: rgba(106, 90, 205, 0.1) !important;
+    color: var(--primary-color);
+}
+
+.all-models-page-container #allModelsTabContainer .tab-button.active {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark) 100%) !important;
+    color: white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.all-models-page-container .tab-button,
 .tab-button {
     flex: 1;
     padding: var(--spacing-medium) var(--spacing-large);
@@ -27,11 +52,13 @@
     overflow: hidden;
 }
 
+.all-models-page-container .tab-button:hover,
 .tab-button:hover {
     background: rgba(106, 90, 205, 0.1);
     color: var(--primary-color);
 }
 
+.all-models-page-container .tab-button.active,
 .tab-button.active {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark) 100%);
     color: white;
