@@ -1,4 +1,5 @@
 import { StyledDropdown } from '../../components/StyledDropdown/StyledDropdown.js';
+import { ModelWizard } from '../../components/ModelWizard/ModelWizard.js';
 import { loadComponentCSS } from '../services/componentLoader.js';
 import tokenService from '../services/token_service.js';
 
@@ -39,21 +40,268 @@ class ModelEditorPage {
         };
         this.originalData = null; // Store original data before transformation
         this.transformedData = null; // Store transformed data
+        
+        // UI Mode
+        this.currentMode = 'wizard'; // 'wizard' or 'advanced'
+        this.wizard = null;
     }
 
     async initialize() {
-        // Load StyledDropdown CSS
-        loadComponentCSS('src/components/StyledDropdown/StyledDropdown.css');
+        console.log('ModelEditorPage initialize() called');
         
+        // Load CSS files
+        await loadComponentCSS('src/components/StyledDropdown/StyledDropdown.css');
+        await loadComponentCSS('src/components/ModelWizard/ModelWizard.css');
+        
+        // Check for active training state first
+        const activeTraining = localStorage.getItem('activeTraining');
+        if (activeTraining) {
+            console.log('Active training detected, restoring training state');
+            this.restoreTrainingState(JSON.parse(activeTraining));
+            return;
+        }
+        
+        this.setupModeToggle();
+        this.initializeCurrentMode();
+        
+        console.log('ModelEditorPage initialization completed');
+    }
+    
+    restoreTrainingState(trainingData) {
+        console.log('Restoring training state:', trainingData);
+        
+        // Setup the basic UI first
+        this.setupModeToggle();
+        
+        // Ensure we're in advanced mode since training was started from there
+        this.currentMode = 'advanced';
+        
+        // Update button states
+        const wizardBtn = document.getElementById('wizard-mode-btn');
+        const advancedBtn = document.getElementById('advanced-mode-btn');
+        
+        if (wizardBtn && advancedBtn) {
+            wizardBtn.classList.remove('active');
+            advancedBtn.classList.add('active');
+        }
+        
+        // Show advanced editor
+        const wizardContainer = document.getElementById('wizard-container');
+        const advancedEditor = document.getElementById('advanced-editor');
+        
+        if (wizardContainer && advancedEditor) {
+            wizardContainer.style.display = 'none';
+            advancedEditor.style.display = 'block';
+        }
+        
+        // Initialize advanced editor
+        this.initializeAdvancedEditor();
+        
+        // Restore form data if available
+        this.restoreFormState();
+        
+        // Show training progress modal automatically
+        setTimeout(() => {
+            this.showTrainingProgressFromState(trainingData);
+        }, 500);
+    }
+    
+    restoreFormState() {
+        // Restore saved form data from localStorage
+        const savedFormState = localStorage.getItem('modelEditorFormState');
+        if (savedFormState) {
+            try {
+                const formData = JSON.parse(savedFormState);
+                
+                // Restore basic form fields
+                const modelName = document.getElementById('model-name');
+                const modelDescription = document.getElementById('model-description');
+                const modelAlgorithm = document.getElementById('model-algorithm');
+                const epoch = document.getElementById('epoch');
+                
+                if (modelName && formData.modelName) modelName.value = formData.modelName;
+                if (modelDescription && formData.modelDescription) modelDescription.value = formData.modelDescription;
+                if (modelAlgorithm && formData.algorithm) modelAlgorithm.value = formData.algorithm;
+                if (epoch && formData.epochs) epoch.value = formData.epochs;
+                
+                // Restore uploaded file info if available
+                if (formData.fileName) {
+                    const fileNameSpan = document.getElementById('file-name');
+                    if (fileNameSpan) {
+                        fileNameSpan.textContent = formData.fileName;
+                    }
+                }
+                
+                console.log('Form state restored:', formData);
+            } catch (error) {
+                console.warn('Failed to restore form state:', error);
+            }
+        }
+    }
+    
+    saveFormState() {
+        // Save current form state to localStorage
+        const modelName = document.getElementById('model-name');
+        const modelDescription = document.getElementById('model-description');
+        const modelAlgorithm = document.getElementById('model-algorithm');
+        const epoch = document.getElementById('epoch');
+        const fileNameSpan = document.getElementById('file-name');
+        
+        const formData = {
+            modelName: modelName?.value || '',
+            modelDescription: modelDescription?.value || '',
+            algorithm: modelAlgorithm?.value || '',
+            epochs: epoch?.value || '',
+            fileName: fileNameSpan?.textContent || 'No file chosen',
+            timestamp: Date.now()
+        };
+        
+        localStorage.setItem('modelEditorFormState', JSON.stringify(formData));
+        console.log('Form state saved:', formData);
+    }
+    
+    showTrainingProgressFromState(trainingData) {
+        // Create a mock config object from training data
+        const mockConfig = {
+            name: trainingData.modelName || 'Model Training',
+            algorithm: trainingData.algorithm || 'Neural Network',
+            epochs: trainingData.epochs || 10,
+            estimatedAccuracy: 0.92
+        };
+        
+        // Show the progress modal
+        this.showProgressModal(mockConfig);
+        
+        // Update the modal with current progress
+        setTimeout(() => {
+            const progressFill = document.getElementById('generation-progress-fill');
+            const progressPercentage = document.querySelector('.progress-percentage');
+            const trainingProgress = document.getElementById('training-progress');
+            
+            if (progressFill) progressFill.style.width = `${trainingData.progress || 0}%`;
+            if (progressPercentage) progressPercentage.textContent = `${Math.round(trainingData.progress || 0)}%`;
+            if (trainingProgress) trainingProgress.textContent = Math.floor((trainingData.progress || 0) / 10);
+            
+            // Update status message
+            const statusMessage = document.querySelector('.status-message');
+            if (statusMessage) {
+                statusMessage.textContent = `Current stage: ${trainingData.currentStage || 'training'}`;
+            }
+        }, 1000);
+    }
+    
+    setupModeToggle() {
+        const wizardBtn = document.getElementById('wizard-mode-btn');
+        const advancedBtn = document.getElementById('advanced-mode-btn');
+        
+        if (wizardBtn && advancedBtn) {
+            wizardBtn.addEventListener('click', () => this.switchMode('wizard'));
+            advancedBtn.addEventListener('click', () => this.switchMode('advanced'));
+        }
+    }
+    
+    switchMode(mode) {
+        if (this.currentMode === mode) return;
+        
+        this.currentMode = mode;
+        
+        // Update button states
+        const wizardBtn = document.getElementById('wizard-mode-btn');
+        const advancedBtn = document.getElementById('advanced-mode-btn');
+        
+        if (wizardBtn && advancedBtn) {
+            wizardBtn.classList.toggle('active', mode === 'wizard');
+            advancedBtn.classList.toggle('active', mode === 'advanced');
+        }
+        
+        // Show/hide appropriate containers
+        const wizardContainer = document.getElementById('wizard-container');
+        const advancedEditor = document.getElementById('advanced-editor');
+        
+        if (wizardContainer && advancedEditor) {
+            wizardContainer.style.display = mode === 'wizard' ? 'block' : 'none';
+            advancedEditor.style.display = mode === 'advanced' ? 'block' : 'none';
+        }
+        
+        // Initialize the selected mode
+        this.initializeCurrentMode();
+    }
+    
+    initializeCurrentMode() {
+        if (this.currentMode === 'wizard') {
+            this.initializeWizard();
+        } else {
+            this.initializeAdvancedEditor();
+        }
+    }
+    
+    initializeWizard() {
+        const wizardContainer = document.getElementById('wizard-container');
+        if (!wizardContainer) return;
+        
+        // Clear container
+        wizardContainer.innerHTML = '';
+        
+        // Initialize wizard
+        this.wizard = new ModelWizard(wizardContainer, {
+            onFinish: (config) => this.handleWizardFinish(config)
+        });
+    }
+    
+    initializeAdvancedEditor() {
+        console.log('Initializing advanced editor');
+        // Initialize the original advanced editor
         this.setupDropdowns();
         this.setupEventListeners();
-        this.calculateDynamicVersionCost(); // Initialize version cost calculation
-        this.initializeMetricsDisplay(); // Show all zeros initially
+        this.calculateDynamicVersionCost();
+        this.initializeMetricsDisplay();
+        console.log('Advanced editor initialized');
+    }
+    
+    handleWizardFinish(config) {
+        console.log('Wizard completed with config:', config);
+        
+        // Start the training process with the wizard configuration
+        this.startTrainingWithConfig(config);
+    }
+    
+    async startTrainingWithConfig(config) {
+        try {
+            // Show training progress modal
+            this.showProgressModal(config);
+            
+            // Here you would typically send the config to the backend
+            // For now, we'll simulate the training process
+            await this.simulateTraining(config);
+            
+        } catch (error) {
+            console.error('Training failed:', error);
+            this.showError('Training failed: ' + error.message);
+        }
+    }
+    
+    async simulateTraining(config) {
+        // Simulate training progress
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                console.log('Training completed successfully');
+                resolve();
+            }, 3000);
+        });
+    }
+    
+    showError(message) {
+        // Show error message to user
+        alert(message); // In production, use a proper toast/notification system
     }
 
     setupDropdowns() {
+        // Clear any existing dropdowns first
+        this.dropdowns = {};
+        
         // Model selector dropdown
         const modelSelectorContainer = document.querySelector('.model-selector-container');
+        console.log('Setting up model selector dropdown. Container found:', !!modelSelectorContainer);
         if (modelSelectorContainer) {
             modelSelectorContainer.innerHTML = '<div id="model-selector-dropdown"></div>';
             this.dropdowns.modelSelector = new StyledDropdown(
@@ -68,9 +316,15 @@ class ModelEditorPage {
                         { value: 'model3', title: 'Sentiment Analyzer', icon: 'fas fa-brain' },
                         { value: 'new', title: 'Create New Model', icon: 'fas fa-plus' }
                     ],
-                    onChange: (value) => this.loadModelData(value)
+                    onChange: (value) => {
+                        console.log('Model dropdown onChange triggered with value:', value);
+                        this.loadModelData(value);
+                    }
                 }
             );
+            console.log('Model selector dropdown created successfully');
+        } else {
+            console.error('Model selector container not found!');
         }
 
         // Tagged data section will be initialized dynamically when model is selected and data is uploaded
@@ -181,10 +435,18 @@ class ModelEditorPage {
 
         // Add file upload listener to store file (no auto-upload)
         const csvUpload = document.getElementById('csv-upload');
+        console.log('Setting up file upload listener. Input found:', !!csvUpload);
         if (csvUpload) {
             csvUpload.addEventListener('change', (event) => {
+                console.log('File input change event triggered');
                 const file = event.target.files[0];
+                console.log('Selected file:', file);
                 if (file) {
+                    console.log('File details:', {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size
+                    });
                     // Handle CSV and other text files
                     if (file.type === 'text/csv' || file.name.endsWith('.csv') || 
                         file.type === 'text/plain' || file.type === '' ||
@@ -192,6 +454,7 @@ class ModelEditorPage {
                         file.name.endsWith('.json')) {
                         // Just store the file and update display
                         this.selectedFile = file;
+                        console.log('File stored in selectedFile:', this.selectedFile);
                         const fileName = document.getElementById('file-name');
                         if (fileName) {
                             fileName.textContent = file.name;
@@ -200,15 +463,22 @@ class ModelEditorPage {
                         const uploadButton = document.getElementById('upload-button');
                         if (uploadButton) {
                             uploadButton.style.display = 'inline-block';
+                            console.log('Upload button made visible');
                         }
                         const clearFileBtn = document.getElementById('clear-file-btn');
                         if (clearFileBtn) {
                             clearFileBtn.style.display = 'inline-block';
                         }
-                        console.log('File selected:', file.name);
+                        console.log('File processing completed successfully');
+                    } else {
+                        console.log('File type not supported:', file.type);
                     }
+                } else {
+                    console.log('No file selected');
                 }
             });
+        } else {
+            console.error('File upload input not found!');
         }
         
         // Add clear file button listener
@@ -219,23 +489,33 @@ class ModelEditorPage {
 
         // Add upload button listener with model validation
         const uploadButton = document.getElementById('upload-button');
+        console.log('Setting up upload button listener. Button found:', !!uploadButton);
         if (uploadButton) {
             uploadButton.addEventListener('click', () => {
+                console.log('Upload button clicked!');
+                console.log('Current selectedModelId:', this.selectedModelId);
+                console.log('Current selectedFile:', this.selectedFile);
+                
                 // Check if model is selected
                 if (!this.selectedModelId) {
+                    console.log('No model selected, showing error message');
                     const modelDropdown = document.getElementById('model-selector-dropdown');
                     this.highlightField(modelDropdown, 'Please select a model from the dropdown in the top right before uploading data.');
                     return;
                 }
                 // Check if file is selected
                 if (!this.selectedFile) {
+                    console.log('No file selected, showing error message');
                     const uploadSection = document.querySelector('.uploaded-data');
                     this.highlightField(uploadSection, 'Please select a file first.');
                     return;
                 }
                 // Process the upload
+                console.log('All validations passed, starting upload...');
                 this.handleFileUpload(this.selectedFile);
             });
+        } else {
+            console.error('Upload button not found in DOM!');
         }
 
         // Fix button styles
@@ -430,18 +710,22 @@ class ModelEditorPage {
     }
 
     loadModelData(modelId) {
+        console.log('loadModelData called with modelId:', modelId);
         this.selectedModelId = modelId;
+        console.log('selectedModelId set to:', this.selectedModelId);
         
         if (modelId === 'new') {
             // New model - allow all columns
+            console.log('Selected new model creation');
             this.modelType = 'new';
             this.clearForm();
             this.initializeTaggedDataSection();
         } else {
             // Template model - load requirements
+            console.log('Selected template model:', modelId);
             this.modelType = 'template';
             this.loadTemplateRequirements(modelId);
-            console.log('Loading template model:', modelId);
+            console.log('Template requirements loaded for:', modelId);
         }
     }
 
@@ -635,6 +919,7 @@ class ModelEditorPage {
                 name: 'Customer Churn Predictor',
                 description: 'Predicts customer churn probability based on purchase history and behavior patterns',
                 modelFunction: 'Binary Classification (Logistic Regression)',
+                algorithm: 'logistic_regression',
                 epoch: 50,
                 hiddenLayers: 3,
                 batchSize: 32,
@@ -649,6 +934,7 @@ class ModelEditorPage {
                 name: 'Sales Forecast Model',
                 description: 'Forecasts future sales based on historical data and seasonal patterns using time series analysis',
                 modelFunction: 'Time Series Regression (LSTM)',
+                algorithm: 'lstm',
                 epoch: 100,
                 hiddenLayers: 4,
                 batchSize: 64,
@@ -662,6 +948,7 @@ class ModelEditorPage {
                 name: 'Sentiment Analyzer',
                 description: 'Analyzes text sentiment and classifies as positive, negative, or neutral using NLP',
                 modelFunction: 'Multi-class Classification (BERT)',
+                algorithm: 'bert',
                 epoch: 30,
                 hiddenLayers: 12,
                 batchSize: 16,
@@ -688,6 +975,7 @@ class ModelEditorPage {
         const modelNameField = document.getElementById('model-name');
         const modelDescField = document.getElementById('model-description');
         const modelFunctionField = document.getElementById('model-function');
+        const algorithmField = document.getElementById('model-algorithm');
         const epochField = document.getElementById('epoch');
         const hiddenLayersField = document.getElementById('hidden-layers');
         const batchSizeField = document.getElementById('batch-size');
@@ -698,6 +986,24 @@ class ModelEditorPage {
         if (epochField) epochField.value = templateConfig.epoch || '';
         if (hiddenLayersField) hiddenLayersField.value = templateConfig.hiddenLayers || '';
         if (batchSizeField) batchSizeField.value = templateConfig.batchSize || '';
+        
+        // Set ML Algorithm dropdown and trigger change event
+        if (algorithmField && templateConfig.algorithm) {
+            // Check if the algorithm value exists in the dropdown
+            const algorithmOption = algorithmField.querySelector(`option[value="${templateConfig.algorithm}"]`);
+            if (algorithmOption) {
+                algorithmField.value = templateConfig.algorithm;
+                this.selectedAlgorithm = templateConfig.algorithm;
+                
+                // Trigger change event to update dependent fields
+                const changeEvent = new Event('change', { bubbles: true });
+                algorithmField.dispatchEvent(changeEvent);
+                
+                console.log('Algorithm set to:', templateConfig.algorithm);
+            } else {
+                console.warn('Algorithm value not found in dropdown:', templateConfig.algorithm);
+            }
+        }
 
         // Update metrics display to reflect the populated values
         this.updateMetricsDisplay();
@@ -1057,17 +1363,38 @@ class ModelEditorPage {
     }
 
     handleFileUpload(file) {
-        if (!file) return;
+        console.log('handleFileUpload called with file:', file);
+        if (!file) {
+            console.error('handleFileUpload called with no file!');
+            return;
+        }
+
+        console.log('Starting file upload process...');
 
         // Show upload progress
         const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('upload-progress-container');
+        const progressPercentage = document.getElementById('progress-percentage');
         const uploadStatus = document.getElementById('upload-status');
         const eta = document.getElementById('eta');
 
-        // Reset progress bar
+        console.log('Progress elements found:', {
+            progressBar: !!progressBar,
+            progressContainer: !!progressContainer,
+            progressPercentage: !!progressPercentage,
+            uploadStatus: !!uploadStatus,
+            eta: !!eta
+        });
+
+        // Show progress container and reset progress bar
+        if (progressContainer) {
+            progressContainer.style.display = 'block';
+        }
         if (progressBar) {
             progressBar.style.width = '0%';
-            progressBar.style.backgroundColor = 'var(--primary-color)';
+        }
+        if (progressPercentage) {
+            progressPercentage.textContent = '0%';
         }
 
         // Always process the file immediately when this method is called
@@ -1077,6 +1404,7 @@ class ModelEditorPage {
 
     processFileUpload(file) {
         const progressBar = document.getElementById('progress-bar');
+        const progressPercentage = document.getElementById('progress-percentage');
         const uploadStatus = document.getElementById('upload-status');
         const eta = document.getElementById('eta');
 
@@ -1086,6 +1414,9 @@ class ModelEditorPage {
             progress += 10;
             if (progressBar) {
                 progressBar.style.width = `${progress}%`;
+            }
+            if (progressPercentage) {
+                progressPercentage.textContent = `${progress}%`;
             }
             if (uploadStatus) {
                 uploadStatus.textContent = `Processing... ${progress}%`;
@@ -1122,6 +1453,7 @@ class ModelEditorPage {
             if (parsedData) {
                 this.analyzeDataQuality();
                 this.updateDropdownsWithColumns();
+                this.initializeTaggedDataSection(); // Populate Tagged Data section
                 this.updateMetricsDisplay();
                 
                 console.log('Parsed columns:', this.columnNames);
@@ -1232,8 +1564,9 @@ class ModelEditorPage {
             return;
         }
 
-        // Clear existing fields
+        // Clear existing fields and add proper CSS class
         paramsRow.innerHTML = '';
+        paramsRow.className = 'algorithm-params-row form-row';
 
         // Add algorithm-specific parameter fields
         let fieldCount = 0;
@@ -1251,6 +1584,7 @@ class ModelEditorPage {
             let input;
             if (paramConfig.type === 'select') {
                 input = document.createElement('select');
+                input.className = 'algorithm-param';
                 paramConfig.options.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt;
@@ -1261,19 +1595,20 @@ class ModelEditorPage {
             } else if (paramConfig.type === 'checkbox') {
                 input = document.createElement('input');
                 input.type = 'checkbox';
+                input.className = 'algorithm-param';
                 input.checked = paramConfig.default;
             } else {
                 input = document.createElement('input');
                 input.type = 'number';
-                input.placeholder = paramConfig.default;
-                input.value = paramConfig.default;
-                input.min = paramConfig.min;
-                input.max = paramConfig.max;
+                input.className = 'algorithm-param';
+                input.placeholder = paramConfig.default?.toString() || '';
+                input.value = paramConfig.default || '';
+                if (paramConfig.min !== undefined) input.min = paramConfig.min;
+                if (paramConfig.max !== undefined) input.max = paramConfig.max;
                 if (paramConfig.step) input.step = paramConfig.step;
             }
 
             input.id = `param-${paramKey}`;
-            input.className = 'algorithm-param';
             
             // Add event listener for real-time updates
             input.addEventListener('change', () => this.updateMetricsDisplay());
@@ -1430,6 +1765,9 @@ class ModelEditorPage {
             } : null
         };
         
+        // Save form state before starting training
+        this.saveFormState();
+        
         // Show progress modal instead of simple alert
         this.showProgressModal(modelConfig);
     }
@@ -1555,6 +1893,15 @@ class ModelEditorPage {
                 statusMessage.textContent = messages[stages[currentStageIndex]];
             }
             
+            // Update localStorage with current progress
+            const activeTraining = localStorage.getItem('activeTraining');
+            if (activeTraining) {
+                const trainingState = JSON.parse(activeTraining);
+                trainingState.progress = Math.round(progress);
+                trainingState.currentStage = stages[currentStageIndex];
+                localStorage.setItem('activeTraining', JSON.stringify(trainingState));
+            }
+            
             // Continue or complete
             if (progress < 100) {
                 progress += Math.random() * 3 + 1; // Random increment
@@ -1569,6 +1916,10 @@ class ModelEditorPage {
     }
     
     completeTraining(modelConfig, startTime) {
+        // Remove from localStorage since training is complete
+        localStorage.removeItem('activeTraining');
+        localStorage.removeItem('modelEditorFormState');
+        
         const completionSection = document.getElementById('completion-section');
         const currentStatus = document.querySelector('.current-status');
         
@@ -1965,7 +2316,11 @@ class ModelEditorPage {
         if (fileName) fileName.textContent = 'No file chosen';
         
         // Clear progress indicators
+        const progressContainer = document.getElementById('upload-progress-container');
+        const progressPercentage = document.getElementById('progress-percentage');
         if (progressBar) progressBar.style.width = '0%';
+        if (progressPercentage) progressPercentage.textContent = '0%';
+        if (progressContainer) progressContainer.style.display = 'none';
         if (uploadStatus) uploadStatus.textContent = '';
         if (eta) eta.textContent = '';
         

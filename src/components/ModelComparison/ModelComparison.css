@@ -1,0 +1,609 @@
+/**
+ * Model Comparison Component Styles
+ */
+
+.model-comparison {
+    padding: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header */
+.comparison-header {
+    margin-bottom: 2rem;
+}
+
+.comparison-header h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.comparison-header p {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.comparison-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.model-selector {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex: 1;
+    min-width: 300px;
+}
+
+.model-selector label {
+    color: var(--text-color);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.model-selector select {
+    min-width: 200px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--background-color);
+    color: var(--text-color);
+}
+
+.comparison-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+/* Selected Models */
+.selected-models {
+    margin-bottom: 2rem;
+}
+
+.no-models-message {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--card-background);
+    border-radius: 12px;
+    border: 2px dashed var(--border-color);
+}
+
+.no-models-message i {
+    font-size: 3rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.no-models-message h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-size: 1.25rem;
+}
+
+.no-models-message p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.selected-models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Model Cards */
+.model-card {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.model-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.model-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.model-card h4 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.remove-model-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.remove-model-btn:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+.algorithm-badge {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.model-metrics {
+    margin-bottom: 1rem;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.metric-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.metric-value {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.metric-value.status-active {
+    color: var(--success-color);
+}
+
+.metric-value.status-in-progress {
+    color: var(--warning-color);
+}
+
+.metric-value.status-failed {
+    color: var(--danger-color);
+}
+
+/* Comparison Content */
+.comparison-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.card {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.card h3 {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-color);
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Summary Grid */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.summary-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.summary-content h4 {
+    margin: 0 0 0.25rem 0;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.summary-model {
+    margin: 0 0 0.25rem 0;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.summary-value {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Tables */
+.metrics-table-container,
+.config-table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.metrics-table,
+.config-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--background-color);
+}
+
+.metrics-table th,
+.metrics-table td,
+.config-table th,
+.config-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.metrics-table th,
+.config-table th {
+    background: var(--card-background);
+    color: var(--text-color);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.metric-name,
+.config-name {
+    font-weight: 500;
+    color: var(--text-color);
+    background: var(--card-background);
+    position: sticky;
+    left: 0;
+    z-index: 2;
+}
+
+.metric-value {
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.best-value {
+    background: var(--success-color) !important;
+    color: white !important;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+/* Charts */
+.chart-controls {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.chart-type-selector,
+.metric-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.chart-type-selector label,
+.metric-selector label {
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.chart-type-selector select,
+.metric-selector select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--background-color);
+    color: var(--text-color);
+    min-width: 150px;
+}
+
+.chart-container {
+    height: 400px;
+    position: relative;
+}
+
+.chart-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: var(--text-secondary);
+}
+
+.chart-error i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--warning-color);
+}
+
+/* Feature Importance */
+.feature-charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.feature-chart {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--background-color);
+}
+
+.feature-chart h4 {
+    margin: 0 0 1rem 0;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.feature-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.feature-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.feature-name {
+    width: 120px;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.bar-container {
+    flex: 1;
+    height: 20px;
+    background: var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.feature-value {
+    width: 50px;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.feature-chart-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--text-secondary);
+    font-style: italic;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background-color);
+}
+
+.no-data {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Recommendations */
+.recommendations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recommendation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.recommendation-item.success {
+    background: rgba(40, 167, 69, 0.1);
+    border-left-color: var(--success-color);
+}
+
+.recommendation-item.warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-left-color: var(--warning-color);
+}
+
+.recommendation-item.info {
+    background: rgba(13, 202, 240, 0.1);
+    border-left-color: var(--info-color);
+}
+
+.recommendation-item.suggestion {
+    background: rgba(111, 66, 193, 0.1);
+    border-left-color: var(--primary-color);
+}
+
+.recommendation-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.recommendation-item.success .recommendation-icon {
+    background: var(--success-color);
+}
+
+.recommendation-item.warning .recommendation-icon {
+    background: var(--warning-color);
+}
+
+.recommendation-item.info .recommendation-icon {
+    background: var(--info-color);
+}
+
+.recommendation-item.suggestion .recommendation-icon {
+    background: var(--primary-color);
+}
+
+.recommendation-text h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.recommendation-text p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .model-comparison {
+        padding: 1rem;
+    }
+    
+    .comparison-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .model-selector {
+        flex-direction: column;
+        align-items: stretch;
+        min-width: unset;
+    }
+    
+    .selected-models-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .feature-charts-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .feature-name {
+        width: auto;
+        text-align: center;
+    }
+    
+    .feature-value {
+        width: auto;
+        text-align: center;
+    }
+}
+
+/* Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.model-card,
+.summary-item,
+.recommendation-item {
+    animation: slideIn 0.3s ease-out;
+}

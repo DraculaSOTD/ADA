@@ -1,6 +1,7 @@
 import { loadComponent, loadComponentCSS } from '../services/componentLoader.js';
 import { fetchAuthenticatedData } from '../services/api.js';
 import { StyledDropdown } from '../../components/StyledDropdown/StyledDropdown.js';
+import { Modal } from '../../components/Modal/Modal.js';
 
 let filterDropdown = null;
 let timeDropdown = null;
@@ -273,6 +274,7 @@ async function loadAllModelsData() {
             const modelCard = document.createElement('div');
             modelCard.classList.add('model-card', 'card');
             modelCard.dataset.modelId = model.id;
+            modelCard.style.cursor = 'pointer';
             modelCard.innerHTML = `
                 <div class="model-header">
                     <span class="model-name">${model.name}</span>
@@ -285,6 +287,15 @@ async function loadAllModelsData() {
                     <p>Status: <span class="detail-value">${model.status}</span></p>
                 </div>
             `;
+            
+            // Add click event listener for showing model details
+            modelCard.addEventListener('click', (e) => {
+                // Don't trigger if clicking the remove button
+                if (!e.target.closest('.remove-model-button')) {
+                    showDashboardModelDetails(model, 'my-models');
+                }
+            });
+            
             modelList.appendChild(modelCard);
         });
 
@@ -329,6 +340,7 @@ async function loadInProgressData() {
         
         const generationCard = document.createElement('div');
         generationCard.classList.add('model-card', 'card');
+        generationCard.style.cursor = 'pointer';
         generationCard.innerHTML = `
             <div class="model-header">
                 <h3><i class="fas fa-database"></i> Data Generation</h3>
@@ -355,7 +367,63 @@ async function loadInProgressData() {
                 </button>
             </div>
         `;
+        
+        // Add click event listener for showing generation details (navigate to data generator)
+        generationCard.addEventListener('click', (e) => {
+            // Don't trigger if clicking action buttons
+            if (!e.target.closest('.model-actions')) {
+                window.location.href = '/data-generator';
+            }
+        });
+        
         modelList.appendChild(generationCard);
+    }
+    
+    // Check for active training jobs from localStorage
+    const activeTraining = localStorage.getItem('activeTraining');
+    if (activeTraining) {
+        const training = JSON.parse(activeTraining);
+        const elapsed = Math.floor((Date.now() - training.startTime) / 1000);
+        
+        const trainingCard = document.createElement('div');
+        trainingCard.classList.add('model-card', 'card');
+        trainingCard.style.cursor = 'pointer';
+        trainingCard.innerHTML = `
+            <div class="model-header">
+                <h3><i class="fas fa-brain"></i> ${training.modelName || 'Model Training'}</h3>
+                <span class="job-type-badge training">Training</span>
+            </div>
+            <div class="model-details">
+                <p>Job ID: <span class="detail-value">#${training.id}</span></p>
+                <p>Algorithm: <span class="detail-value">${training.algorithm || 'Neural Network'}</span></p>
+                <p>Status: <span class="detail-value status-active">${training.currentStage || training.status}</span></p>
+                <p>Time Elapsed: <span class="detail-value">${formatTime(elapsed)}</span></p>
+            </div>
+            <div class="progress-section">
+                <span class="progress-label">Training Progress:</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${training.progress || 0}%;">${Math.round(training.progress || 0)}%</div>
+                </div>
+            </div>
+            <div class="model-actions">
+                <button class="view-button" onclick="window.location.href='/model-editor'">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
+                <button class="cancel-button" onclick="cancelTraining('${training.id}')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        `;
+        
+        // Add click event listener for showing training details
+        trainingCard.addEventListener('click', (e) => {
+            // Don't trigger if clicking action buttons
+            if (!e.target.closest('.model-actions')) {
+                showDashboardModelDetails(training, 'in-progress');
+            }
+        });
+        
+        modelList.appendChild(trainingCard);
     }
     
     // Load model training jobs from API with error handling
@@ -442,6 +510,465 @@ window.cancelGeneration = function(generationId) {
     }
 }
 
+window.cancelTraining = function(trainingId) {
+    if (confirm('Are you sure you want to cancel this training job?')) {
+        localStorage.removeItem('activeTraining');
+        loadInProgressData(); // Refresh the list
+    }
+}
+
+// Enhanced model details modal for dashboard
+async function showDashboardModelDetails(model, tabType = 'my-models') {
+    // Try to fetch complete model details from API
+    let fullModelData = model;
+    try {
+        if (model.id) {
+            const apiData = await fetchAuthenticatedData(`/api/models/${model.id}`);
+            if (apiData) {
+                fullModelData = { ...model, ...apiData };
+            }
+        }
+    } catch (error) {
+        console.warn('Could not fetch additional model details:', error);
+    }
+    
+    // Generate modal content based on tab type
+    let modalContent = '';
+    
+    if (tabType === 'in-progress') {
+        // In-progress specific content
+        const elapsed = fullModelData.elapsed || 
+                       (fullModelData.startTime ? Math.floor((Date.now() - fullModelData.startTime) / 1000) : 0);
+        modalContent = `
+            <div class="model-details-modal dashboard-model-modal">
+                <div class="model-status-header">
+                    <div class="status-indicator ${fullModelData.status || 'in_progress'}">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Training In Progress</span>
+                    </div>
+                    <div class="job-id">Job ID: #${fullModelData.id || Date.now()}</div>
+                </div>
+                
+                <div class="progress-overview">
+                    <h4>Training Progress</h4>
+                    <div class="main-progress">
+                        <div class="progress-bar-large">
+                            <div class="progress-fill" style="width: ${fullModelData.progress || 0}%;">
+                                ${Math.round(fullModelData.progress || 0)}%
+                            </div>
+                        </div>
+                        <div class="progress-stats">
+                            <span>Stage: ${fullModelData.currentStage || 'Initializing'}</span>
+                            <span>Time Elapsed: ${formatTime(elapsed)}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="training-details-grid">
+                    <div class="detail-section">
+                        <h5><i class="fas fa-cog"></i> Configuration</h5>
+                        <div class="detail-item">
+                            <label>Algorithm:</label>
+                            <span>${fullModelData.algorithm || 'Neural Network'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Dataset Size:</label>
+                            <span>${fullModelData.dataSize || 'Unknown'} rows</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Epochs:</label>
+                            <span>${fullModelData.epochs || 10}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Batch Size:</label>
+                            <span>${fullModelData.batchSize || 32}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h5><i class="fas fa-server"></i> Resources</h5>
+                        <div class="detail-item">
+                            <label>Processing Units:</label>
+                            <span>${fullModelData.processingUnits || 1} GPU(s)</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Memory Usage:</label>
+                            <span>${fullModelData.memoryUsage || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Estimated Cost:</label>
+                            <span>${fullModelData.estimatedCost || 'Calculating...'} tokens</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Est. Time Remaining:</label>
+                            <span>${fullModelData.estimatedTimeRemaining || 'Calculating...'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="training-logs">
+                    <h5><i class="fas fa-terminal"></i> Training Logs</h5>
+                    <div class="log-container">
+                        <pre>${fullModelData.logs || '[2024-01-10 10:30:15] Initializing model architecture...\n[2024-01-10 10:30:18] Loading dataset...\n[2024-01-10 10:30:25] Starting training process...\n[2024-01-10 10:30:26] Epoch 1/10 - Loss: 0.5432'}</pre>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-warning" onclick="pauseTraining('${fullModelData.id}')">
+                        <i class="fas fa-pause"></i> Pause Training
+                    </button>
+                    <button class="btn btn-danger" onclick="cancelTraining('${fullModelData.id}')">
+                        <i class="fas fa-times"></i> Cancel Training
+                    </button>
+                    <button class="btn btn-info" onclick="window.location.href='/model-editor'">
+                        <i class="fas fa-external-link-alt"></i> View in Editor
+                    </button>
+                </div>
+            </div>
+        `;
+    } else {
+        // Regular model details (My Models, Active Models)
+        modalContent = `
+            <div class="model-details-modal dashboard-model-modal">
+                <div class="model-header-info">
+                    <div class="model-badges">
+                        <span class="badge badge-${fullModelData.status === 'active' ? 'success' : 'secondary'}">
+                            ${fullModelData.status || 'inactive'}
+                        </span>
+                        <span class="badge badge-info">${fullModelData.type || 'Custom Model'}</span>
+                        <span class="badge badge-${fullModelData.visibility === 'public' ? 'primary' : 'warning'}">
+                            ${fullModelData.visibility || 'private'}
+                        </span>
+                    </div>
+                    <div class="model-meta">
+                        <span><i class="fas fa-calendar"></i> Created: ${fullModelData.created_at ? 
+                            new Date(fullModelData.created_at).toLocaleDateString() : 'Unknown'}</span>
+                        <span><i class="fas fa-sync"></i> Last Updated: ${fullModelData.updated_at ? 
+                            new Date(fullModelData.updated_at).toLocaleDateString() : 'Never'}</span>
+                    </div>
+                </div>
+                
+                <div class="model-description-section">
+                    <h4>Description</h4>
+                    <p>${fullModelData.description || 'No description provided for this model.'}</p>
+                </div>
+                
+                <div class="model-tabs">
+                    <div class="tab-nav">
+                        <button class="tab-btn active" onclick="switchModelTab(event, 'overview')">Overview</button>
+                        <button class="tab-btn" onclick="switchModelTab(event, 'performance')">Performance</button>
+                        <button class="tab-btn" onclick="switchModelTab(event, 'configuration')">Configuration</button>
+                        <button class="tab-btn" onclick="switchModelTab(event, 'data')">Data & Training</button>
+                        <button class="tab-btn" onclick="switchModelTab(event, 'costs')">Costs</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="overview">
+                        <div class="overview-grid">
+                            <div class="overview-card">
+                                <h5>Basic Information</h5>
+                                <div class="detail-item">
+                                    <label>Model ID:</label>
+                                    <span>#${fullModelData.id || 'N/A'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Algorithm:</label>
+                                    <span>${fullModelData.algorithm || 'Neural Network'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Version:</label>
+                                    <span>${fullModelData.version || '1.0.0'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Size:</label>
+                                    <span>${fullModelData.modelSize || '45.2'} MB</span>
+                                </div>
+                            </div>
+                            
+                            <div class="overview-card">
+                                <h5>Usage Statistics</h5>
+                                <div class="detail-item">
+                                    <label>Total Predictions:</label>
+                                    <span>${fullModelData.totalPredictions || 0}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Avg Response Time:</label>
+                                    <span>${fullModelData.avgResponseTime || 'N/A'} ms</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Uptime:</label>
+                                    <span>${fullModelData.uptime || '99.9'}%</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Last Used:</label>
+                                    <span>${fullModelData.lastUsed || 'Never'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="performance">
+                        <div class="performance-metrics">
+                            <h5>Model Performance Metrics</h5>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <label>Accuracy</label>
+                                    <div class="metric-value">${(fullModelData.accuracy || 0.92 * 100).toFixed(1)}%</div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: ${(fullModelData.accuracy || 0.92) * 100}%;"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <label>Precision</label>
+                                    <div class="metric-value">${(fullModelData.precision || 0.89 * 100).toFixed(1)}%</div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: ${(fullModelData.precision || 0.89) * 100}%;"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <label>Recall</label>
+                                    <div class="metric-value">${(fullModelData.recall || 0.87 * 100).toFixed(1)}%</div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: ${(fullModelData.recall || 0.87) * 100}%;"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <label>F1 Score</label>
+                                    <div class="metric-value">${(fullModelData.f1Score || 0.88 * 100).toFixed(1)}%</div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: ${(fullModelData.f1Score || 0.88) * 100}%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h5 style="margin-top: 20px;">Confusion Matrix</h5>
+                            <div class="confusion-matrix-placeholder">
+                                <p>Confusion matrix visualization would appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="configuration">
+                        <div class="config-details">
+                            <h5>Model Configuration</h5>
+                            <div class="config-grid">
+                                <div class="config-section">
+                                    <h6>Architecture</h6>
+                                    <div class="detail-item">
+                                        <label>Hidden Layers:</label>
+                                        <span>${fullModelData.hiddenLayers || 3}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Neurons per Layer:</label>
+                                        <span>${fullModelData.neuronsPerLayer || '128, 64, 32'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Activation Function:</label>
+                                        <span>${fullModelData.activation || 'ReLU'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Dropout Rate:</label>
+                                        <span>${fullModelData.dropout || 0.2}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="config-section">
+                                    <h6>Training Parameters</h6>
+                                    <div class="detail-item">
+                                        <label>Learning Rate:</label>
+                                        <span>${fullModelData.learningRate || 0.001}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Optimizer:</label>
+                                        <span>${fullModelData.optimizer || 'Adam'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Loss Function:</label>
+                                        <span>${fullModelData.lossFunction || 'Cross Entropy'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Regularization:</label>
+                                        <span>${fullModelData.regularization || 'L2'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="data">
+                        <div class="data-training-info">
+                            <h5>Dataset Information</h5>
+                            <div class="data-grid">
+                                <div class="detail-item">
+                                    <label>Training Samples:</label>
+                                    <span>${fullModelData.trainingSamples || '10,000'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Validation Samples:</label>
+                                    <span>${fullModelData.validationSamples || '2,000'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Test Samples:</label>
+                                    <span>${fullModelData.testSamples || '2,000'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Features:</label>
+                                    <span>${fullModelData.features || 15}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Data Quality Score:</label>
+                                    <span>${fullModelData.dataQuality || '94'}%</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Preprocessing:</label>
+                                    <span>${fullModelData.preprocessing || 'StandardScaler, OneHotEncoding'}</span>
+                                </div>
+                            </div>
+                            
+                            <h5 style="margin-top: 20px;">Training History</h5>
+                            <div class="training-history">
+                                <div class="detail-item">
+                                    <label>Total Epochs:</label>
+                                    <span>${fullModelData.epochs || 50}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Best Epoch:</label>
+                                    <span>${fullModelData.bestEpoch || 42}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Training Time:</label>
+                                    <span>${fullModelData.trainingTime || '2h 15m'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Early Stopping:</label>
+                                    <span>${fullModelData.earlyStopping ? 'Yes' : 'No'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="costs">
+                        <div class="cost-analysis">
+                            <h5>Cost Breakdown</h5>
+                            <div class="cost-summary">
+                                <div class="cost-card">
+                                    <h6>Training Costs</h6>
+                                    <div class="detail-item">
+                                        <label>Compute:</label>
+                                        <span>${fullModelData.computeCost || 1250} tokens</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Data Processing:</label>
+                                        <span>${fullModelData.dataProcessingCost || 350} tokens</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Optimization:</label>
+                                        <span>${fullModelData.optimizationCost || 200} tokens</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="cost-card">
+                                    <h6>Operational Costs</h6>
+                                    <div class="detail-item">
+                                        <label>Storage (Monthly):</label>
+                                        <span>${fullModelData.storageCost || 50} tokens</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Inference (Per 1K):</label>
+                                        <span>${fullModelData.inferenceCost || 10} tokens</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <label>Total This Month:</label>
+                                        <span>${fullModelData.monthlyTotal || 185} tokens</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="cost-total">
+                                <h6>Lifetime Cost</h6>
+                                <div class="total-amount">${fullModelData.lifetimeCost || 2450} tokens</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='/model-editor?id=${fullModelData.id}'">
+                        <i class="fas fa-edit"></i> Edit Model
+                    </button>
+                    <button class="btn btn-success" onclick="testModel('${fullModelData.id}')">
+                        <i class="fas fa-play"></i> Test Model
+                    </button>
+                    <button class="btn btn-info" onclick="downloadModel('${fullModelData.id}')">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="btn btn-warning" onclick="retrainModel('${fullModelData.id}')">
+                        <i class="fas fa-redo"></i> Retrain
+                    </button>
+                    ${tabType === 'active-models' ? `
+                        <button class="btn btn-danger" onclick="deactivateModel('${fullModelData.id}')">
+                            <i class="fas fa-power-off"></i> Deactivate
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Show the modal
+    Modal.alert({
+        title: fullModelData.modelName || fullModelData.name || 'Model Details',
+        size: 'dashboard',
+        message: modalContent
+    });
+}
+
+// Tab switching function for model details modal
+window.switchModelTab = function(event, tabName) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.model-tabs .tab-content');
+    tabContents.forEach(content => content.classList.remove('active'));
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.model-tabs .tab-btn');
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    
+    // Show selected tab content
+    const selectedTab = document.getElementById(tabName);
+    if (selectedTab) selectedTab.classList.add('active');
+    
+    // Add active class to clicked button
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+}
+
+// Helper functions for model actions
+window.testModel = function(modelId) {
+    window.location.href = `/test-model?id=${modelId}`;
+}
+
+window.downloadModel = function(modelId) {
+    // Implement download logic
+    console.log(`Downloading model ${modelId}`);
+    // Could trigger actual download here
+}
+
+window.retrainModel = function(modelId) {
+    window.location.href = `/model-editor?id=${modelId}&retrain=true`;
+}
+
+window.deactivateModel = function(modelId) {
+    if (confirm('Are you sure you want to deactivate this model?')) {
+        // Implement deactivation logic
+        console.log(`Deactivating model ${modelId}`);
+    }
+}
+
+window.pauseTraining = function(trainingId) {
+    // Implement pause logic
+    console.log(`Pausing training ${trainingId}`);
+}
+
 async function loadActiveModelsData() {
     try {
         const data = await fetchAuthenticatedData('/api/models/active');
@@ -451,6 +978,7 @@ async function loadActiveModelsData() {
             data.forEach(model => {
             const modelCard = document.createElement('div');
             modelCard.classList.add('model-card', 'card');
+            modelCard.style.cursor = 'pointer';
             modelCard.innerHTML = `
                 <div class="model-header">
                     <span class="model-name">${model.name}</span>
@@ -462,6 +990,12 @@ async function loadActiveModelsData() {
                     <p>Status: <span class="detail-value">${model.status}</span></p>
                 </div>
             `;
+            
+            // Add click event listener for showing model details
+            modelCard.addEventListener('click', () => {
+                showDashboardModelDetails(model, 'active-models');
+            });
+            
             modelList.appendChild(modelCard);
         });
     }

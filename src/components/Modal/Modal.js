@@ -3,7 +3,7 @@ export class Modal {
         this.options = {
             title: options.title || '',
             content: options.content || '',
-            size: options.size || 'medium', // small, medium, large, xlarge
+            size: options.size || 'medium', // small, medium, large, xlarge, dashboard
             centered: options.centered !== false,
             backdrop: options.backdrop !== false,
             keyboard: options.keyboard !== false,

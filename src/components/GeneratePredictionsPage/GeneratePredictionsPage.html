@@ -2,21 +2,44 @@
     <div class="finalization-page">
         <div class="page-header">
             <h1 class="page-title">Model Editor</h1>
-            <p class="page-subtitle">Design, configure, and train custom AI models</p>
-            <div class="model-selector-container">
-                <div class="custom-dropdown">
-                    <input type="text" id="model-search" class="model-search" placeholder="Search or select a model...">
-                    <div id="model-options" class="model-options" style="display: none;">
-                        <!-- Options will be populated by JavaScript -->
-                    </div>
-                </div>
+            <p class="page-subtitle">Design, configure, and train custom AI models with our guided wizard</p>
+            
+            <!-- Mode Toggle -->
+            <div class="editor-mode-toggle">
+                <button class="mode-btn active" id="wizard-mode-btn">
+                    <i class="fas fa-magic"></i> Guided Wizard
+                </button>
+                <button class="mode-btn" id="advanced-mode-btn">
+                    <i class="fas fa-cogs"></i> Advanced Editor
+                </button>
             </div>
         </div>
+        
+        <!-- Wizard Container -->
+        <div id="wizard-container" class="wizard-container">
+            <!-- Model Wizard will be rendered here -->
+        </div>
+        
+        <!-- Advanced Editor (Original) -->
+        <div id="advanced-editor" class="advanced-editor" style="display: none;">
         
         <!-- Disclaimer at the top -->
         <div class="disclaimer card">
             <h3>Disclaimer:</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies ligula eget eros tristique accumsan. Duis diam velit, sagittis quis ipsum ut, tempor pharetra erat. Fusce a pretium tortor.</p>
+        </div>
+        
+        <!-- Model Selector Section -->
+        <div class="form-section card">
+            <h3>Model Selection:</h3>
+            <div class="form-row">
+                <div class="form-group" style="width: 100%;">
+                    <label for="model-selector">Select or Create Model:</label>
+                    <div class="model-selector-container">
+                        <!-- StyledDropdown will be initialized here -->
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="form-section">
@@ -103,8 +126,11 @@
                 <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls,.json" style="display: none;" multiple>
                 <label for="csv-upload" class="upload-label">Choose File</label>
                 <span id="file-name">No file chosen</span>
-                <div class="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
+                <div class="progress-container" style="display: none;" id="upload-progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-bar"></div>
+                        <span class="progress-percentage" id="progress-percentage">0%</span>
+                    </div>
                 </div>
                 <span id="upload-status"></span>
                 <span id="eta"></span>
@@ -392,5 +418,6 @@
                 </div>
             </div>
         </div>
+        </div> <!-- End Advanced Editor -->
     </div>
 </div>
