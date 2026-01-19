@@ -1,6 +1,6 @@
 from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
-from models.miscellaneous import Rule, RuleExecution
+from models.rule import Rule, RuleExecution
 from models.model import Model
 from services.model_service import get_model_by_id
 from services.predict import run_prediction

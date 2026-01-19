@@ -6,7 +6,9 @@ import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.database import engine, SessionLocal
-from models import Base, User, Model, Notification
+from models.base import Base
+from models.all_models import *  # Import all models to ensure relationships are resolved
+from models.notification import Notification
 from models.schemas import UserCreate
 from services.user_service import create_user, get_user_by_email
 from dotenv import load_dotenv

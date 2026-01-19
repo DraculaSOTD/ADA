@@ -3,9 +3,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from core.database import get_db
-from routes import models, auth, upload, jobs, generator, rules, tokens, votes, settings, notifications, payment, cleaning, feature_engineering, hyperparameter_optimization
+from startup_services import lifespan
+from routes import (
+    models, auth, upload, jobs, generator, rules, tokens, votes, settings,
+    notifications, payment, cleaning, feature_engineering, hyperparameter_optimization,
+    endpoints
+    # Temporarily disabled due to missing schemas - these are experimental/incomplete features
+    # enhanced_models, enhanced_uploads, enhanced_downloads, teams
+)
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 # Configure CORS
 app.add_middleware(
@@ -38,6 +45,14 @@ app.include_router(notifications.router)
 app.include_router(payment.router)
 app.include_router(feature_engineering.router)
 app.include_router(hyperparameter_optimization.router)
+app.include_router(endpoints.router)
+
+# Include enhanced routes for multi-tenant and lifecycle features
+# Temporarily disabled - these routes have missing schemas
+# app.include_router(enhanced_models.router)  # /api/v2/models
+# app.include_router(enhanced_uploads.router)  # /api/v2/uploads
+# app.include_router(enhanced_downloads.router)  # /api/v2/downloads
+# app.include_router(teams.router)  # /api/teams
 
 
 @app.get("/")

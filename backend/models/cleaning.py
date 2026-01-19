@@ -72,6 +72,7 @@ class CleaningJob(Base):
     user = relationship("User", back_populates="cleaning_jobs")
     profiles = relationship("DataProfile", back_populates="cleaning_job", cascade="all, delete-orphan")
     report = relationship("CleaningReport", back_populates="cleaning_job", uselist=False, cascade="all, delete-orphan")
+    transformation_logs = relationship("DataTransformationLog", back_populates="cleaning_job", cascade="all, delete-orphan")
 
 
 class DataProfile(Base):
@@ -167,3 +168,139 @@ class CleaningTemplate(Base):
     
     # Relationships
     user = relationship("User")
+
+
+class DataTransformationLog(Base):
+    """Model for logging data transformation operations"""
+    __tablename__ = "data_transformation_logs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Source tracking
+    cleaning_job_id = Column(Integer, ForeignKey("cleaning_jobs.id"))
+    job_id = Column(Integer, ForeignKey("model_jobs.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    
+    # Transformation details
+    transformation_type = Column(String(50), nullable=False)
+    transformation_name = Column(String(100))
+    
+    # Target data
+    target_column = Column(String(255))
+    target_rows = Column(JSON)
+    
+    # Before/After
+    before_snapshot = Column(JSON)
+    after_snapshot = Column(JSON)
+    
+    # Statistics
+    rows_affected = Column(Integer)
+    values_changed = Column(Integer)
+    null_values_before = Column(Integer)
+    null_values_after = Column(Integer)
+    
+    # Parameters used
+    parameters = Column(JSON)
+    
+    # Validation
+    validation_passed = Column(Boolean, default=True)
+    validation_errors = Column(JSON, default=list)
+    
+    # Performance
+    execution_time_ms = Column(Integer)
+    
+    # Reversibility
+    is_reversible = Column(Boolean, default=False)
+    reversal_config = Column(JSON)
+    
+    created_at = Column(DateTime, server_default=func.now())
+    
+    # Relationships
+    cleaning_job = relationship("CleaningJob", back_populates="transformation_logs")
+    job = relationship("ModelJob", back_populates="transformation_logs")
+    user = relationship("User")
+
+
+class DataQualityMetric(Base):
+    """Model for tracking data quality metrics"""
+    __tablename__ = "data_quality_metrics"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Resource being measured
+    resource_type = Column(String(50), nullable=False)
+    resource_id = Column(String(255), nullable=False)
+    
+    # Measurement context
+    measurement_type = Column(String(50), nullable=False)
+    measurement_trigger = Column(String(50))
+    
+    # Quality dimensions
+    completeness_score = Column(Float)
+    accuracy_score = Column(Float)
+    consistency_score = Column(Float)
+    validity_score = Column(Float)
+    uniqueness_score = Column(Float)
+    timeliness_score = Column(Float)
+    
+    # Overall score
+    overall_score = Column(Float, nullable=False)
+    score_calculation = Column(JSON)
+    
+    # Issues found
+    issues = Column(JSON, default=list)
+    critical_issues = Column(Integer, default=0)
+    warnings = Column(Integer, default=0)
+    
+    # Recommendations
+    recommendations = Column(JSON, default=list)
+    auto_fix_available = Column(Boolean, default=False)
+    
+    # Column-level metrics
+    column_metrics = Column(JSON, default=dict)
+    
+    measured_at = Column(DateTime, server_default=func.now())
+    measured_by = Column(Integer, ForeignKey("users.id"))
+    
+    # Relationships
+    measurer = relationship("User")
+
+
+class DataValidationRule(Base):
+    """Model for data validation rules"""
+    __tablename__ = "data_validation_rules"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Rule ownership
+    user_id = Column(Integer, ForeignKey("users.id"))
+    
+    # Rule definition
+    rule_name = Column(String(255), nullable=False)
+    description = Column(Text)
+    rule_type = Column(String(50), nullable=False)
+    
+    # Target
+    target_column = Column(String(255))
+    target_data_type = Column(String(50))
+    
+    # Validation logic
+    validation_logic = Column(JSON, nullable=False)
+    error_message = Column(String(500))
+    severity = Column(String(20), default='warning')
+    
+    # Auto-fix configuration
+    auto_fix_enabled = Column(Boolean, default=False)
+    auto_fix_strategy = Column(JSON)
+    
+    # Usage tracking
+    usage_count = Column(Integer, default=0)
+    violations_found = Column(Integer, default=0)
+    violations_fixed = Column(Integer, default=0)
+    
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    
+    # Relationships
+    creator = relationship("User")

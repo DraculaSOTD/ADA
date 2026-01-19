@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc, and_
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-from models.miscellaneous import Notification, NotificationPreference
+from models.notification import Notification, NotificationPreference
 from models import schemas
 
 def get_notifications_by_user(

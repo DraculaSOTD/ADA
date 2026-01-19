@@ -48,7 +48,12 @@ class User(UserBase):
     two_factor_enabled: bool
     last_login_at: Optional[datetime] = None
     created_at: datetime
-    profile: UserProfile
+    profile: Optional[UserProfile] = None
+    account_status: Optional[str] = 'active'
+    failed_login_attempts: Optional[int] = 0
+    last_activity_at: Optional[datetime] = None
+    consent_given: Optional[dict] = None
+    privacy_settings: Optional[dict] = None
 
     class Config:
         from_attributes = True

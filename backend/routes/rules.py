@@ -3,17 +3,16 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime, timezone
 from models import schemas
-from models.miscellaneous import Rule
-from services import rule_service
+from models.rule import Rule
+from services import rule_service, security
 from core.database import get_db
-from services.security import get_current_user
 
 router = APIRouter(prefix="/api/rules", tags=["Rules"])
 
 @router.post("/", response_model=schemas.RuleResponse)
 async def create_rule(
     rule: schemas.RuleCreate, 
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Create a new rule engine with advanced features"""
@@ -25,7 +24,7 @@ async def create_rule(
 
 @router.get("/", response_model=List[schemas.RuleListItem])
 async def get_rules(
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get all rules for the current user"""
@@ -34,7 +33,7 @@ async def get_rules(
 @router.get("/executions")
 async def get_all_executions(
     limit: int = Query(100, ge=1, le=500),
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get all rule executions for the current user"""
@@ -57,7 +56,7 @@ async def get_all_executions(
 @router.get("/{rule_id}", response_model=schemas.RuleDetail)
 async def get_rule(
     rule_id: int,
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get detailed information about a specific rule"""
@@ -70,7 +69,7 @@ async def get_rule(
 async def update_rule(
     rule_id: int,
     rule_update: schemas.RuleUpdate,
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Update an existing rule"""
@@ -87,7 +86,7 @@ async def update_rule(
 @router.delete("/{rule_id}")
 async def delete_rule(
     rule_id: int,
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Delete a rule"""
@@ -99,7 +98,7 @@ async def delete_rule(
 async def execute_rule(
     rule_id: int,
     execution_request: schemas.RuleExecutionRequest,
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Execute a rule with the provided input data"""
@@ -118,7 +117,7 @@ async def execute_rule(
 async def test_rule(
     rule_id: int,
     test_request: schemas.RuleTestRequest,
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Test a rule without creating an execution record"""
@@ -136,7 +135,7 @@ async def test_rule(
 async def get_rule_executions(
     rule_id: int,
     limit: int = Query(50, ge=1, le=100),
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get execution history for a rule"""
@@ -251,7 +250,7 @@ async def webhook_trigger_with_token(
 
 @router.get("/models/rules", response_model=List[schemas.RuleModelListItem])
 async def get_rule_models(
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get all rule engines that appear as models"""
@@ -261,7 +260,7 @@ async def get_rule_models(
 async def clone_rule(
     rule_id: int,
     clone_request: schemas.RuleCloneRequest,
-    current_user: schemas.User = Depends(get_current_user),
+    current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db)
 ):
     """Clone an existing rule"""

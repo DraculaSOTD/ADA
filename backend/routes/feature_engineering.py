@@ -10,7 +10,7 @@ import json
 from pydantic import BaseModel
 
 from services.feature_engineering_service import feature_engineering_service
-from core.security import get_current_user
+from services.security import get_current_user
 
 router = APIRouter(prefix="/api/feature-engineering", tags=["Feature Engineering"])
 

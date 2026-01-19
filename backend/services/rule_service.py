@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
-from models.miscellaneous import Rule, RuleExecution
+from models.rule import Rule, RuleExecution
 from models.model import Model
 from models import schemas
 from datetime import datetime
